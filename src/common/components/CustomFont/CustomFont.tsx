@@ -1,0 +1,34 @@
+export const CustomFonts = (): JSX.Element => {
+  return (
+    <>
+      <link
+        rel="preload"
+        href="/assets/fonts/Jost/Jost-Italic-VariableFont_wght.ttf"
+        as="font"
+        type="font/ttf"
+        crossOrigin="anonymous"
+      ></link>
+      <link
+        rel="preload"
+        href="/assets/fonts/Jost/Jost-VariableFont_wght.ttf"
+        as="font"
+        type="font/ttf"
+        crossOrigin="anonymous"
+      ></link>
+      <link
+        rel="preload"
+        href="/assets/fonts/Domaine/domaine-display-extrabold.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      ></link>
+      <link
+        rel="preload"
+        href="/assets/fonts/Domaine/domaine-display-medium.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      ></link>
+    </>
+  );
+};

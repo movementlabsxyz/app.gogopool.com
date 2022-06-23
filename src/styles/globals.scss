@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url(/assets/fonts/Jost/Jost-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Jost";
+  font-style: italic;
+  font-weight: normal;
+  font-display: swap;
+  src: url(/assets/fonts/Jost/Jost-Italic-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Domaine";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url(/assets/fonts/Domaine/domaine-display-medium.woff2) format("truetype");
+}
+
+@font-face {
+  font-family: "Domaine";
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+  src: url(/assets/fonts/Domaine/domaine-display-extrabold.woff2)
+    format("truetype");
+}
+
 html {
   font-size: 16px;
   -ms-text-size-adjust: 100%;
@@ -20,8 +53,4 @@ html,
 body,
 #__next {
   height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-}
-
-body {
-  font-family: "GT-America";
 }
