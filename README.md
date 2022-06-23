@@ -1,0 +1,2 @@
+# gogopool
+GoGoPools Development Repository
