@@ -111,6 +111,15 @@ module.exports = {
           50: "#FFECEC",
         },
       },
+      rounded: {
+        "4xl": "2rem",
+      },
+    },
+    screens: {
+      xs: "600px",
+      sm: "850px",
+      md: "1280px",
+      std: "1536px",
     },
   },
   plugins: [],
