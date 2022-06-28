@@ -9,6 +9,7 @@ module.exports = {
     quotes: ["error", "double"],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+    "no-console": "error",
   },
   ignorePatterns: ["src/**/*.test.ts"],
 };
