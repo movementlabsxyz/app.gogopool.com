@@ -1,7 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
-import { Favicon } from "@/common/components/FavIcon";
 import { CustomFonts } from "@/common/components/CustomFont";
+import { Favicon } from "@/common/components/FavIcon";
 
 class MyDocument extends Document {
   render() {
