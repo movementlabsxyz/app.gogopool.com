@@ -1,14 +1,15 @@
-import MetamaskConnect from "@/common/components/MetamaskConnect";
-import { PageHead } from "@/common/components/PageHead";
 import { Button } from "@chakra-ui/react";
 import {
-  useEthers,
-  useEtherBalance,
-  DAppProvider,
   Config,
+  DAppProvider,
   Rinkeby,
+  useEtherBalance,
+  useEthers,
 } from "@usedapp/core";
 import { getDefaultProvider } from "ethers";
+
+import MetamaskConnect from "@/common/components/MetamaskConnect";
+import { PageHead } from "@/common/components/PageHead";
 
 export default function Home() {
   const { account, deactivate } = useEthers();
