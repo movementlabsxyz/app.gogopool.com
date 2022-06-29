@@ -1,6 +1,6 @@
-import React from "react";
-import { useEthers } from "@usedapp/core";
 import { Button } from "@chakra-ui/react";
+import { useEthers } from "@usedapp/core";
+import React from "react";
 
 export const MetamaskConnect = () => {
   const { account, activateBrowserWallet } = useEthers();
