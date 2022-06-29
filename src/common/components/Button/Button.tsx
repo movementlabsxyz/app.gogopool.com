@@ -7,6 +7,7 @@ interface ButtonProps {
   iconLeft?: ReactElement;
   iconRight?: ReactElement;
   iconOnly?: ReactElement;
+  onClick?: () => void;
 }
 
 export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
@@ -16,6 +17,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   iconRight,
   iconOnly,
   children,
+  onClick,
 }) => {
   return (
     <Box
@@ -39,6 +41,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
           ? "p-[18px] h-[58px] w-[58px]" // padding is 20px - 2px since border-box includes border width and padding
           : "pl font-bold px-[26px] py-[12px] w-fit" // same as above
       }`}
+      onClick={onClick}
     >
       {iconOnly ? (
         <div
