@@ -1,8 +1,5 @@
 import { CustomIcon } from "./CustomIcon";
-
-interface CustomIconProps {
-  size?: string;
-}
+import { CustomIconProps } from "./types";
 
 export const CaretUpIcon = (props: CustomIconProps) => (
   <CustomIcon {...props}>

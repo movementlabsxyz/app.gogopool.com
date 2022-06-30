@@ -1,11 +1,9 @@
-import { ComponentPropsWithoutRef, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
+import { CustomIconProps } from "./types";
 
-interface Props extends ComponentPropsWithoutRef<"svg"> {
-  size?: number | string; // width and height will both be set as the same value
-  name?: string;
-}
-
-export const CustomIcon = (props: PropsWithChildren<Props>): JSX.Element => {
+export const CustomIcon = (
+  props: PropsWithChildren<CustomIconProps>
+): JSX.Element => {
   const {
     children,
     width = 24,

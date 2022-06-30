@@ -1,11 +1,17 @@
 import { CustomIcon } from "./CustomIcon";
 import { CustomIconProps } from "./types";
 
-export const CaretDownIcon = (props: CustomIconProps) => (
+export const PlusIcon = (props: CustomIconProps) => (
   <CustomIcon {...props}>
     <path
-      d="M6 9L12 15L18 9"
-      fill="none"
+      d="M12 5V19"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M5 12H19"
       stroke="black"
       stroke-width="2"
       stroke-linecap="round"
