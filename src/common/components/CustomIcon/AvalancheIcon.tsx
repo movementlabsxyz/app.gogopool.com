@@ -2,7 +2,7 @@ import { CustomIcon } from "./CustomIcon";
 import { CustomIconProps } from "./types";
 
 export const AvalancheIcon = (props: CustomIconProps) => (
-  <CustomIcon {...props} fill={props.fill || "#E84142"}>
+  <CustomIcon fill="#E84142" {...props}>
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"

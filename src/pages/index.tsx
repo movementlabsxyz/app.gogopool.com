@@ -1,13 +1,16 @@
-import { Config, DAppProvider, Rinkeby } from "@usedapp/core";
-import { getDefaultProvider } from "ethers";
+import { PageHead } from "@/common/components/PageHead";
 
 export default function Home() {
-  const config: Config = {
-    readOnlyChainId: Rinkeby.chainId,
-    readOnlyUrls: {
-      [Rinkeby.chainId]: getDefaultProvider("rinkeby"),
-    },
-  };
-
-  return <DAppProvider config={config}></DAppProvider>;
+  return (
+    <div className="h-full">
+      <PageHead
+        append={false}
+        description="Home page description"
+        name="Home"
+      />
+      <section className="grid place-content-center h-full">
+        <span>Hello world</span>
+      </section>
+    </div>
+  );
 }
