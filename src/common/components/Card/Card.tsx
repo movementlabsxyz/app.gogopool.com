@@ -65,7 +65,7 @@ export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
 export const Content = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Box ref={ref} mb="2rem" {...rest} sx={customStyles}>
+      <Box ref={ref} {...rest} sx={customStyles}>
         {children}
       </Box>
     );
@@ -75,7 +75,7 @@ export const Content = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
 export const Footer = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Box ref={ref} {...rest} sx={customStyles}>
+      <Box ref={ref} mt="2rem" {...rest} sx={customStyles}>
         {children}
       </Box>
     );
