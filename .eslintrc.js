@@ -14,6 +14,7 @@ module.exports = {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "no-console": "error",
+    "tailwindcss/no-custom-classname": "off",
   },
   ignorePatterns: ["src/**/*.test.ts"],
 };
