@@ -24,7 +24,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   return (
     <Box
       as="button"
-      className={`box-border rounded-full ${full ? "w-full" : ""} ${
+      className={`box-border rounded-full ${
         variant === "primary"
           ? "bg-green-500 text-grey-1000 hover:bg-green-550 focus:bg-green-550"
           : variant === "secondary-filled"
@@ -34,15 +34,15 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
         size === "sm"
           ? iconOnly
             ? "h-[42px] w-[42px] p-3.5"
-            : "ps w-fit px-5 py-2.5 font-bold"
+            : "ps px-5 py-2.5 font-bold"
           : size === "md"
           ? iconOnly
             ? "h-[50px] w-[50px] p-4"
-            : "p w-fit px-6 py-3 font-bold"
+            : "p px-6 py-3 font-bold"
           : iconOnly
           ? "h-[58px] w-[58px] p-[18px]" // padding is 20px - 2px since border-box includes border width and padding
-          : "pl w-fit px-[26px] py-[12px] font-bold" // same as above
-      }`}
+          : "pl px-[26px] py-[12px] font-bold" // same as above
+      } ${iconOnly ? "" : full ? "w-full" : "w-fit"}`}
       onClick={onClick}
     >
       {iconOnly ? (
