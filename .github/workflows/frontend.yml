@@ -1,39 +1,49 @@
 name: Build
 
-on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
+on: [pull_request]
 
 jobs:
-  build:
+  lint:
+    name: Lint & Format
     runs-on: ubuntu-latest
-    strategy:
-      gogopool:
-        node-version: [14.x, 16.x]
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v2
-      - name: Configure yarn caching
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: "yarn"
+      - name: Cache Node Modules
         uses: actions/cache@v2
         with:
           path: ~/.yarn
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/workflows/prettier.yml') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Use Node.js ${{ gogopool.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ gogopool.node-version }}
-          cache: "yarn"
-      - name: Install dependencies
+      - name: Install Packages
         run: yarn install
-      - name: Format the code
-        run: yarn run prettier
-      - name: Check the code style
+      - name: Check Lint
         run: yarn run lint:eslint
-      - name: Check the types
+      - name: Format code
+        run: yarn run prettier
+      - name: Typecheck
         run: yarn run check-types
-      - name: Build the project
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: "yarn"
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/workflows/prettier.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install Packages
+        run: yarn install
+      - name: Build project
         run: yarn run build
