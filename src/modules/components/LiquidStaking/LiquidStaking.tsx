@@ -13,60 +13,62 @@ import { FunctionComponent } from "react";
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 
+import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
+import { Statistics } from "./Statistics";
+
+const statisticData = [
+  {
+    label: (
+      <>
+        Annual Percentage Rate
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+      </>
+    ),
+    value: "~7.20%",
+  },
+  {
+    label: (
+      <>
+        Exchange Rate
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+      </>
+    ),
+    value: "1 AVAX = 0.0000 sAVAX",
+  },
+  {
+    label: <># of Stakers</>,
+    value: "0",
+  },
+  {
+    label: <>Total AVAX Staked</>,
+    value: "0 AVAX",
+  },
+  {
+    label: <>sAVAX Market Cap</>,
+    value: "$0",
+  },
+  {
+    label: (
+      <>
+        Unstaking Cooldown Period
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+      </>
+    ),
+    value: "0 days",
+  },
+  {
+    label: (
+      <>
+        Redemption Period
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+      </>
+    ),
+    value: "0 days",
+  },
+];
 
 export const LiquidStaking: FunctionComponent = () => {
-  const statisticData = [
-    {
-      label: (
-        <>
-          Annual Percentage Rate
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
-        </>
-      ),
-      value: "~7.20%",
-    },
-    {
-      label: (
-        <>
-          Exchange Rate
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
-        </>
-      ),
-      value: "1 AVAX = 0.0000 sAVAX",
-    },
-    {
-      label: <># of Stakers</>,
-      value: "0",
-    },
-    {
-      label: <>Total AVAX Staked</>,
-      value: "0 AVAX",
-    },
-    {
-      label: <>sAVAX Market Cap</>,
-      value: "$0",
-    },
-    {
-      label: (
-        <>
-          Unstaking Cooldown Period
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
-        </>
-      ),
-      value: "0 days",
-    },
-    {
-      label: (
-        <>
-          Redemption Period
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
-        </>
-      ),
-      value: "0 days",
-    },
-  ];
-
   return (
     <Card>
       <Title>Liquid Staking</Title>
@@ -93,28 +95,7 @@ export const LiquidStaking: FunctionComponent = () => {
             mb="4"
           >
             <Content>
-              <Box // I am not sure what to call this section. Need advice on component name
-                display="flex"
-                flexDir="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb="2.5"
-              >
-                <Text size="sm" fontWeight="600" className="text-grey-600">
-                  RECEIVE ggpAVAX
-                </Text>
-                <Box display="flex" flexDir="row" alignItems="center">
-                  <div className="mr-2 h-6 w-6 rounded-full bg-red-500" />
-                  <Text size="xxl" fontWeight="bold">
-                    0
-                  </Text>
-                </Box>
-              </Box>
-              <Box>
-                <Text size="xs" className="text-grey-600">
-                  BALANCE: 0 GGP-AVAX
-                </Text>
-              </Box>
+              <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
           <Card
@@ -125,9 +106,6 @@ export const LiquidStaking: FunctionComponent = () => {
             mb="2"
           >
             <Content>
-              {
-                // I am not sure what to call this section. Need advice on component name
-              }
               <Accordion allowToggle>
                 <AccordionItem borderWidth="0" _last={{ borderWidth: "0" }}>
                   <AccordionButton p="1rem 1.5rem">
@@ -137,28 +115,7 @@ export const LiquidStaking: FunctionComponent = () => {
                     <AccordionIcon />
                   </AccordionButton>
                   <AccordionPanel p="1rem 1.5rem">
-                    <Box gap="0.25rem">
-                      {statisticData.map(({ label, value }) => (
-                        <Box
-                          display="flex"
-                          flexDir="row"
-                          justifyContent="space-between"
-                        >
-                          <Text
-                            size="sm"
-                            color="grey.600"
-                            display="flex"
-                            flexDir="row"
-                            alignItems="center"
-                          >
-                            {label}
-                          </Text>
-                          <Text size="sm" fontWeight="bold">
-                            {value}
-                          </Text>
-                        </Box>
-                      ))}
-                    </Box>
+                    <Statistics data={statisticData} />
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
