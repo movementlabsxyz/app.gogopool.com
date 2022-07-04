@@ -107,14 +107,14 @@ export const LiquidStaking: FunctionComponent = () => {
           >
             <Content>
               <Accordion allowToggle>
-                <AccordionItem borderWidth="0" _last={{ borderWidth: "0" }}>
+                <AccordionItem>
                   <AccordionButton p="1rem 1.5rem">
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
                     <AccordionIcon />
                   </AccordionButton>
-                  <AccordionPanel p="1rem 1.5rem">
+                  <AccordionPanel>
                     <Statistics data={statisticData} />
                   </AccordionPanel>
                 </AccordionItem>
