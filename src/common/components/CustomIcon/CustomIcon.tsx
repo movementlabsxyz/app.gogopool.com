@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+
 import { CustomIconProps } from "./types";
 
 export const CustomIcon = (
