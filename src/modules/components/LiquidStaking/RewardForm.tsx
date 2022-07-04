@@ -16,7 +16,7 @@ export const RewardForm: FunctionComponent<Props> = ({ reward, balance }) => {
         alignItems="center"
         mb="2.5"
       >
-        <Text size="sm" fontWeight="600" className="text-grey-600">
+        <Text size="sm" fontWeight="600" color="grey.600">
           RECEIVE ggpAVAX
         </Text>
         <Box display="flex" flexDir="row" alignItems="center">
@@ -27,9 +27,7 @@ export const RewardForm: FunctionComponent<Props> = ({ reward, balance }) => {
         </Box>
       </Box>
       <Box>
-        <Text size="xs" className="text-grey-600">
-          {`BALANCE: ${balance} GGP-AVAX`}
-        </Text>
+        <Text size="xs" color="grey.600">{`BALANCE: ${balance} GGP-AVAX`}</Text>
       </Box>
     </>
   );

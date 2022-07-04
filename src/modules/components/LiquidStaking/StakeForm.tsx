@@ -12,7 +12,7 @@ export const StakeForm = () => {
   return (
     <>
       <FormLabel mb="1">
-        <Text size="sm" fontWeight="600" className="text-grey-600">
+        <Text size="sm" fontWeight="600" color="grey.600">
           STAKE AVAX
         </Text>
       </FormLabel>
@@ -38,7 +38,7 @@ export const StakeForm = () => {
         />
       </InputGroup>
       <FormLabel>
-        <Text size="xs" className="text-grey-600">
+        <Text size="xs" color="grey.600">
           BALANCE: 9878124.23 AVAX
         </Text>
       </FormLabel>
