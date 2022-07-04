@@ -3,6 +3,7 @@ import "@/styles/globals.scss";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Head from "next/head";
 
+import { Accordion } from "@/common/components/Accordion";
 import { CoreLayout } from "@/common/components/CoreLayout";
 import { PageHead } from "@/common/components/PageHead";
 
@@ -11,6 +12,7 @@ export const App = ({ Component, pageProps }) => {
 
   const customTheme = extendTheme({
     components: {
+      Accordion: Accordion,
       Heading: {
         sizes: {
           h1: {
