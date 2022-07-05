@@ -21,7 +21,7 @@ export const NavigationBar = () => {
           <Flex alignItems="center">
             <Stack direction="row" spacing="7">
               <Button
-                size="sm"
+                size="xs"
                 variant="secondary-outline"
                 onClick={() => null}
               >
