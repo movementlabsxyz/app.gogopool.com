@@ -5,6 +5,7 @@ import { withProse } from "@nikolovlazar/chakra-ui-prose";
 import Head from "next/head";
 
 import { Accordion } from "@/common/components/Accordion";
+import { ThemeButton } from "@/common/components/Button";
 import { CoreLayout } from "@/common/components/CoreLayout";
 import { Colors } from "@/common/components/CustomColor";
 import {
@@ -23,6 +24,7 @@ export const App = ({ Component, pageProps }) => {
       fonts: Fonts,
       components: {
         Accordion: Accordion,
+        Button: ThemeButton,
         Heading: Heading,
         Text: Text,
       },
