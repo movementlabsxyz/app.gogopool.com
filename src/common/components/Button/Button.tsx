@@ -1,7 +1,7 @@
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
 
-interface ButtonProps {
+export interface ButtonProps extends BoxProps {
   size?: "sm" | "md" | "lg";
   variant?: "primary" | "secondary-filled" | "secondary-outline";
   iconLeft?: ReactElement;
@@ -20,6 +20,8 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   full,
   children,
   onClick,
+  className,
+  ...props
 }) => {
   return (
     <Box
@@ -42,8 +44,9 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
           : iconOnly
           ? "h-[58px] w-[58px] p-[18px]" // padding is 20px - 2px since border-box includes border width and padding
           : "pl px-[26px] py-[12px] font-bold" // same as above
-      } ${iconOnly ? "" : full ? "w-full" : "w-fit"}`}
+      } ${iconOnly ? "" : full ? "w-full" : "w-fit"} ${className}`}
       onClick={onClick}
+      {...props}
     >
       {iconOnly ? (
         <div
