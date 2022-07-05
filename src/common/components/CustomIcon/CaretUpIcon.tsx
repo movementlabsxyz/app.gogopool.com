@@ -7,9 +7,9 @@ export const CaretUpIcon = (props: CustomIconProps) => (
       d="M18 15L12 9L6 15"
       fill="none"
       stroke="black"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </CustomIcon>
 );
