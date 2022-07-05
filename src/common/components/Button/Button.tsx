@@ -1,8 +1,4 @@
-import {
-  Box,
-  Button as ChakraButton,
-  ComponentStyleConfig,
-} from "@chakra-ui/react";
+import { Button as ChakraButton, ComponentStyleConfig } from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
 
 interface ButtonProps {
@@ -27,6 +23,11 @@ export const ThemeButton: ComponentStyleConfig = {
       opacity: "40%",
     },
     width: "fit-content",
+    display: "flex",
+    flexDir: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    columnGap: "2",
   },
   sizes: {
     xs: {
@@ -128,6 +129,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
     <ChakraButton
       onClick={onClick}
       width={full && "100%"}
+      height="full"
       size={iconOnly ? `iconOnly-${size}` : size}
       variant={variant}
       {...props}
@@ -135,17 +137,11 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
       {iconOnly ? (
         iconOnly
       ) : (
-        <Box
-          display="flex"
-          flexDir="row"
-          alignItems="center"
-          justifyContent="center"
-          columnGap="2"
-        >
+        <>
           {iconLeft}
           {children}
           {iconRight}
-        </Box>
+        </>
       )}
     </ChakraButton>
   );
