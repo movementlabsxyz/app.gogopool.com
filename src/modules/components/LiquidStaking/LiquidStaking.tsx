@@ -12,6 +12,8 @@ import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
+import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
+import { Tooltip } from "@/common/components/Tooltip";
 
 import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
@@ -22,7 +24,9 @@ const statisticData = [
     label: (
       <>
         Annual Percentage Rate
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        </Tooltip>
       </>
     ),
     value: "~7.20%",
@@ -31,7 +35,9 @@ const statisticData = [
     label: (
       <>
         Exchange Rate
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        </Tooltip>
       </>
     ),
     value: "1 AVAX = 0.0000 sAVAX",
@@ -52,7 +58,9 @@ const statisticData = [
     label: (
       <>
         Unstaking Cooldown Period
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        </Tooltip>
       </>
     ),
     value: "0 days",
@@ -61,7 +69,9 @@ const statisticData = [
     label: (
       <>
         Redemption Period
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        </Tooltip>
       </>
     ),
     value: "0 days",
