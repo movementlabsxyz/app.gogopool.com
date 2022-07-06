@@ -129,7 +129,7 @@ export const LiquidStaking: FunctionComponent = () => {
                     </Text>
                     <AccordionIcon />
                   </AccordionButton>
-                  <AccordionPanel>
+                  <AccordionPanel p="0 1.5rem 1rem 1.5rem">
                     <Statistics data={statisticData} />
                   </AccordionPanel>
                 </AccordionItem>
