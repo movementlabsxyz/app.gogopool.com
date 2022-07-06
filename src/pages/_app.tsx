@@ -1,6 +1,6 @@
 import "@/styles/globals.scss";
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { withProse } from "@nikolovlazar/chakra-ui-prose";
 import Head from "next/head";
 
