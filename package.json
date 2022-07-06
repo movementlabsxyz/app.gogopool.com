@@ -15,7 +15,7 @@
     "validate": "npm run prettier & npm run lint:eslint & npm run check-types & npm run build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test-storybook": "test-storybook"
+    "test-storybook": "test-storybook --maxWorkers=2"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.1",
@@ -40,7 +40,6 @@
     "@storybook/addon-interactions": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
     "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/addon-storyshots": "^6.5.9",
     "@storybook/builder-webpack5": "^6.5.9",
     "@storybook/jest": "^0.0.10",
     "@storybook/manager-webpack5": "^6.5.9",
@@ -59,7 +58,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-tailwindcss": "^3.6.0",
     "husky": ">=8.0.1",
-    "jest": "^28.1.2",
+    "jest": "27",
     "lint-staged": ">=12.4.2",
     "postcss": "^8.4.14",
     "prettier": "^2.6.2",
