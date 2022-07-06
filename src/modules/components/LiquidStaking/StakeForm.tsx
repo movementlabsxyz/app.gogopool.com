@@ -11,7 +11,7 @@ import {
 export const StakeForm = () => {
   return (
     <>
-      <FormLabel mb="1">
+      <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
         <Text size="sm" fontWeight="600" color="grey.600">
           STAKE AVAX
         </Text>
@@ -19,13 +19,14 @@ export const StakeForm = () => {
       <InputGroup variant="unstyled" display="flex" alignItems="center" mb="4">
         <InputLeftElement
           height="full"
-          children={<div className="h-6 w-6 rounded-full bg-red-500" />}
+          children={<div className="w-6 h-6 bg-red-500 rounded-full" />}
         />
         <NumberInput defaultValue={0} ml="8">
           <NumberInputField
             fontWeight="bold"
             fontSize="32px"
             className="pxxl"
+            id="stake-avax-form"
           />
         </NumberInput>
         <InputRightElement
