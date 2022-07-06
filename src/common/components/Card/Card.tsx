@@ -29,7 +29,6 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
     return (
       <Box
         ref={ref}
-        {...rest}
         width={width}
         p={p}
         height={height}
@@ -39,6 +38,7 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
         bg={backgroundColor}
         boxShadow={boxShadow}
         sx={customStyles}
+        {...rest}
       >
         {children}
       </Box>
@@ -49,14 +49,7 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
 export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Heading
-        ref={ref}
-        size="h5"
-        fontWeight="bold"
-        mb="8"
-        sx={customStyles}
-        {...rest}
-      >
+      <Heading ref={ref} size="h5" fontWeight="bold" mb="8" sx={customStyles} {...rest}>
         {children}
       </Heading>
     );
