@@ -1,7 +1,11 @@
-import { Button as ChakraButton, ComponentStyleConfig } from "@chakra-ui/react";
+import {
+  Button as ChakraButton,
+  ButtonProps as ChakraButtonProps,
+  ComponentStyleConfig,
+} from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
 
-interface ButtonProps {
+export interface ButtonProps extends ChakraButtonProps {
   size?: "xs" | "sm" | "md" | "lg";
   variant?: "primary" | "secondary-filled" | "secondary-outline" | "destructive-outline";
   iconLeft?: ReactElement;
