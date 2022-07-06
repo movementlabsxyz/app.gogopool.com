@@ -1,6 +1,7 @@
-import { Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 
 import { Button } from "@/common/components/Button";
+import { GogopoolIcon } from "@/common/components/CustomIcon/GogopoolIcon";
 
 export const NavigationBar = () => {
   return (
@@ -13,9 +14,7 @@ export const NavigationBar = () => {
       >
         <Flex alignItems="center" justifyContent="space-between">
           <Box>
-            <Text size="xl" fontWeight="bold">
-              gogopool
-            </Text>
+            <GogopoolIcon />
           </Box>
 
           <Flex alignItems="center">
