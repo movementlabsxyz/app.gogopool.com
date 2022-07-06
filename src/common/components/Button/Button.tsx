@@ -38,7 +38,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
           {iconLeft}
           {children}
           {iconRight}
-        </>
+        </Box>
       )}
     </ChakraButton>
   );
