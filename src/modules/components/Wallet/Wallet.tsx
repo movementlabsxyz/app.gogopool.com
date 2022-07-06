@@ -7,9 +7,9 @@ import {
   Portal,
   Stack,
   Text,
-  useColorMode,
   useTheme,
 } from "@chakra-ui/react";
+import { useColorModeValue } from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, useRef } from "react";
 
 import { Address } from "@/common/components/Address";
@@ -20,7 +20,6 @@ import { CaretDownIcon } from "@/common/components/CustomIcon/CaretDownIcon";
 
 import { WalletCard } from "./WalletCard";
 import { WalletCardButton } from "./WalletCardButton";
-import { WalletDisconnect } from "./WalletDisconnect";
 
 export interface WalletProps {
   avatar?: string;
@@ -37,9 +36,12 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
   onDisconnect,
   onClearAllTransaction,
 }): JSX.Element => {
-  const { colorMode } = useColorMode();
   const { colors } = useTheme();
   const initialFocusRef = useRef<HTMLButtonElement>(null);
+  const buttonTextColor = useColorModeValue(colors.grey[0], colors.grey[1000]);
+  const buttonBackgroundColor = useColorModeValue(colors.grey[1000], colors.grey[0]);
+  const popoverBackgruondColor = useColorModeValue(colors.grey[0], colors.grey[1000]);
+  const labelColor = useColorModeValue(colors.grey[700], colors.grey[400]);
 
   const handleClickRecenTransactions = (): void => {
     // TODO: Change me to navigate to recent transactions page
@@ -56,16 +58,16 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
             paddingLeft="6px"
             paddingRight="8px"
             paddingY="5px"
-            bg={colorMode === "light" ? colors.grey[0] : colors.grey[1000]}
-            color={colorMode === "light" ? colors.grey[1000] : colors.grey[0]}
+            bg={buttonBackgroundColor}
+            color={buttonTextColor}
             _hover={{
-              bg: colorMode === "light" ? colors.grey[0] : colors.grey[1000],
+              bg: buttonBackgroundColor,
             }}
             _active={{
-              bg: colorMode === "light" ? colors.grey[0] : colors.grey[1000],
+              bg: buttonBackgroundColor,
             }}
             _focus={{
-              bg: colorMode === "light" ? colors.grey[0] : colors.grey[1000],
+              bg: buttonBackgroundColor,
             }}
           >
             <Address>{address}</Address>
@@ -75,7 +77,7 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
       <Portal>
         <PopoverContent border="none" borderRadius={10} minWidth="464px">
           <PopoverBody
-            bg={colorMode === "light" ? colors.grey[0] : colors.grey[1000]}
+            bg={popoverBackgruondColor}
             borderRadius={10}
             padding="16px"
             display="flex"
@@ -96,20 +98,19 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
             </WalletCard>
             <WalletCard
               title="Recent Transactions"
-              titleIcon={<ArrowDownLeftIcon />}
+              titleIcon={<ArrowDownLeftIcon viewBox="0 0 12 12" height={16} width={16} />}
               action={
                 <WalletCardButton onClick={onClearAllTransaction}>Clear all</WalletCardButton>
               }
               onClickTitle={handleClickRecenTransactions}
             >
-              <Text
-                fontSize="sm"
-                color={colorMode === "light" ? colors.grey[700] : colors.grey[400]}
-              >
+              <Text fontSize="sm" color={labelColor}>
                 Your transaction will appear here
               </Text>
             </WalletCard>
-            <WalletDisconnect onClick={onDisconnect}>Disconnect wallet</WalletDisconnect>
+            <Button variant="destructive-outline" full onClick={onDisconnect}>
+              Disconnect wallet
+            </Button>
           </PopoverBody>
         </PopoverContent>
       </Portal>

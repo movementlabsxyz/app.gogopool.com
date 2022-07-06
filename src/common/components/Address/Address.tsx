@@ -1,8 +1,7 @@
-import { Box, Stack, Text, TextProps, useColorMode, useTheme } from "@chakra-ui/react";
+import { Box, Stack, Text, TextProps, useColorModeValue, useTheme } from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
 
 import { CopyIcon } from "@/common/components/CustomIcon/CopyIcon";
-import { CustomIcon } from "@/common/components/CustomIcon/CustomIcon";
 
 interface CopyableAddressProps {
   text?: string;
@@ -27,10 +26,10 @@ export const Address: FunctionComponent<PropsWithChildren<AddressProps>> = ({
   fontWeight = 400,
   ...props
 }): JSX.Element => {
-  const { colorMode } = useColorMode();
   const { colors } = useTheme();
   const startLetter = children.toString().slice(0, startLength);
   const lastLetter = children.toString().slice(lastLength);
+  const textColor = useColorModeValue(colors.grey[1000], colors.grey[0]);
 
   const handleCopy = (): void => {
     // TODO: Add tooltip when user copied the address
@@ -43,19 +42,12 @@ export const Address: FunctionComponent<PropsWithChildren<AddressProps>> = ({
 
   return (
     <Stack direction="row" alignItems="center" gap="2px">
-      <Text
-        fontSize={fontSize}
-        fontWeight={fontWeight}
-        color={colorMode === "light" ? colors.grey[1000] : colors.grey[0]}
-        {...props}
-      >
+      <Text fontSize={fontSize} fontWeight={fontWeight} color={textColor} {...props}>
         {truncate ? startLetter + ellipsis + lastLetter : children}
       </Text>
       {Boolean(copyable) && (
         <Box as="button" aria-label="copy" onClick={handleCopy}>
-          <CustomIcon>
-            <CopyIcon />
-          </CustomIcon>
+          <CopyIcon size="16" />
         </Box>
       )}
     </Stack>
