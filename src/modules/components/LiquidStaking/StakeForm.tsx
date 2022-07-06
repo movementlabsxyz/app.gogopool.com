@@ -8,6 +8,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
+
 export const StakeForm = () => {
   return (
     <>
@@ -17,10 +19,7 @@ export const StakeForm = () => {
         </Text>
       </FormLabel>
       <InputGroup variant="unstyled" display="flex" alignItems="center" mb="4">
-        <InputLeftElement
-          height="full"
-          children={<div className="h-6 w-6 rounded-full bg-red-500" />}
-        />
+        <InputLeftElement height="full" children={<AvalancheIcon />} />
         <NumberInput defaultValue={0} ml="8">
           <NumberInputField
             fontWeight="bold"
