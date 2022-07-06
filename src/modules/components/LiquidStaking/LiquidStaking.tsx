@@ -86,7 +86,12 @@ export const LiquidStaking: FunctionComponent = () => {
             h="6"
             borderRadius="md"
             className="left-[calc(50%-16px)] top-[148px] cursor-pointer"
-          />
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <SwapIcon size="16px" />
+          </Box>
           <Card
             width="auto"
             rounded="4"
