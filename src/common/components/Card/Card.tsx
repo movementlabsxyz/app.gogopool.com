@@ -1,4 +1,4 @@
-import { Box, BoxProps, Text, TextProps } from "@chakra-ui/react";
+import { Box, BoxProps, Heading, TextProps } from "@chakra-ui/react";
 import { forwardRef } from "react";
 
 interface BoxPropsWithStyles extends BoxProps {
@@ -49,15 +49,16 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
 export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Text
+      <Heading
         ref={ref}
-        className="h5 font-bold"
-        mb="2rem"
+        size="h5"
+        fontWeight="bold"
+        mb="8"
         sx={customStyles}
         {...rest}
       >
         {children}
-      </Text>
+      </Heading>
     );
   }
 );
@@ -75,7 +76,7 @@ export const Content = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
 export const Footer = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Box ref={ref} mt="2rem" {...rest} sx={customStyles}>
+      <Box ref={ref} mt="8" {...rest} sx={customStyles}>
         {children}
       </Box>
     );

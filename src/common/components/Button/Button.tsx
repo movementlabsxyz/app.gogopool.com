@@ -1,15 +1,112 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Button as ChakraButton, ComponentStyleConfig } from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
 
-export interface ButtonProps extends BoxProps {
-  size?: "sm" | "md" | "lg";
-  variant?: "primary" | "secondary-filled" | "secondary-outline";
+interface ButtonProps {
+  size?: "xs" | "sm" | "md" | "lg";
+  variant?: "primary" | "secondary-filled" | "secondary-outline" | "destructive-outline";
   iconLeft?: ReactElement;
   iconRight?: ReactElement;
   iconOnly?: ReactElement;
   full?: boolean;
   onClick?: () => void;
 }
+
+export const ThemeButton: ComponentStyleConfig = {
+  baseStyle: {
+    rounded: "full",
+    fontWeight: "bold",
+    _disabled: {
+      opacity: "40%",
+    },
+    width: "fit-content",
+    display: "flex",
+    flexDir: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    columnGap: "2",
+  },
+  sizes: {
+    xs: {
+      paddingX: "20px",
+      paddingY: "6px",
+      fontSize: "14px",
+      lineHeight: "22px",
+    },
+    sm: {
+      paddingX: "20px",
+      paddingY: "10px",
+      fontSize: "14px",
+      lineHeight: "22px",
+    },
+    md: {
+      paddingX: "24px",
+      paddingY: "12px",
+      fontSize: "16px",
+      lineHeight: "24px",
+    },
+    lg: {
+      paddingX: "28px",
+      paddingY: "14px",
+      fontSize: "18px",
+      lineHeight: "28px",
+    },
+    "iconOnly-xs": {
+      height: "34px",
+      width: "34px",
+      padding: "10px",
+    },
+    "iconOnly-sm": {
+      height: "42px",
+      width: "42px",
+      padding: "14px",
+    },
+    "iconOnly-md": {
+      height: "48px",
+      width: "48px",
+      padding: "16px",
+    },
+    "iconOnly-lg": {
+      height: "58px",
+      width: "58px",
+      padding: "20px",
+    },
+  },
+  variants: {
+    primary: {
+      bgColor: "green.500",
+      _hover: {
+        bgColor: "green.550",
+      },
+    },
+    "secondary-filled": {
+      color: "grey.0",
+      bgColor: "blue.500",
+      _hover: {
+        bgColor: "blue.550",
+      },
+    },
+    "secondary-outline": ({ theme }) => ({
+      boxShadow: `inset 0 0 0 2px ${theme.colors.blue[500]}`,
+      color: "blue.500",
+      _hover: {
+        color: "blue.550",
+        boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
+      },
+    }),
+    "destructive-outline": ({ theme }) => ({
+      boxShadow: `inset 0 0 0 2px ${theme.colors.error[500]}`,
+      color: "error.500",
+      _hover: {
+        color: "error.600",
+        boxShadow: `inset 0 0 0 2px ${theme.colors.error[600]}`,
+      },
+    }),
+  },
+  defaultProps: {
+    variant: "primary",
+    size: "md",
+  },
+};
 
 export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   size = "md",
@@ -20,53 +117,26 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   full,
   children,
   onClick,
-  className,
   ...props
 }) => {
   return (
-    <Box
-      as="button"
-      className={`box-border rounded-full ${
-        variant === "primary"
-          ? "bg-green-500 text-grey-1000 hover:bg-green-550 focus:bg-green-550"
-          : variant === "secondary-filled"
-          ? "bg-blue-500 text-grey-0 hover:bg-blue-550 focus:bg-blue-550"
-          : "border-2 border-blue-500 text-blue-500 hover:border-blue-550 focus:border-blue-550"
-      } ${
-        size === "sm"
-          ? iconOnly
-            ? "h-[42px] w-[42px] p-3.5"
-            : "ps px-5 py-2.5 font-bold"
-          : size === "md"
-          ? iconOnly
-            ? "h-[50px] w-[50px] p-4"
-            : "p px-6 py-3 font-bold"
-          : iconOnly
-          ? "h-[58px] w-[58px] p-[18px]" // padding is 20px - 2px since border-box includes border width and padding
-          : "pl px-[26px] py-[12px] font-bold" // same as above
-      } ${iconOnly ? "" : full ? "w-full" : "w-fit"} ${className}`}
+    <ChakraButton
       onClick={onClick}
+      width={full && "100%"}
+      height="full"
+      size={iconOnly ? `iconOnly-${size}` : size}
+      variant={variant}
       {...props}
     >
       {iconOnly ? (
-        <div
-          className={`${
-            size === "sm"
-              ? "h-[14px] w-[14px]"
-              : size === "md"
-              ? "h-[16px] w-[16px]"
-              : "h-[18px] w-[18px]"
-          }`}
-        >
-          {iconOnly}
-        </div>
+        iconOnly
       ) : (
-        <div className="flex flex-row items-center justify-center gap-x-2">
+        <>
           {iconLeft}
           {children}
           {iconRight}
-        </div>
+        </>
       )}
-    </Box>
+    </ChakraButton>
   );
 };
