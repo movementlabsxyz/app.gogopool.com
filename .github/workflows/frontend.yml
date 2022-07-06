@@ -28,6 +28,7 @@ jobs:
       - name: Typecheck
         run: yarn run check-types
   test:
+    name: Test
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
