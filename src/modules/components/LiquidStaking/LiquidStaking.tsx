@@ -22,7 +22,7 @@ const statisticData = [
     label: (
       <>
         Annual Percentage Rate
-        <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
       </>
     ),
     value: "~7.20%",
@@ -31,7 +31,7 @@ const statisticData = [
     label: (
       <>
         Exchange Rate
-        <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
       </>
     ),
     value: "1 AVAX = 0.0000 sAVAX",
@@ -52,7 +52,7 @@ const statisticData = [
     label: (
       <>
         Unstaking Cooldown Period
-        <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
       </>
     ),
     value: "0 days",
@@ -61,7 +61,7 @@ const statisticData = [
     label: (
       <>
         Redemption Period
-        <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
       </>
     ),
     value: "0 days",

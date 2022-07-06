@@ -19,7 +19,7 @@ export const StakeForm = () => {
       <InputGroup variant="unstyled" display="flex" alignItems="center" mb="4">
         <InputLeftElement
           height="full"
-          children={<div className="w-6 h-6 bg-red-500 rounded-full" />}
+          children={<div className="h-6 w-6 rounded-full bg-red-500" />}
         />
         <NumberInput defaultValue={0} ml="8">
           <NumberInputField
