@@ -12,6 +12,8 @@ import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
+import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
+import { Tooltip } from "@/common/components/Tooltip";
 
 import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
@@ -22,7 +24,9 @@ const statisticData = [
     label: (
       <>
         Annual Percentage Rate
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        </Tooltip>
       </>
     ),
     value: "~7.20%",
@@ -31,7 +35,9 @@ const statisticData = [
     label: (
       <>
         Exchange Rate
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        </Tooltip>
       </>
     ),
     value: "1 AVAX = 0.0000 sAVAX",
@@ -52,7 +58,9 @@ const statisticData = [
     label: (
       <>
         Unstaking Cooldown Period
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        </Tooltip>
       </>
     ),
     value: "0 days",
@@ -61,7 +69,9 @@ const statisticData = [
     label: (
       <>
         Redemption Period
-        <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip placement="right" content="Explanation here">
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+        </Tooltip>
       </>
     ),
     value: "0 days",
@@ -86,35 +96,28 @@ export const LiquidStaking: FunctionComponent = () => {
             h="6"
             borderRadius="md"
             className="left-[calc(50%-16px)] top-[148px] cursor-pointer"
-          />
-          <Card
-            width="auto"
-            rounded="4"
-            p="1rem 1.5rem"
-            backgroundColor="grey.100"
-            mb="4"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
           >
+            <SwapIcon size="16px" />
+          </Box>
+          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card
-            width="auto"
-            rounded="4"
-            p="0"
-            backgroundColor="grey.100"
-            mb="2"
-          >
+          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem">
+                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
                     <AccordionIcon />
                   </AccordionButton>
-                  <AccordionPanel>
+                  <AccordionPanel p="0 1.5rem 1rem 1.5rem">
                     <Statistics data={statisticData} />
                   </AccordionPanel>
                 </AccordionItem>
