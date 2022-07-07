@@ -26,6 +26,7 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
     <ChakraButton
       onClick={onClick}
       width={full && "100%"}
+      height="full"
       size={iconOnly ? `iconOnly-${size}` : size}
       variant={variant}
       {...props}
