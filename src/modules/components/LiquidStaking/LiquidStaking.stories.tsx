@@ -18,10 +18,10 @@ Default.play = async ({ canvasElement }) => {
 
   await userEvent.clear(canvas.getByRole("spinbutton"));
   await userEvent.type(canvas.getByRole("spinbutton"), "1234567890");
-  expect(canvas.getByRole("spinbutton")).toHaveValue("1234567890");
+  await expect(canvas.getByRole("spinbutton")).toHaveValue("1234567890");
 
   await userEvent.click(canvas.getByTestId("liquid-staking-accordion-action"));
-  expect(canvas.getByTestId("liquid-staking-accordion-action")).toHaveAttribute(
+  await expect(canvas.getByTestId("liquid-staking-accordion-action")).toHaveAttribute(
     "aria-expanded",
     "true"
   );
