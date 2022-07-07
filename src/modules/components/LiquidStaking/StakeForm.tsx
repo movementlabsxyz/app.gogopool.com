@@ -13,7 +13,7 @@ import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 export const StakeForm = () => {
   return (
     <>
-      <FormLabel mb="1">
+      <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
         <Text size="sm" fontWeight="600" color="grey.600">
           STAKE AVAX
         </Text>
@@ -25,6 +25,7 @@ export const StakeForm = () => {
             fontWeight="bold"
             fontSize="32px"
             className="pxxl"
+            id="stake-avax-form"
           />
         </NumberInput>
         <InputRightElement

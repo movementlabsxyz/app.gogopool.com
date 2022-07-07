@@ -25,7 +25,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -36,7 +36,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -59,7 +59,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -70,7 +70,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -102,28 +102,16 @@ export const LiquidStaking: FunctionComponent = () => {
           >
             <SwapIcon size="16px" />
           </Box>
-          <Card
-            width="auto"
-            rounded="4"
-            p="1rem 1.5rem"
-            backgroundColor="grey.100"
-            mb="4"
-          >
+          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card
-            width="auto"
-            rounded="4"
-            p="0"
-            backgroundColor="grey.100"
-            mb="2"
-          >
+          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem">
+                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
