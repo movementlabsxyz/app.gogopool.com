@@ -10,6 +10,7 @@ export const NavigationBar = () => {
         p="0.75rem 1.5rem"
         borderBottomWidth="1px"
         borderBottomColor="#0000001A"
+        bgColor="grey.0"
         h="58px"
       >
         <Flex alignItems="center" justifyContent="space-between">
