@@ -3,15 +3,11 @@ import { useColorModeValue } from "@chakra-ui/react";
 import { CustomIcon } from "./CustomIcon";
 import { CustomIconProps } from "./types";
 
-export interface CopyIconProps extends CustomIconProps {
-  colorMode?: "light" | "dark";
-}
-
-export const CopyIcon = ({ height = 12, width = 12, colorMode, ...props }: CopyIconProps) => {
+export const CopyIcon = ({ height = 12, width = 12, ...props }: CustomIconProps) => {
   const strokeColor = useColorModeValue("#000000", "#A8A8A8");
 
   return (
-    <CustomIcon {...props}>
+    <CustomIcon height={height} width={width} {...props}>
       <rect
         x="4"
         y="8"
