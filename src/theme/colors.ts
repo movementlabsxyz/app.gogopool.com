@@ -1,4 +1,6 @@
-export const Colors = {
+import { Colors } from "@chakra-ui/react";
+
+export const colors: Colors = {
   paper: {
     start: "#F6F6F3",
     end: "#FFFFFF",
