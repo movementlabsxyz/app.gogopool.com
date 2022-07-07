@@ -25,7 +25,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -36,7 +36,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -59,7 +59,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -70,7 +70,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
