@@ -13,7 +13,7 @@ const faqsData = [
         <Text>
           Avalanche is a new blockchain created by Ava Labs, and solves the{" "}
           <a href="https://medium.com/certik/the-blockchain-trilemma-decentralized-scalable-and-secure-e9d8c41a87b3">
-            <span className="text-blue-500 font-jost">Trilemma. </span>
+            <span className="font-jost text-blue-500">Trilemma. </span>
           </a>{" "}
           It is:
         </Text>
@@ -39,7 +39,7 @@ const faqsData = [
     content: (
       <>
         <a href="https://twitter.com/das_connor/status/1456592161420587017">
-          <span className="text-blue-500 font-jost">Tweet storm on Subnets</span>
+          <span className="font-jost text-blue-500">Tweet storm on Subnets</span>
         </a>
         <br />
         <br />
