@@ -9,8 +9,6 @@ import { Text } from "./components/text";
 import { config } from "./config";
 import { fonts } from "./fonts";
 
-// NOTE: Please don't use '@/' when import components, it will break the storybook
-
 const theme = extendTheme(
   {
     components: {
