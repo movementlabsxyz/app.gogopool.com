@@ -16,5 +16,7 @@ Please include a summary of the change and which issue is fixed. Please also inc
 - [ ] Unused code cleanup
 - [ ] Clean console
 - [ ] Commented code, particularly in hard-to-understand areas
+- [ ] I have created the storybook of the component
+- [ ] I have created the unit test of the component
 
 # Video Recording/Screenshots Showcasing Implementation

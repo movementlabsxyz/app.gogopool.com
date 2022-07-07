@@ -87,28 +87,16 @@ export const LiquidStaking: FunctionComponent = () => {
             borderRadius="md"
             className="left-[calc(50%-16px)] top-[148px] cursor-pointer"
           />
-          <Card
-            width="auto"
-            rounded="4"
-            p="1rem 1.5rem"
-            backgroundColor="grey.100"
-            mb="4"
-          >
+          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card
-            width="auto"
-            rounded="4"
-            p="0"
-            backgroundColor="grey.100"
-            mb="2"
-          >
+          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem">
+                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
