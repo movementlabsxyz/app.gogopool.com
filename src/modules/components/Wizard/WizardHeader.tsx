@@ -23,6 +23,7 @@ export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({ step }): JS
       position="relative"
       justify="space-between"
       minWidth="696px"
+      width="100%"
     >
       {wizardSteps.map((wizard) => (
         <Stack
@@ -48,6 +49,7 @@ export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({ step }): JS
         zIndex={1}
         orientation="horizontal"
         top="50%"
+        width="600px"
         variant="dashed"
         borderColor={colors.grey[300]}
       />
