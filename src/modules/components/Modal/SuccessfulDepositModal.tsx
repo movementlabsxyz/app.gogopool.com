@@ -15,19 +15,17 @@ import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 
-interface ModalProps extends Omit<ChakraModalProps, "children"> {
+export interface SuccessfulDepositModalProps
+  extends Omit<ChakraModalProps, "children"> {
   isOpen: boolean;
   onClose: () => void;
   amount: number;
   token: string;
 }
 
-export const SuccessfulDepositModal: FunctionComponent<ModalProps> = ({
-  isOpen,
-  onClose,
-  amount,
-  token,
-}) => {
+export const SuccessfulDepositModal: FunctionComponent<
+  SuccessfulDepositModalProps
+> = ({ isOpen, onClose, amount, token }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -36,7 +34,7 @@ export const SuccessfulDepositModal: FunctionComponent<ModalProps> = ({
           <Box width="178px" height="98px" bgColor="red.300" mb="8" />
         </VStack>
         <ModalHeader p="0 0 8px 0">
-          <Heading textAlign="center" size="h5">
+          <Heading textAlign="center" size="h5" color="grey.1000">
             Congratulations! 👏
           </Heading>
         </ModalHeader>

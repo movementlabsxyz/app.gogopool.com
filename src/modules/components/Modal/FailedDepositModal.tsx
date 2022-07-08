@@ -15,14 +15,13 @@ import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 
-interface ModalProps extends Omit<ChakraModalProps, "children"> {
+export interface FailedDepositModalProps
+  extends Omit<ChakraModalProps, "children"> {
   isOpen: boolean;
   onClose: () => void;
-  amount: number;
-  token: string;
 }
 
-export const FailedDepositModal: FunctionComponent<ModalProps> = ({
+export const FailedDepositModal: FunctionComponent<FailedDepositModalProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -34,7 +33,7 @@ export const FailedDepositModal: FunctionComponent<ModalProps> = ({
           <Box width="178px" height="98px" bgColor="red.300" mb="8" />
         </VStack>
         <ModalHeader p="0 0 8px 0">
-          <Heading textAlign="center" size="h5">
+          <Heading textAlign="center" size="h5" color="grey.1000">
             Deposit Failed! 😢
           </Heading>
         </ModalHeader>
