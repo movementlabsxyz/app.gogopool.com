@@ -1,22 +1,10 @@
-import {
-  Box,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  ModalProps as ChakraModalProps,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
+import { Modal, ModalBody, ModalHeader } from "@/common/components/Modal";
 
-export interface FailedDepositModalProps
-  extends Omit<ChakraModalProps, "children"> {
+export interface FailedDepositModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -26,33 +14,32 @@ export const FailedDepositModal: FunctionComponent<FailedDepositModalProps> = ({
   onClose,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent maxWidth="465px" mt="auto" mb="auto">
-        <VStack>
-          <Box width="178px" height="98px" bgColor="red.300" mb="8" />
-        </VStack>
-        <ModalHeader p="0 0 8px 0">
-          <Heading textAlign="center" size="h5" color="grey.1000">
-            Deposit Failed! 😢
-          </Heading>
-        </ModalHeader>
-        <ModalBody p="0 0 24px 0">
-          <Text textAlign="center" color="grey.600">
-            Sorry, you don't have enough AVAX to make a deposit. Please add more
-            AVAX to your wallet and try another deposit.
-          </Text>
-        </ModalBody>
-
-        <ModalFooter p="0" gap="16px">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      headerImage={<Box width="178px" height="98px" bgColor="red.300" mb="8" />}
+      ctaButton={
+        <>
           <Button size="sm" variant="secondary-outline" full onClick={onClose}>
             Cancel
           </Button>
           <Button size="sm" variant="secondary-filled" full onClick={onClose}>
             Try again
           </Button>
-        </ModalFooter>
-      </ModalContent>
+        </>
+      }
+    >
+      <ModalHeader>
+        <Heading textAlign="center" size="h5" color="grey.1000">
+          Deposit Failed! 😢
+        </Heading>
+      </ModalHeader>
+      <ModalBody>
+        <Text textAlign="center" color="grey.600">
+          Sorry, you don't have enough AVAX to make a deposit. Please add more
+          AVAX to your wallet and try another deposit.
+        </Text>
+      </ModalBody>
     </Modal>
   );
 };

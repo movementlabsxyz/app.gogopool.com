@@ -1,22 +1,10 @@
-import {
-  Box,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  ModalProps as ChakraModalProps,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
+import { Modal, ModalBody, ModalHeader } from "@/common/components/Modal";
 
-export interface SuccessfulDepositModalProps
-  extends Omit<ChakraModalProps, "children"> {
+export interface SuccessfulDepositModalProps {
   isOpen: boolean;
   onClose: () => void;
   amount: number;
@@ -27,30 +15,27 @@ export const SuccessfulDepositModal: FunctionComponent<
   SuccessfulDepositModalProps
 > = ({ isOpen, onClose, amount, token }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent maxWidth="465px" mt="auto" mb="auto">
-        <VStack>
-          <Box width="178px" height="98px" bgColor="red.300" mb="8" />
-        </VStack>
-        <ModalHeader p="0 0 8px 0">
-          <Heading textAlign="center" size="h5" color="grey.1000">
-            Congratulations! 👏
-          </Heading>
-        </ModalHeader>
-        <ModalBody p="0 0 24px 0">
-          <Text textAlign="center" color="grey.600">
-            You've successfully deposited{" "}
-            <Box as="span" fontWeight={700}>{`${amount} ${token}!`}</Box> 😄
-          </Text>
-        </ModalBody>
-
-        <ModalFooter p="0">
-          <Button size="sm" variant="secondary-filled" full onClick={onClose}>
-            Done
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      headerImage={<Box width="178px" height="98px" bgColor="red.300" mb="8" />}
+      ctaButton={
+        <Button size="sm" variant="secondary-filled" full onClick={onClose}>
+          Done
+        </Button>
+      }
+    >
+      <ModalHeader>
+        <Heading textAlign="center" size="h5" color="grey.1000">
+          Congratulations! 👏
+        </Heading>
+      </ModalHeader>
+      <ModalBody>
+        <Text textAlign="center" color="grey.600">
+          You've successfully deposited{" "}
+          <Box as="span" fontWeight={700}>{`${amount} ${token}!`}</Box> 😄
+        </Text>
+      </ModalBody>
     </Modal>
   );
 };
