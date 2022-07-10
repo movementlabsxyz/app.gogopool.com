@@ -4,6 +4,7 @@ import { withProse } from "@nikolovlazar/chakra-ui-prose";
 import { colors } from "./colors";
 import { Accordion } from "./components/accordion";
 import { Button } from "./components/button";
+import { Card } from "./components/card";
 import { Heading } from "./components/heading";
 import { Text } from "./components/text";
 import { config } from "./config";
@@ -16,6 +17,7 @@ const theme = extendTheme(
       Heading,
       Text,
       Button,
+      Card,
     },
     fonts,
     colors,
