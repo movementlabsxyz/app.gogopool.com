@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Collection, List, Map, OrderedMap, OrderedSet, Set, Stack } from "immutable";
-import { CollectionType } from "types/immutable.types";
+
+import { CollectionType } from "@/types/immutable";
 
 export function getCollectionType(
   iterable: Collection<string | number, any>

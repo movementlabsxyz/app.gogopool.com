@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Collection, List, Map, OrderedMap, OrderedSet, Record, Set, Stack } from "immutable";
-import {
-  DeserializationOptions,
-  SerializedCollection,
-  SerializedRecord,
-} from "types/immutable.types";
+
+import { DeserializationOptions, SerializedCollection, SerializedRecord } from "@/types/immutable";
 
 import { getUniqueId } from "./get-unique-id";
 

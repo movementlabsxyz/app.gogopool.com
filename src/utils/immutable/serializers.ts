@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Collection, isCollection, Record } from "immutable";
-import { SerializedCollection, SerializedRecord } from "types/immutable.types";
+
+import { SerializedCollection, SerializedRecord } from "@/types/immutable";
 
 import { getCollectionType } from "./collections";
 import { isDate, isRegExp } from "./native-types";

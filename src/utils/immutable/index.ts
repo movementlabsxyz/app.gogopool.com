@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { isCollection, Record } from "immutable";
 import JSONStreamStringify from "json-stream-stringify";
+
 import {
   DeserializationOptions,
   SerializationOptions,
   SerializationStreamOptions,
-} from "types/immutable.types";
+} from "@/types/immutable";
 
 import { decodeData } from "./decoders";
 import { isSupportedNativeType, patchNativeTypeMethods } from "./native-types";
