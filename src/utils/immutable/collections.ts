@@ -1,32 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Collection, List, Map, OrderedMap, OrderedSet, Set, Stack } from 'immutable';
-import { CollectionType } from 'types/immutable.types';
+import { Collection, List, Map, OrderedMap, OrderedSet, Set, Stack } from "immutable";
+import { CollectionType } from "types/immutable.types";
 
 export function getCollectionType(
   iterable: Collection<string | number, any>
 ): CollectionType | undefined {
   if (List.isList(iterable)) {
-    return 'List';
+    return "List";
   }
 
   if (Stack.isStack(iterable)) {
-    return 'Stack';
+    return "Stack";
   }
 
   if (Set.isSet(iterable)) {
     if (OrderedSet.isOrderedSet(iterable)) {
-      return 'OrderedSet';
+      return "OrderedSet";
     }
 
-    return 'Set';
+    return "Set";
   }
 
   if (Map.isMap(iterable)) {
     if (OrderedMap.isOrderedMap(iterable)) {
-      return 'OrderedMap';
+      return "OrderedMap";
     }
 
-    return 'Map';
+    return "Map";
   }
 
   return undefined;

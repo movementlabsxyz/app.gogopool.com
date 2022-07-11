@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Collection, isCollection, Record } from 'immutable';
-import { SerializedCollection, SerializedRecord } from 'types/immutable.types';
-import { getCollectionType } from './collections';
-import { isDate, isRegExp } from './native-types';
+import { Collection, isCollection, Record } from "immutable";
+import { SerializedCollection, SerializedRecord } from "types/immutable.types";
+
+import { getCollectionType } from "./collections";
+import { isDate, isRegExp } from "./native-types";
 
 export function serializeData(_key: string | number, value: any): any {
   let result = value;
@@ -19,7 +20,7 @@ export function serializeData(_key: string | number, value: any): any {
     result = { __date: value.toISOString() };
   } else if (isRegExp(value)) {
     result = { __regexp: value.toString() };
-  } else if (typeof value === 'object' && value !== null) {
+  } else if (typeof value === "object" && value !== null) {
     result = serializePlainObject(value, serializeData);
   }
 
@@ -133,7 +134,7 @@ export function serializeDataAsync(_key: string | number, value: any): any {
           resolve(serializeArray(value, serializeDataAsync));
         });
       });
-    } else if (typeof value === 'object' && value !== null) {
+    } else if (typeof value === "object" && value !== null) {
       result = new Promise((resolve) => {
         setImmediate(() => {
           resolve(serializePlainObject(value, serializeDataAsync));

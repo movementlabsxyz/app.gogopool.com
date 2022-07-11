@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { isCollection, Record } from 'immutable';
-import JSONStreamStringify from 'json-stream-stringify';
+import { isCollection, Record } from "immutable";
+import JSONStreamStringify from "json-stream-stringify";
 import {
   DeserializationOptions,
   SerializationOptions,
   SerializationStreamOptions,
-} from 'types/immutable.types';
-import { decodeData } from './decoders';
-import { isSupportedNativeType, patchNativeTypeMethods } from './native-types';
-import { serializeData, serializeDataAsync } from './serializers';
+} from "types/immutable.types";
+
+import { decodeData } from "./decoders";
+import { isSupportedNativeType, patchNativeTypeMethods } from "./native-types";
+import { serializeData, serializeDataAsync } from "./serializers";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function deserialize(json: string, options: DeserializationOptions = {}) {

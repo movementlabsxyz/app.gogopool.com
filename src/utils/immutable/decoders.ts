@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Collection, List, Map, OrderedMap, OrderedSet, Record, Set, Stack } from 'immutable';
+import { Collection, List, Map, OrderedMap, OrderedSet, Record, Set, Stack } from "immutable";
 import {
   DeserializationOptions,
   SerializedCollection,
   SerializedRecord,
-} from 'types/immutable.types';
-import { getUniqueId } from './get-unique-id';
+} from "types/immutable.types";
+
+import { getUniqueId } from "./get-unique-id";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function decodeData(key: string, value: any, options: DeserializationOptions) {
-  if (typeof value === 'object' && value) {
+  if (typeof value === "object" && value) {
     if (value.__record) {
       return decodeRecord(key, value, options);
     } else if (value.__collection) {
@@ -17,14 +18,14 @@ export function decodeData(key: string, value: any, options: DeserializationOpti
     } else if (value.__date) {
       return new Date(value.__date);
     } else if (value.__regexp) {
-      const regExpParts = value.__regexp.split('/');
+      const regExpParts = value.__regexp.split("/");
       return new RegExp(regExpParts[1], regExpParts[2]);
     }
   }
   return value;
 }
 
-const getUniqueAnonymousRecordId = getUniqueId('AnonymousRecord');
+const getUniqueAnonymousRecordId = getUniqueId("AnonymousRecord");
 
 function decodeRecord(key: string, recInfo: SerializedRecord, options: DeserializationOptions) {
   const { __record: recordName, data } = recInfo;
@@ -35,7 +36,7 @@ function decodeRecord(key: string, recInfo: SerializedRecord, options: Deseriali
   }
 
   let decodedData: any = decodeData(key, data, options);
-  if (!!RecordType && typeof (RecordType as any).migrate === 'function') {
+  if (!!RecordType && typeof (RecordType as any).migrate === "function") {
     decodedData = (RecordType as any).migrate(decodedData);
   }
 
