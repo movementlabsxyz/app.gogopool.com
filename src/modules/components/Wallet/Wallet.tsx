@@ -39,7 +39,7 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
   const { colors } = useTheme();
   const initialFocusRef = useRef<HTMLButtonElement>(null);
   const buttonTextColor = useColorModeValue(colors.grey[0], colors.grey[1000]);
-  const buttonBackgroundColor = useColorModeValue(colors.grey[1000], colors.grey[0]);
+  const buttonBackgroundColor = useColorModeValue(colors.grey[0], colors.grey[1000]);
   const popoverBackgruondColor = useColorModeValue(colors.grey[0], colors.grey[1000]);
   const labelColor = useColorModeValue(colors.grey[700], colors.grey[400]);
 
@@ -108,7 +108,7 @@ export const Wallet: FunctionComponent<PropsWithChildren<WalletProps>> = ({
                 Your transaction will appear here
               </Text>
             </WalletCard>
-            <Button variant="destructive-outline" full onClick={onDisconnect}>
+            <Button variant="destructive-outline" mt={1} full onClick={onDisconnect}>
               Disconnect wallet
             </Button>
           </PopoverBody>
