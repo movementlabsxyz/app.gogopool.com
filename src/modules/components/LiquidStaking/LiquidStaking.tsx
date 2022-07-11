@@ -8,12 +8,14 @@ import {
   FormControl,
   Text,
 } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import useDeposit from "@/hooks/deposit";
+import useWallet from "@/hooks/wallet";
 
 import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
@@ -25,7 +27,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -36,7 +38,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -59,7 +61,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -70,7 +72,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -79,14 +81,27 @@ const statisticData = [
 ];
 
 export const LiquidStaking: FunctionComponent = () => {
+  const { account, activate, provider } = useWallet();
+  const { send } = useDeposit(provider);
+
+  const [amount, setAmount] = useState<number>(0);
+
+  const handleDeposit = async () => {
+    await send(amount);
+  };
+
+  const handleConnect = () => {
+    activate();
+  };
+
   return (
-    <Card>
+    <Card color="#000000">
       <Title>Liquid Staking</Title>
       <Content position="relative">
         <FormControl>
           <Card width="auto" rounded="4" backgroundColor="grey.100" mb="2">
             <Content>
-              <StakeForm />
+              <StakeForm amount={amount} setAmount={setAmount} />
             </Content>
           </Card>
           <Box // TODO: Add icon and functionality
@@ -127,7 +142,15 @@ export const LiquidStaking: FunctionComponent = () => {
         </FormControl>
       </Content>
       <Footer>
-        <Button full={true}>Connect wallet</Button>
+        {account ? (
+          <Button full disabled={!amount} onClick={handleDeposit}>
+            Deposit
+          </Button>
+        ) : (
+          <Button full onClick={handleConnect}>
+            Connect wallet
+          </Button>
+        )}
       </Footer>
     </Card>
   );
