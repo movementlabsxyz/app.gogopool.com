@@ -15,13 +15,14 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
     {
       children,
       backgroundColor = "white",
-      maxWidth = "auto",
-      width = "588px",
+      maxWidth = "588px",
+      minWidth = "334px",
+      width = "auto",
       maxHeight = "auto",
       height = "auto",
       p = "1.5rem", // 24px
       boxShadow = "default",
-      borderRadius = "0.625rem", // 8px
+      borderRadius = "1.25rem", // 8px
       outer = false,
       customStyles,
       ...rest
@@ -31,10 +32,11 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
     return (
       <Box
         ref={ref}
-        width={width}
+        width={outer ? "full" : width}
         p={p}
         height={height}
-        maxWidth={maxWidth}
+        maxWidth={outer && maxWidth}
+        minWidth={outer && minWidth}
         maxHeight={maxHeight}
         borderRadius={borderRadius}
         bg={backgroundColor}
