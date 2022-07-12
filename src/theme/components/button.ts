@@ -69,24 +69,22 @@ export const Button: ComponentStyleConfig = {
         bgColor: "blue.550",
       },
     },
-    "secondary-outline": {
+    "secondary-outline": ({ theme }) => ({
+      boxShadow: `inset 0 0 0 2px ${theme.colors.blue[500]}`,
       color: "blue.500",
-      borderWidth: "2px",
-      borderColor: "blue.500",
       _hover: {
         color: "blue.550",
-        borderColor: "blue.550",
+        boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
       },
-    },
-    "destructive-outline": {
+    }),
+    "destructive-outline": ({ theme }) => ({
+      boxShadow: `inset 0 0 0 2px ${theme.colors.error[500]}`,
       color: "error.500",
-      borderWidth: "2px",
-      borderColor: "error.500",
       _hover: {
         color: "error.600",
-        borderColor: "error.600",
+        boxShadow: `inset 0 0 0 2px ${theme.colors.error[600]}`,
       },
-    },
+    }),
   },
   defaultProps: {
     variant: "primary",
