@@ -25,7 +25,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -36,7 +36,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -59,7 +59,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -70,7 +70,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -80,7 +80,7 @@ const statisticData = [
 
 export const LiquidStaking: FunctionComponent = () => {
   return (
-    <Card>
+    <Card outer>
       <Title>Liquid Staking</Title>
       <Content position="relative">
         <FormControl>
@@ -89,7 +89,7 @@ export const LiquidStaking: FunctionComponent = () => {
               <StakeForm />
             </Content>
           </Card>
-          <Box // TODO: Add icon and functionality
+          <Box
             position="absolute"
             bgColor="green.500"
             w="8"
@@ -102,16 +102,31 @@ export const LiquidStaking: FunctionComponent = () => {
           >
             <SwapIcon size="16px" />
           </Box>
-          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
+          <Card
+            width="auto"
+            rounded="4"
+            p="1rem 1.5rem"
+            backgroundColor="grey.100"
+            mb="4"
+          >
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
+          <Card
+            width="auto"
+            rounded="4"
+            p="0"
+            backgroundColor="grey.100"
+            mb="2"
+          >
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
+                  <AccordionButton
+                    p="1rem 1.5rem"
+                    data-testid="liquid-staking-accordion-action"
+                  >
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
