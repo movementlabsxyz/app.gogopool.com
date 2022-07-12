@@ -82,25 +82,27 @@ export const LiquidStaking: FunctionComponent = () => {
   return (
     <Card outer>
       <Title>Liquid Staking</Title>
-      <Content position="relative">
+      <Content>
         <FormControl>
-          <Card backgroundColor="grey.100" mb="2">
-            <Content>
-              <StakeForm />
-            </Content>
-          </Card>
-          <Box
-            position="absolute"
-            bgColor="green.500"
-            w="8"
-            h="6"
-            borderRadius="md"
-            className="left-[calc(50%-16px)] top-[148px] cursor-pointer"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <SwapIcon size="16px" />
+          <Box position="relative">
+            <Card backgroundColor="grey.100" mb="2">
+              <Content>
+                <StakeForm />
+              </Content>
+            </Card>
+            <Box
+              position="absolute"
+              bgColor="green.500"
+              w="8"
+              h="6"
+              borderRadius="md"
+              className="left-[calc(50%-16px)] bottom-[-16px] cursor-pointer"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <SwapIcon size="16px" />
+            </Box>
           </Box>
           <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
