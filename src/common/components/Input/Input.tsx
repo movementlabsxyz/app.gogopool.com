@@ -8,6 +8,7 @@ export const Input = (props: InputProps) => {
       style={{ boxShadow: "none" }}
       fontFamily="Jost"
       outline={0}
+      borderColor="grey.200"
       _placeholder={{ color: "grey.500" }}
       _hover={{ borderColor: "grey.300" }}
       errorBorderColor="error.500"
