@@ -5,11 +5,12 @@ import { deserialize, serialize } from "@/utils/immutable";
 
 import { reducers } from "./reducers";
 
-const makeStore = () =>
-  configureStore({
-    reducer: reducers,
-    devTools: process.env.NODE_ENV !== "production",
-  });
+export const store = configureStore({
+  reducer: reducers,
+  devTools: process.env.NODE_ENV !== "production",
+});
+
+export const makeStore = () => store;
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppDispatch = ReturnType<typeof makeStore>["dispatch"];
