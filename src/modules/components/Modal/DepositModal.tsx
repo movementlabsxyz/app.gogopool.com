@@ -12,7 +12,7 @@ import {
 
 type DepositModalProps = {
   status: "success" | "failed";
-} & ModalProps &
+} & Omit<ModalProps, "children"> &
   (SuccessfulDepositModalProps & FailedDepositModalProps);
 
 export const DepositModal: FunctionComponent<DepositModalProps> = ({
