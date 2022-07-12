@@ -7,28 +7,30 @@ import {
   ModalHeader as ChakraModalHeader,
   ModalHeaderProps,
   ModalOverlay,
+  ModalProps as ChakraModalProps,
   VStack,
 } from "@chakra-ui/react";
-import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
+import { FunctionComponent, ReactNode } from "react";
 
-interface ModalProps {
+interface ModalProps extends ChakraModalProps {
   isOpen: boolean;
   onClose: () => void;
   headerImage?: ReactNode;
   ctaButton?: ReactNode;
 }
 
-export const Modal: FunctionComponent<PropsWithChildren<ModalProps>> = ({
+export const Modal: FunctionComponent<ModalProps> = ({
   isOpen,
   onClose,
   children,
   headerImage,
   ctaButton,
+  ...rest
 }) => {
   return (
-    <ChakraModal isOpen={isOpen} onClose={onClose}>
+    <ChakraModal isOpen={isOpen} onClose={onClose} isCentered {...rest}>
       <ModalOverlay />
-      <ModalContent maxWidth="465px" mt="auto" mb="auto">
+      <ModalContent maxWidth="465px">
         {headerImage && <VStack>{headerImage}</VStack>}
         {children}
         {ctaButton && (
