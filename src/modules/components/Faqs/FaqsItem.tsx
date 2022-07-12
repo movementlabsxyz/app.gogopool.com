@@ -2,11 +2,11 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box,
   Text,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactElement } from "react";
 
+import { Card } from "@/common/components/Card";
 import { MinusIcon } from "@/common/components/CustomIcon/MinusIcon";
 import { PlusIcon } from "@/common/components/CustomIcon/PlusIcon";
 
@@ -19,10 +19,11 @@ export const FaqsItem: FunctionComponent<Props> = ({ label, content }) => {
   return (
     <AccordionItem mb="4" _last={{ mb: "0" }}>
       {({ isExpanded }) => (
-        <Box
+        <Card
           borderWidth="1px"
           borderColor={isExpanded ? "blue.500" : "grey.200"}
           rounded="lg"
+          p="0"
         >
           <AccordionButton>
             <Text size="md" fontWeight="bold" flex="1" textAlign="left">
@@ -35,7 +36,7 @@ export const FaqsItem: FunctionComponent<Props> = ({ label, content }) => {
             )}
           </AccordionButton>
           <AccordionPanel p="0rem 1rem 1rem 1rem">{content}</AccordionPanel>
-        </Box>
+        </Card>
       )}
     </AccordionItem>
   );
