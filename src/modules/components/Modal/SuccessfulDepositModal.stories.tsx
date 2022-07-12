@@ -3,6 +3,7 @@ import { Meta, Story } from "@storybook/react";
 
 import { Button } from "@/common/components/Button";
 
+import { DepositModal } from "./DepositModal";
 import {
   SuccessfulDepositModal,
   SuccessfulDepositModalProps,
@@ -18,11 +19,14 @@ const Template: Story<SuccessfulDepositModalProps> = ({ amount, token }) => {
   return (
     <>
       <Button onClick={onOpen}>Open Modal</Button>
-      <SuccessfulDepositModal
+      <DepositModal
+        status="success"
         isOpen={isOpen}
         onClose={onClose}
-        amount={amount}
-        token={token}
+        successProps={{
+          amount,
+          token,
+        }}
       />
     </>
   );

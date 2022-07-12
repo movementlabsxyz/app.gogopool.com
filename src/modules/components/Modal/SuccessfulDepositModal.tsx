@@ -1,32 +1,18 @@
-import { Box, Heading, ModalProps, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
-import { Button } from "@/common/components/Button";
-import { Modal, ModalBody, ModalHeader } from "@/common/components/Modal";
+import { ModalBody, ModalHeader } from "@/common/components/Modal";
 
-export interface SuccessfulDepositModalProps
-  extends Omit<ModalProps, "children"> {
-  isOpen: boolean;
-  onClose: () => void;
+export interface SuccessfulDepositModalProps {
   amount: number;
   token: string;
 }
 
 export const SuccessfulDepositModal: FunctionComponent<
   SuccessfulDepositModalProps
-> = ({ isOpen, onClose, amount, token, ...modalProps }) => {
+> = ({ amount, token }) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      headerImage={<Box width="178px" height="98px" bgColor="red.300" mb="8" />}
-      ctaButton={
-        <Button size="sm" variant="secondary-filled" full onClick={onClose}>
-          Done
-        </Button>
-      }
-      {...modalProps}
-    >
+    <>
       <ModalHeader>
         <Heading textAlign="center" size="h5" color="grey.1000">
           Congratulations! 👏
@@ -38,6 +24,6 @@ export const SuccessfulDepositModal: FunctionComponent<
           <Box as="span" fontWeight={700}>{`${amount} ${token}!`}</Box> 😄
         </Text>
       </ModalBody>
-    </Modal>
+    </>
   );
 };
