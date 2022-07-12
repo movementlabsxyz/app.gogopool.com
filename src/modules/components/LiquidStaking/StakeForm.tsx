@@ -1,8 +1,10 @@
 import {
+  Box,
+  Divider,
+  Flex,
   FormLabel,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   NumberInput,
   NumberInputField,
   Text,
@@ -18,26 +20,38 @@ export const StakeForm = () => {
           STAKE AVAX
         </Text>
       </FormLabel>
-      <InputGroup variant="unstyled" display="flex" alignItems="center" mb="4">
-        <InputLeftElement height="full" children={<AvalancheIcon />} />
-        <NumberInput defaultValue={0} ml="8">
-          <NumberInputField
-            fontWeight="bold"
-            fontSize="32px"
-            className="pxxl"
-            id="stake-avax-form"
-          />
-        </NumberInput>
-        <InputRightElement
-          height="full"
-          children={
-            <Text size="xl" fontWeight="bold">
-              $0
-            </Text>
-          }
-        />
-      </InputGroup>
-      <FormLabel>
+      <Flex
+        flexDir={{ base: "column", sm: "row" }}
+        alignItems={{ base: "flex-start", sm: "center" }}
+        mb={{ base: "2", sm: "4" }}
+        gap="2"
+      >
+        <InputGroup variant="unstyled" display="flex" alignItems="center">
+          <InputLeftElement height="full" children={<AvalancheIcon />} />
+          <NumberInput defaultValue={0} ml="8">
+            <NumberInputField
+              fontWeight="bold"
+              fontSize="32px"
+              className="pxxl"
+              id="stake-avax-form"
+            />
+          </NumberInput>
+        </InputGroup>
+        <Flex>
+          <Text size={{ base: "xs", sm: "xl" }} fontWeight="bold">
+            <Box as="span" display={{ base: null, sm: "none" }}>
+              Value:{" "}
+            </Box>
+            $0
+          </Text>
+        </Flex>
+      </Flex>
+      <Divider
+        borderColor="grey.300"
+        mb="2"
+        display={{ base: null, sm: "none" }}
+      />
+      <FormLabel m="0">
         <Text size="xs" color="grey.600">
           BALANCE: 9878124.23 AVAX
         </Text>
