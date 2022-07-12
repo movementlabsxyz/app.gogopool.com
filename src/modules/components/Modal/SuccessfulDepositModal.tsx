@@ -1,10 +1,11 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, ModalProps, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Modal, ModalBody, ModalHeader } from "@/common/components/Modal";
 
-export interface SuccessfulDepositModalProps {
+export interface SuccessfulDepositModalProps
+  extends Omit<ModalProps, "children"> {
   isOpen: boolean;
   onClose: () => void;
   amount: number;
@@ -13,7 +14,7 @@ export interface SuccessfulDepositModalProps {
 
 export const SuccessfulDepositModal: FunctionComponent<
   SuccessfulDepositModalProps
-> = ({ isOpen, onClose, amount, token }) => {
+> = ({ isOpen, onClose, amount, token, ...modalProps }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -24,6 +25,7 @@ export const SuccessfulDepositModal: FunctionComponent<
           Done
         </Button>
       }
+      {...modalProps}
     >
       <ModalHeader>
         <Heading textAlign="center" size="h5" color="grey.1000">

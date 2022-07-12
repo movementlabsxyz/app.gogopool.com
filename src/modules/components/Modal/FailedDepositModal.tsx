@@ -1,10 +1,10 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, ModalProps, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Modal, ModalBody, ModalHeader } from "@/common/components/Modal";
 
-export interface FailedDepositModalProps {
+export interface FailedDepositModalProps extends Omit<ModalProps, "children"> {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -12,6 +12,7 @@ export interface FailedDepositModalProps {
 export const FailedDepositModal: FunctionComponent<FailedDepositModalProps> = ({
   isOpen,
   onClose,
+  ...modalProps
 }) => {
   return (
     <Modal
@@ -28,6 +29,7 @@ export const FailedDepositModal: FunctionComponent<FailedDepositModalProps> = ({
           </Button>
         </>
       }
+      {...modalProps}
     >
       <ModalHeader>
         <Heading textAlign="center" size="h5" color="grey.1000">
