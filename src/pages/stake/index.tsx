@@ -6,7 +6,7 @@ import { LiquidStaking } from "@/modules/components/LiquidStaking";
 
 const Stake = () => {
   return (
-    <div className="h-full pt-[50px]">
+    <div className="h-full p-4 xs:py-[50px]">
       <div className="absolute left-[-435px] top-[32px] -z-50 h-[1080px] w-[1080px] rounded-full bg-purple-300 opacity-30 blur-[280px]" />
       <div className="absolute right-[-435px] top-[-304px] -z-50 h-[1080px] w-[1080px] rounded-full bg-purple-300 opacity-30 blur-[280px]" />
       <PageHead
