@@ -2,6 +2,7 @@ import { Box, BoxProps, Heading, TextProps } from "@chakra-ui/react";
 import { forwardRef } from "react";
 
 interface BoxPropsWithStyles extends BoxProps {
+  outer?: boolean;
   customStyles?: React.CSSProperties;
 }
 
@@ -21,6 +22,7 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
       p = "1.5rem", // 24px
       boxShadow = "default",
       borderRadius = "0.625rem", // 8px
+      outer = false,
       customStyles,
       ...rest
     },
@@ -37,6 +39,8 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
         borderRadius={borderRadius}
         bg={backgroundColor}
         boxShadow={boxShadow}
+        borderWidth={outer && "1px"}
+        borderColor="grey.200"
         sx={customStyles}
         {...rest}
       >
@@ -49,7 +53,14 @@ export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
 export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Heading ref={ref} size="h5" fontWeight="bold" mb="8" sx={customStyles} {...rest}>
+      <Heading
+        ref={ref}
+        size="h5"
+        fontWeight="bold"
+        mb="8"
+        sx={customStyles}
+        {...rest}
+      >
         {children}
       </Heading>
     );

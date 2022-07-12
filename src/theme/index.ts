@@ -6,6 +6,7 @@ import { Accordion } from "./components/accordion";
 import { Button } from "./components/button";
 import { Card } from "./components/card";
 import { Heading } from "./components/heading";
+import { Modal } from "./components/modal";
 import { Text } from "./components/text";
 import { config } from "./config";
 import { fonts } from "./fonts";
@@ -18,6 +19,7 @@ const theme = extendTheme(
       Text,
       Button,
       Card,
+      Modal,
     },
     fonts,
     colors,

@@ -27,7 +27,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -38,7 +38,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -61,7 +61,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -72,7 +72,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 ml-1 bg-red-500 rounded-full" />
         </Tooltip>
       </>
     ),
@@ -104,7 +104,7 @@ export const LiquidStaking: FunctionComponent = () => {
               <StakeForm amount={amount} setAmount={setAmount} />
             </Content>
           </Card>
-          <Box // TODO: Add icon and functionality
+          <Box
             position="absolute"
             bgColor="green.500"
             w="8"

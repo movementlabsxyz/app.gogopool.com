@@ -186,7 +186,7 @@ const faqsData = [
 ];
 export const Faqs: FunctionComponent = () => {
   return (
-    <Card>
+    <Card outer>
       <Title>FAQs</Title>
       <Content>
         <Accordion allowToggle allowMultiple>

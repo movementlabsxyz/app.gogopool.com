@@ -15,6 +15,7 @@ module.exports = {
     "simple-import-sort/exports": "error",
     "no-console": "error",
     "tailwindcss/no-custom-classname": "off",
+    "@typescript-eslint/no-empty-interface": "off",
   },
   ignorePatterns: ["src/**/*.test.ts"],
 };
