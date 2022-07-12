@@ -84,7 +84,7 @@ export const LiquidStaking: FunctionComponent = () => {
       <Title>Liquid Staking</Title>
       <Content position="relative">
         <FormControl>
-          <Card width="auto" rounded="4" backgroundColor="grey.100" mb="2">
+          <Card backgroundColor="grey.100" mb="2">
             <Content>
               <StakeForm />
             </Content>
@@ -102,24 +102,12 @@ export const LiquidStaking: FunctionComponent = () => {
           >
             <SwapIcon size="16px" />
           </Box>
-          <Card
-            width="auto"
-            rounded="4"
-            p="1rem 1.5rem"
-            backgroundColor="grey.100"
-            mb="4"
-          >
+          <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card
-            width="auto"
-            rounded="4"
-            p="0"
-            backgroundColor="grey.100"
-            mb="2"
-          >
+          <Card rounded="12px" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
