@@ -23,7 +23,7 @@ export const RewardForm: FunctionComponent<Props> = ({ reward, balance }) => {
         <Flex flexDir="row" alignItems="center">
           <AvalancheIcon />
           <Text ml="2" size="xxl" fontWeight="bold">
-            {reward}
+            {reward ?? 0}
           </Text>
         </Flex>
       </Flex>

@@ -86,8 +86,8 @@ export const LiquidStaking: FunctionComponent = () => {
   const balance = useBalance(); // AVAX balance
   const { send } = useDeposit(provider);
 
-  const [amount, setAmount] = useState<number>(0); // stake value
-  const [reward, setReward] = useState<number>(0); // reward value
+  const [amount, setAmount] = useState<number>(); // stake value
+  const [reward, setReward] = useState<number>(); // reward value
 
   const handleDeposit = async () => {
     await send(amount);
@@ -101,9 +101,9 @@ export const LiquidStaking: FunctionComponent = () => {
     const temporaryAmount = amount;
     const temporaryReward = reward;
 
-    setAmount(temporaryReward)
-    setReward(temporaryAmount)
-  }
+    setAmount(temporaryReward);
+    setReward(temporaryAmount);
+  };
 
   return (
     <Card outer>
