@@ -89,16 +89,16 @@ export const Tooltip = ({
 }: CustomTooltipProps) => {
   const [modifiers, tooltipPlacement] = getModifiers(placement);
   const [visible, setVisible] = useBoolean(!!defaultIsOpen);
-  const [displayAlready, setDisplayAlready] = useBoolean(false)
+  const [displayAlready, setDisplayAlready] = useBoolean(false);
 
   let label = content;
 
   const isPersistent = variant === TooltipVariant.persistent;
-  
+
   const handleClose = () => {
-    setVisible.off()
-    setDisplayAlready.on()
-  }
+    setVisible.off();
+    setDisplayAlready.on();
+  };
 
   useEffect(() => {
     if (isPersistent && defaultIsOpen && !displayAlready) {
@@ -116,6 +116,7 @@ export const Tooltip = ({
           viewBox="0 0 16 16"
           onClick={handleClose}
           pointerEvents="auto"
+          cursor="pointer"
         />
         {content}
       </Flex>
@@ -129,6 +130,7 @@ export const Tooltip = ({
       placement={tooltipPlacement}
       isOpen={isPersistent ? visible : undefined}
       label={label}
+      maxWidth="100%"
       bg="grey.900"
       color="grey.50"
       className={`tooltip_${tooltipPlacement}`}
