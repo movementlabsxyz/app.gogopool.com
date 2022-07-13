@@ -95,14 +95,14 @@ export const LiquidStaking: FunctionComponent = () => {
   };
 
   return (
-    <Card color="#000000">
+    <Card outer>
       <Title>Liquid Staking</Title>
       <Content>
         <FormControl>
           <Box position="relative">
             <Card backgroundColor="grey.100" mb="2">
               <Content>
-                <StakeForm />
+                <StakeForm amount={amount} setAmount={setAmount} />
               </Content>
             </Card>
             <Box
@@ -128,7 +128,10 @@ export const LiquidStaking: FunctionComponent = () => {
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
+                  <AccordionButton
+                    p="1rem 1.5rem"
+                    data-testid="liquid-staking-accordion-action"
+                  >
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
