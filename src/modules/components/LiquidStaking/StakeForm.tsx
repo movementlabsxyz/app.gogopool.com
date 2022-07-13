@@ -9,6 +9,7 @@ import {
   NumberInputField,
   Text,
 } from "@chakra-ui/react";
+import { BigNumber } from "ethers";
 import { Dispatch, SetStateAction } from "react";
 
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
@@ -16,9 +17,14 @@ import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 export interface StakeFormProps {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
+  balance: number | BigNumber;
 }
 
-export const StakeForm = ({ amount, setAmount }: StakeFormProps): JSX.Element => {
+export const StakeForm = ({
+  amount,
+  setAmount,
+  balance,
+}: StakeFormProps): JSX.Element => {
   return (
     <>
       <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
@@ -61,7 +67,7 @@ export const StakeForm = ({ amount, setAmount }: StakeFormProps): JSX.Element =>
       />
       <FormLabel m="0">
         <Text size="xs" color="grey.600">
-          BALANCE: 9878124.23 AVAX
+          {`BALANCE: ${balance} AVAX`}
         </Text>
       </FormLabel>
     </>

@@ -14,6 +14,7 @@ import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import useBalance from "@/hooks/balance";
 import useDeposit from "@/hooks/deposit";
 import useWallet from "@/hooks/wallet";
 
@@ -82,6 +83,7 @@ const statisticData = [
 
 export const LiquidStaking: FunctionComponent = () => {
   const { account, activate, provider } = useWallet();
+  const balance = useBalance();
   const { send } = useDeposit(provider);
 
   const [amount, setAmount] = useState<number>(0);
@@ -102,7 +104,11 @@ export const LiquidStaking: FunctionComponent = () => {
           <Box position="relative">
             <Card backgroundColor="grey.100" mb="2">
               <Content>
-                <StakeForm amount={amount} setAmount={setAmount} />
+                <StakeForm
+                  amount={amount}
+                  setAmount={setAmount}
+                  balance={balance || 0}
+                />
               </Content>
             </Card>
             <Box
