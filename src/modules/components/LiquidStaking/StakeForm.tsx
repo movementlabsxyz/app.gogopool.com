@@ -13,6 +13,8 @@ import { BigNumber } from "ethers";
 import { Dispatch, SetStateAction } from "react";
 
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
+import { CaretRightIcon } from "@/common/components/CustomIcon/CaretRightIcon";
+import { Tooltip } from "@/common/components/Tooltip";
 
 export interface StakeFormProps {
   amount: number;
@@ -43,7 +45,37 @@ export const StakeForm = ({
         gap="2"
       >
         <InputGroup variant="unstyled" display="flex" alignItems="center">
-          <InputLeftElement height="full" children={<AvalancheIcon />} />
+          <Tooltip
+            placement="bottom_right"
+            variant="persistent"
+            defaultIsOpen={amount >= 1000 && true}
+            content={
+              <>
+                <Text size="xxs">
+                  {`With ${amount} AVAX deposited, you can start a Node validator in protocol. `}
+                </Text>
+                <Flex
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignContent="center"
+                  width="80px"
+                  onClick={() => null} // redirect somewhere
+                >
+                  <Text size="xxs" color="green.500" fontWeight={700}>
+                    Learn more
+                  </Text>
+                  <CaretRightIcon
+                    stroke="#49E988"
+                    width={16}
+                    height={16}
+                    style={{ marginLeft: 2 }}
+                  />
+                </Flex>
+              </>
+            }
+          >
+            <InputLeftElement height="full" children={<AvalancheIcon />} />
+          </Tooltip>
           <NumberInput
             ml="8"
             value={amount}
