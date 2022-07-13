@@ -17,14 +17,18 @@ import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 export interface StakeFormProps {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
+  setReward: Dispatch<SetStateAction<number>>;
   balance: number | BigNumber;
 }
 
 export const StakeForm = ({
   amount,
   setAmount,
+  setReward,
   balance,
 }: StakeFormProps): JSX.Element => {
+  const parse = (val) => (!val || val < 0 ? 0 : val);
+
   return (
     <>
       <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
@@ -40,14 +44,19 @@ export const StakeForm = ({
       >
         <InputGroup variant="unstyled" display="flex" alignItems="center">
           <InputLeftElement height="full" children={<AvalancheIcon />} />
-          <NumberInput defaultValue={0} ml="8">
+          <NumberInput
+            ml="8"
+            value={amount}
+            onChange={(value) => setAmount(parse(value))} // change Reward accordingly
+            defaultValue={0}
+            min={0}
+            keepWithinRange={true}
+          >
             <NumberInputField
               fontWeight="bold"
               fontSize="32px"
               className="pxxl"
               id="stake-avax-form"
-              value={amount}
-              onChange={(e): void => setAmount(Number(e.target.value))}
             />
           </NumberInput>
         </InputGroup>
