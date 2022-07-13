@@ -5,6 +5,7 @@ import { breakpoints } from "./breakpoints";
 import { colors } from "./colors";
 import { Accordion } from "./components/accordion";
 import { Button } from "./components/button";
+import { Card } from "./components/card";
 import { Heading } from "./components/heading";
 import { Modal } from "./components/modal";
 import { Text } from "./components/text";
@@ -18,6 +19,7 @@ const theme = extendTheme(
       Heading,
       Text,
       Button,
+      Card,
       Modal,
     },
     fonts,

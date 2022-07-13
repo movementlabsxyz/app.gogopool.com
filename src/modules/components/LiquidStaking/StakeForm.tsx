@@ -9,10 +9,16 @@ import {
   NumberInputField,
   Text,
 } from "@chakra-ui/react";
+import { Dispatch, SetStateAction } from "react";
 
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 
-export const StakeForm = () => {
+export interface StakeFormProps {
+  amount: number;
+  setAmount: Dispatch<SetStateAction<number>>;
+}
+
+export const StakeForm = ({ amount, setAmount }: StakeFormProps): JSX.Element => {
   return (
     <>
       <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
@@ -34,6 +40,8 @@ export const StakeForm = () => {
               fontSize="32px"
               className="pxxl"
               id="stake-avax-form"
+              value={amount}
+              onChange={(e): void => setAmount(Number(e.target.value))}
             />
           </NumberInput>
         </InputGroup>
