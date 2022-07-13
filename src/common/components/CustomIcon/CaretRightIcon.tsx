@@ -6,7 +6,7 @@ export const CaretRightIcon = (props: CustomIconProps) => (
     <path
       d="M9 18L15 12L9 6"
       fill="none"
-      stroke="black"
+      stroke={props.stroke || "black"}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

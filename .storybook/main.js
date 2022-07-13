@@ -13,6 +13,7 @@ module.exports = {
     "@storybook/addon-interactions",
     "@chakra-ui/storybook-addon",
     "@storybook/addon-a11y",
+    "@storybook/preset-scss",
     {
       /**
        * Fix Storybook issue with PostCSS@8

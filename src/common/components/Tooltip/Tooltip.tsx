@@ -1,5 +1,12 @@
-import { Tooltip as ChakraTooltip, TooltipProps } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import {
+  Flex,
+  Tooltip as ChakraTooltip,
+  TooltipProps,
+  useBoolean,
+} from "@chakra-ui/react";
+import { ReactNode, useEffect } from "react";
+
+import { CloseIcon } from "../CustomIcon";
 
 enum OriginalPosition {
   top = "top",
@@ -7,11 +14,17 @@ enum OriginalPosition {
   right = "right",
   left = "left",
 }
+
 enum AdditionPosition {
   top_left = "top_left",
   top_right = "top_right",
   bottom_left = "bottom_left",
   bottom_right = "bottom_right",
+}
+
+enum TooltipVariant {
+  default = "default",
+  persistent = "persistent",
 }
 
 const tooltipToLeft = {
@@ -49,27 +62,73 @@ const getModifiers = (
   return [[], placement as OriginalOptions];
 };
 
-type CustomTooltipProps = {
+type VariantProps =
+  | {
+      variant?: "default";
+      defaultIsOpen?: boolean;
+    }
+  | {
+      variant?: "persistent";
+      defaultIsOpen: boolean;
+    };
+
+export type CustomTooltipProps = {
   placement?: OriginalOptions | AdditionalOptions;
   content: ReactNode;
   children: ReactNode;
-  chakraUIStyle?: Omit<TooltipProps, "children">;
-};
+  chakraUIprops?: Omit<TooltipProps, "variant">;
+} & VariantProps;
 
 export const Tooltip = ({
   placement = "bottom",
+  variant = TooltipVariant.default,
   content,
-  chakraUIStyle = {},
   children,
+  defaultIsOpen,
+  chakraUIprops,
 }: CustomTooltipProps) => {
   const [modifiers, tooltipPlacement] = getModifiers(placement);
+  const [visible, setVisible] = useBoolean(!!defaultIsOpen);
+  const [displayAlready, setDisplayAlready] = useBoolean(false)
+
+  let label = content;
+
+  const isPersistent = variant === TooltipVariant.persistent;
+  
+  const handleClose = () => {
+    setVisible.off()
+    setDisplayAlready.on()
+  }
+
+  useEffect(() => {
+    if (isPersistent && defaultIsOpen && !displayAlready) {
+      setVisible.on();
+    }
+  }, [defaultIsOpen]);
+
+  if (isPersistent) {
+    label = (
+      <Flex justifyContent="center" alignItems="center">
+        <CloseIcon
+          width={16}
+          height={16}
+          style={{ marginRight: 8 }}
+          viewBox="0 0 16 16"
+          onClick={handleClose}
+          pointerEvents="auto"
+        />
+        {content}
+      </Flex>
+    );
+  }
 
   return (
     <ChakraTooltip
       modifiers={modifiers}
       hasArrow
       placement={tooltipPlacement}
-      label={content}
+      isOpen={isPersistent ? visible : undefined}
+      label={label}
       bg="grey.900"
       color="grey.50"
       className={`tooltip_${tooltipPlacement}`}
@@ -77,7 +136,7 @@ export const Tooltip = ({
       borderRadius={6}
       borderWidth={1}
       borderColor="grey.800"
-      {...chakraUIStyle}
+      {...chakraUIprops}
     >
       {children}
     </ChakraTooltip>
