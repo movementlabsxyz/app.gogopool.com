@@ -8,12 +8,14 @@ import {
   FormControl,
   Text,
 } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import useDeposit from "@/hooks/deposit";
+import useWallet from "@/hooks/wallet";
 
 import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
@@ -79,14 +81,27 @@ const statisticData = [
 ];
 
 export const LiquidStaking: FunctionComponent = () => {
+  const { account, activate, provider } = useWallet();
+  const { send } = useDeposit(provider);
+
+  const [amount, setAmount] = useState<number>(0);
+
+  const handleDeposit = async () => {
+    await send(amount);
+  };
+
+  const handleConnect = () => {
+    activate();
+  };
+
   return (
-    <Card outer>
+    <Card color="#000000">
       <Title>Liquid Staking</Title>
       <Content position="relative">
         <FormControl>
           <Card width="auto" rounded="4" backgroundColor="grey.100" mb="2">
             <Content>
-              <StakeForm />
+              <StakeForm amount={amount} setAmount={setAmount} />
             </Content>
           </Card>
           <Box
@@ -102,31 +117,16 @@ export const LiquidStaking: FunctionComponent = () => {
           >
             <SwapIcon size="16px" />
           </Box>
-          <Card
-            width="auto"
-            rounded="4"
-            p="1rem 1.5rem"
-            backgroundColor="grey.100"
-            mb="4"
-          >
+          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card
-            width="auto"
-            rounded="4"
-            p="0"
-            backgroundColor="grey.100"
-            mb="2"
-          >
+          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton
-                    p="1rem 1.5rem"
-                    data-testid="liquid-staking-accordion-action"
-                  >
+                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
@@ -142,7 +142,15 @@ export const LiquidStaking: FunctionComponent = () => {
         </FormControl>
       </Content>
       <Footer>
-        <Button full={true}>Connect wallet</Button>
+        {account ? (
+          <Button full disabled={!amount} onClick={handleDeposit}>
+            Deposit
+          </Button>
+        ) : (
+          <Button full onClick={handleConnect}>
+            Connect wallet
+          </Button>
+        )}
       </Footer>
     </Card>
   );

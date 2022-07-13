@@ -6,6 +6,7 @@ import Head from "next/head";
 import { CoreLayout } from "@/common/components/CoreLayout";
 import { ChakraFonts } from "@/common/components/CustomFont";
 import { PageHead } from "@/common/components/PageHead";
+import { wrapper } from "@/store";
 import theme from "@/theme";
 
 export const App = ({ Component, pageProps }) => {
@@ -28,4 +29,4 @@ export const App = ({ Component, pageProps }) => {
   );
 };
 
-export default App;
+export default wrapper.withRedux(App);
