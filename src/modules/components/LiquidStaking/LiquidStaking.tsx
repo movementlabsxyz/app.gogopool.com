@@ -87,7 +87,7 @@ export const LiquidStaking: FunctionComponent = () => {
   const { send } = useDeposit(provider);
 
   const [amount, setAmount] = useState<number>(); // stake value
-  const [reward, setReward] = useState<number>(); // reward value
+  const [reward, setReward] = useState<number>(0); // reward value
 
   const handleDeposit = async () => {
     await send(amount);
