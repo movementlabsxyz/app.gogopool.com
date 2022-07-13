@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 import { withProse } from "@nikolovlazar/chakra-ui-prose";
 
+import { breakpoints } from "./breakpoints";
 import { colors } from "./colors";
 import { Accordion } from "./components/accordion";
 import { Button } from "./components/button";
@@ -24,6 +25,7 @@ const theme = extendTheme(
     fonts,
     colors,
     config,
+    breakpoints,
   },
   withProse()
 );

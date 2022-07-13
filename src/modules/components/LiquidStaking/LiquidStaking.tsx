@@ -27,7 +27,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -38,7 +38,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -61,7 +61,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -72,7 +72,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <div className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
         </Tooltip>
       </>
     ),
@@ -95,38 +95,43 @@ export const LiquidStaking: FunctionComponent = () => {
   };
 
   return (
-    <Card color="#000000">
+    <Card outer>
       <Title>Liquid Staking</Title>
-      <Content position="relative">
+      <Content>
         <FormControl>
-          <Card width="auto" rounded="4" backgroundColor="grey.100" mb="2">
-            <Content>
-              <StakeForm amount={amount} setAmount={setAmount} />
-            </Content>
-          </Card>
-          <Box
-            position="absolute"
-            bgColor="green.500"
-            w="8"
-            h="6"
-            borderRadius="md"
-            className="left-[calc(50%-16px)] top-[148px] cursor-pointer"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <SwapIcon size="16px" />
+          <Box position="relative">
+            <Card backgroundColor="grey.100" mb="2">
+              <Content>
+                <StakeForm amount={amount} setAmount={setAmount} />
+              </Content>
+            </Card>
+            <Box
+              position="absolute"
+              bgColor="green.500"
+              w="8"
+              h="6"
+              borderRadius="md"
+              className="left-[calc(50%-16px)] bottom-[-16px] cursor-pointer"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <SwapIcon size="16px" />
+            </Box>
           </Box>
-          <Card width="auto" rounded="4" p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
+          <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
               <RewardForm reward={0} balance={0} />
             </Content>
           </Card>
-          <Card width="auto" rounded="4" p="0" backgroundColor="grey.100" mb="2">
+          <Card rounded="12px" p="0" backgroundColor="grey.100" mb="2">
             <Content>
               <Accordion allowToggle>
                 <AccordionItem>
-                  <AccordionButton p="1rem 1.5rem" data-testid="liquid-staking-accordion-action">
+                  <AccordionButton
+                    p="1rem 1.5rem"
+                    data-testid="liquid-staking-accordion-action"
+                  >
                     <Text flex="1" textAlign="left" size="md" fontWeight="bold">
                       Liquid Staking Statistics
                     </Text>
