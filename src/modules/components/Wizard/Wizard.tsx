@@ -33,7 +33,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({ step = 1 }): JSX.Elemen
   };
 
   return (
-    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000">
+    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000" width={780}>
       <WizardHeader step={currentStep} />
       <Box mx="auto" maxWidth="528px">
         <WizardContent step={currentStep} />
