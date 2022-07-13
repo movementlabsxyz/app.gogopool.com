@@ -14,6 +14,7 @@ import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import useBalance from "@/hooks/balance";
 import useDeposit from "@/hooks/deposit";
 import useWallet from "@/hooks/wallet";
 
@@ -82,9 +83,11 @@ const statisticData = [
 
 export const LiquidStaking: FunctionComponent = () => {
   const { account, activate, provider } = useWallet();
+  const balance = useBalance(); // AVAX balance
   const { send } = useDeposit(provider);
 
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(); // stake value
+  const [reward, setReward] = useState<number>(0); // reward value
 
   const handleDeposit = async () => {
     await send(amount);
@@ -92,6 +95,14 @@ export const LiquidStaking: FunctionComponent = () => {
 
   const handleConnect = () => {
     activate();
+  };
+
+  const handleSwap = () => {
+    const temporaryAmount = amount;
+    const temporaryReward = reward;
+
+    setAmount(temporaryReward);
+    setReward(temporaryAmount);
   };
 
   return (
@@ -102,7 +113,12 @@ export const LiquidStaking: FunctionComponent = () => {
           <Box position="relative">
             <Card backgroundColor="grey.100" mb="2">
               <Content>
-                <StakeForm amount={amount} setAmount={setAmount} />
+                <StakeForm
+                  amount={amount}
+                  setAmount={setAmount}
+                  setReward={setReward}
+                  balance={balance || 0}
+                />
               </Content>
             </Card>
             <Box
@@ -115,13 +131,14 @@ export const LiquidStaking: FunctionComponent = () => {
               display="flex"
               justifyContent="center"
               alignItems="center"
+              onClick={handleSwap}
             >
               <SwapIcon size="16px" />
             </Box>
           </Box>
           <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
             <Content>
-              <RewardForm reward={0} balance={0} />
+              <RewardForm reward={reward} balance={0} />
             </Content>
           </Card>
           <Card rounded="12px" p="0" backgroundColor="grey.100" mb="2">

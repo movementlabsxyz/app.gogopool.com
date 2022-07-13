@@ -32,5 +32,10 @@ export const Text: ComponentStyleConfig = {
       fontSize: "12px",
       lineHeight: "18px",
     },
+    xxs: {
+      fontFamily: "Jost",
+      fontSize: "10px",
+      lineHeight: "16px",
+    },
   },
 };
