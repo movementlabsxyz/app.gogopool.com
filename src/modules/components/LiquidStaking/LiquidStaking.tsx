@@ -102,17 +102,7 @@ export const LiquidStaking: FunctionComponent = () => {
   );
 
   const handleDeposit = async () => {
-    send(amount)
-      .then(() => {
-        if (success) setDepositStatus("success");
-        else setDepositStatus("failed");
-
-        (() => onOpen())();
-      })
-      .catch(() => {
-        setDepositStatus("failed");
-        (() => onOpen())();
-      });
+    await send(amount);
   };
 
   const handleConnect = () => {
