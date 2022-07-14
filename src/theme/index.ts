@@ -6,6 +6,7 @@ import { colors } from "./colors";
 import { Accordion } from "./components/accordion";
 import { Button } from "./components/button";
 import { Card } from "./components/card";
+import { Drawer } from "./components/drawer";
 import { Heading } from "./components/heading";
 import { Modal } from "./components/modal";
 import { Text } from "./components/text";
@@ -21,6 +22,7 @@ const theme = extendTheme(
       Button,
       Card,
       Modal,
+      Drawer,
     },
     fonts,
     colors,
