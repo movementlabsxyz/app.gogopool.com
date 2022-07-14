@@ -10,17 +10,22 @@ export interface UseDeposit {
   error?: string | undefined;
   response?: any;
   success?: boolean;
+  isLoading?: boolean;
 }
 
-const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit => {
+const useDeposit = (
+  provider: providers.Web3Provider | undefined
+): UseDeposit => {
   const contract = useTokenContract(provider);
   const toast = useToast();
 
   const [error, setError] = useState<string | undefined>(undefined);
   const [response, setResponse] = useState<any>(undefined);
   const [success, setSuccess] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const send = async (amount: number) => {
+    setIsLoading(true);
     if (!contract) return;
     if (!provider) {
       toast({
@@ -28,6 +33,8 @@ const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit =>
         status: "error",
       });
       setError("Please install MetaMask");
+      setSuccess(false);
+      setIsLoading(false);
       return;
     }
     if (!amount) {
@@ -36,6 +43,8 @@ const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit =>
         status: "error",
       });
       setError("Please enter a valid amount");
+      setSuccess(false);
+      setIsLoading(false);
       return;
     }
 
@@ -53,6 +62,8 @@ const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit =>
         status: "error",
       });
       setError(e as string);
+      setSuccess(false);
+      setIsLoading(false);
     }
   };
 
@@ -63,6 +74,7 @@ const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit =>
         status: "success",
       });
       setSuccess(true);
+      setIsLoading(false);
     }
   }, [response]);
 
@@ -71,6 +83,7 @@ const useDeposit = (provider: providers.Web3Provider | undefined): UseDeposit =>
     error,
     response,
     success,
+    isLoading,
   };
 };
 
