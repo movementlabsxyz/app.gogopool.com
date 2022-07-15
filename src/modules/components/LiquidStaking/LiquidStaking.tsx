@@ -19,7 +19,9 @@ import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
 import useBalance from "@/hooks/balance";
 import useDeposit from "@/hooks/deposit";
+import useExchangeRate from "@/hooks/ggexchange";
 import useWallet from "@/hooks/wallet";
+import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { DepositDrawer } from "../Drawer";
 import { DepositModal } from "../Modal";
@@ -94,6 +96,7 @@ export const LiquidStaking: FunctionComponent = () => {
   const { account, activate, provider } = useWallet();
   const balance = useBalance(); // AVAX balance
   const { send, success, isLoading } = useDeposit(provider);
+  const exchangeRate = useExchangeRate(provider);
 
   const [amount, setAmount] = useState<number>(); // stake value
   const [reward, setReward] = useState<number>(0); // reward value
@@ -162,7 +165,8 @@ export const LiquidStaking: FunctionComponent = () => {
                     amount={amount}
                     setAmount={setAmount}
                     setReward={setReward}
-                    balance={balance || 0}
+                    balance={roundedBigNumber(balance) || 0}
+                    exchangeRate={roundedBigNumber(exchangeRate) || 0}
                   />
                 </Content>
               </Card>
