@@ -21,7 +21,7 @@ const useDeposit = (
 
   const [error, setError] = useState<string | undefined>(undefined);
   const [response, setResponse] = useState<any>(undefined);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(null); // change to null to prevent first modal render
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const send = async (amount: number) => {
