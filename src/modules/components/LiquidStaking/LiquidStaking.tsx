@@ -12,6 +12,7 @@ import { FunctionComponent, useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
+import { InfoCircleIcon } from "@/common/components/CustomIcon";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
 import useBalance from "@/hooks/balance";
@@ -27,8 +28,13 @@ const statisticData = [
     label: (
       <>
         Annual Percentage Rate
-        <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip
+          placement="right"
+          content="Percentage reward you get per year on your staked AVAX."
+        >
+          <Box as="span">
+            <InfoCircleIcon fill="grey.600" className="ml-1" />
+          </Box>
         </Tooltip>
       </>
     ),
@@ -38,8 +44,13 @@ const statisticData = [
     label: (
       <>
         Exchange Rate
-        <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip
+          placement="right"
+          content="Rate of exchange between AVAX and ggAVAX."
+        >
+          <Box as="span">
+            <InfoCircleIcon fill="grey.600" className="ml-1" />
+          </Box>
         </Tooltip>
       </>
     ),
@@ -61,8 +72,13 @@ const statisticData = [
     label: (
       <>
         Unstaking Cooldown Period
-        <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip
+          placement="right"
+          content="The waiting period before all funds become available."
+        >
+          <Box as="span">
+            <InfoCircleIcon fill="grey.600" className="ml-1" />
+          </Box>
         </Tooltip>
       </>
     ),
@@ -72,8 +88,13 @@ const statisticData = [
     label: (
       <>
         Redemption Period
-        <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+        <Tooltip
+          placement="right"
+          content="The time period where redemption is allowed."
+        >
+          <Box as="span">
+            <InfoCircleIcon fill="grey.600" className="ml-1" />
+          </Box>
         </Tooltip>
       </>
     ),
