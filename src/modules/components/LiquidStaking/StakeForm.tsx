@@ -79,7 +79,10 @@ export const StakeForm = ({
           <NumberInput
             ml="8"
             value={amount}
-            onChange={(value) => setAmount(parse(value))} // change Reward accordingly
+            onChange={(value) => {
+              setAmount(parse(value));
+              setReward(0); // change Reward accordingly
+            }}
             min={0}
             keepWithinRange={true}
           >
