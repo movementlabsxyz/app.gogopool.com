@@ -32,9 +32,9 @@ const statisticData = [
           placement="right"
           content="Percentage reward you get per year on your staked AVAX."
         >
-          <div>
+          <Box as="span">
             <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </div>
+          </Box>
         </Tooltip>
       </>
     ),
@@ -48,9 +48,9 @@ const statisticData = [
           placement="right"
           content="Rate of exchange between AVAX and ggAVAX."
         >
-          <div>
+          <Box as="span">
             <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </div>
+          </Box>
         </Tooltip>
       </>
     ),
@@ -76,9 +76,9 @@ const statisticData = [
           placement="right"
           content="The waiting period before all funds become available."
         >
-          <div>
+          <Box as="span">
             <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </div>
+          </Box>
         </Tooltip>
       </>
     ),
@@ -92,9 +92,9 @@ const statisticData = [
           placement="right"
           content="The time period where redemption is allowed."
         >
-          <div>
+          <Box as="span">
             <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </div>
+          </Box>
         </Tooltip>
       </>
     ),
