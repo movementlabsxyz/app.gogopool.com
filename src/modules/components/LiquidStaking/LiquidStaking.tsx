@@ -131,11 +131,9 @@ export const LiquidStaking: FunctionComponent = () => {
     }
     if (success === true) {
       setDepositStatus("success");
-      setAmount(0);
       (() => onOpen())();
     } else if (success === false) {
       setDepositStatus("failed");
-      setAmount(0);
       (() => onOpen())();
     }
   }, [success, error]);
@@ -146,7 +144,10 @@ export const LiquidStaking: FunctionComponent = () => {
         <DepositModal
           status={depositStatus}
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setAmount(0);
+          }}
           successProps={{
             amount: amount,
             token: "AVAX",
@@ -157,7 +158,10 @@ export const LiquidStaking: FunctionComponent = () => {
         <DepositDrawer
           status={depositStatus}
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setAmount(0);
+          }}
           successProps={{
             amount: amount,
             token: "AVAX",
