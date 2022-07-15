@@ -14,7 +14,6 @@ import {
 import {
   FunctionComponent,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -125,7 +124,7 @@ export const LiquidStaking: FunctionComponent = () => {
   };
 
   const isMounted = useRef(true);
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isMounted.current) {
       isMounted.current = false;
       return;
