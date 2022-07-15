@@ -28,7 +28,7 @@ const statisticData = [
     label: (
       <>
         Annual Percentage Rate
-        <Tooltip placement="right" content="Explanation here">
+        <Tooltip placement="right" content="Percentage reward you get per year on your staked AVAX.">
           <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
@@ -39,7 +39,7 @@ const statisticData = [
     label: (
       <>
         Exchange Rate
-        <Tooltip placement="right" content="Explanation here">
+        <Tooltip placement="right" content="Rate of exchange between AVAX and ggAVAX.">
           <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
@@ -62,7 +62,7 @@ const statisticData = [
     label: (
       <>
         Unstaking Cooldown Period
-        <Tooltip placement="right" content="Explanation here">
+        <Tooltip placement="right" content="The waiting period before all funds become available.">
           <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
@@ -73,7 +73,7 @@ const statisticData = [
     label: (
       <>
         Redemption Period
-        <Tooltip placement="right" content="Explanation here">
+        <Tooltip placement="right" content="The time period where redemption is allowed.">
           <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
