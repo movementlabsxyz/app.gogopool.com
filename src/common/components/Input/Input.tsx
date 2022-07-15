@@ -29,7 +29,7 @@ export const Input = ({ errorText, ...props }: CustomInputProps) => {
       />
       {props.isInvalid ? (
         <Flex justifyContent="flex-start" alignItems="center" marginTop={1}>
-          <InfoCircleIcon />
+          <InfoCircleIcon fill="#FF2A29" />
           <Text
             marginLeft={1}
             fontSize="xs"
