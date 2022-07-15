@@ -12,6 +12,7 @@ import { FunctionComponent, useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
+import { InfoCircleIcon } from "@/common/components/CustomIcon";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
 import useBalance from "@/hooks/balance";
@@ -28,7 +29,7 @@ const statisticData = [
       <>
         Annual Percentage Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
     ),
@@ -39,7 +40,7 @@ const statisticData = [
       <>
         Exchange Rate
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
     ),
@@ -62,7 +63,7 @@ const statisticData = [
       <>
         Unstaking Cooldown Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
     ),
@@ -73,7 +74,7 @@ const statisticData = [
       <>
         Redemption Period
         <Tooltip placement="right" content="Explanation here">
-          <span className="ml-1 h-3 w-3 rounded-full bg-red-500" />
+          <InfoCircleIcon fill="grey.600" className="ml-1" />
         </Tooltip>
       </>
     ),
