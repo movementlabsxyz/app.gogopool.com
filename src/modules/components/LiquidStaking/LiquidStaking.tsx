@@ -11,7 +11,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import {
+  FunctionComponent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
@@ -89,13 +95,11 @@ const statisticData = [
 ];
 
 export const LiquidStaking: FunctionComponent = () => {
-  const isMounted = useRef(false);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { account, activate, provider } = useWallet();
   const balance = useBalance(); // AVAX balance
-  const { send, success, isLoading } = useDeposit(provider);
+  const { send, success, error, isLoading } = useDeposit(provider);
   const exchangeRate = useExchangeRate(provider);
 
   const [amount, setAmount] = useState<number>(); // stake value
@@ -120,15 +124,22 @@ export const LiquidStaking: FunctionComponent = () => {
     setReward(temporaryAmount);
   };
 
-  useEffect(() => {
+  const isMounted = useRef(true);
+  useLayoutEffect(() => {
     if (isMounted.current) {
-      if (success) setDepositStatus("success");
-      else setDepositStatus("failed");
-      (() => onOpen())();
-    } else {
-      isMounted.current = true;
+      isMounted.current = false;
+      return;
     }
-  }, [success]);
+    if (success === true) {
+      setDepositStatus("success");
+      setAmount(0);
+      (() => onOpen())();
+    } else if (success === false) {
+      setDepositStatus("failed");
+      setAmount(0);
+      (() => onOpen())();
+    }
+  }, [success, error]);
 
   return (
     <>
