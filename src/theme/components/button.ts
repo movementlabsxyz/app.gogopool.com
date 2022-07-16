@@ -76,12 +76,18 @@ export const Button: ComponentStyleConfig = {
         color: "blue.550",
         boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
       },
+      _disabled: {
+        boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
+      },
     }),
     "destructive-outline": ({ theme }) => ({
       boxShadow: `inset 0 0 0 2px ${theme.colors.error[500]}`,
       color: "error.500",
       _hover: {
         color: "error.600",
+        boxShadow: `inset 0 0 0 2px ${theme.colors.error[600]}`,
+      },
+      _disabled: {
         boxShadow: `inset 0 0 0 2px ${theme.colors.error[600]}`,
       },
     }),
