@@ -1,6 +1,5 @@
 import { Box, BoxProps, Flex, FlexProps, Link, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { useState } from "react";
 import { ReactNode } from "react";
 
 import { IconType, MenuItemType } from "@/types/shared";
@@ -16,7 +15,6 @@ interface NavItemProps extends FlexProps {
   url: string;
   children: ReactNode;
   isActive: boolean;
-  toggleActive: () => void;
 }
 
 const NavItem = ({ icon, isActive, children, url, ...rest }: NavItemProps) => {
@@ -36,7 +34,7 @@ const NavItem = ({ icon, isActive, children, url, ...rest }: NavItemProps) => {
         _hover={{ background: "#00000040", fontWeight: "bold" }}
         {...rest}
       >
-        {icon({ className: "mr-4" })}
+        {icon({ className: "mr-4", stroke: "white" })}
         {children}
       </Flex>
     </Link>
@@ -44,9 +42,7 @@ const NavItem = ({ icon, isActive, children, url, ...rest }: NavItemProps) => {
 };
 
 const Sidebar = ({ header, menuItems, ...rest }: SidebarProps) => {
-  const [activeMenuIndex, setActiveMenuIndex] = useState(0);
-  const handleActiveMenu = (index) => () =>
-    activeMenuIndex !== index && setActiveMenuIndex(index);
+  const activeMenuIndex = 0
 
   return (
     <Flex
@@ -70,7 +66,6 @@ const Sidebar = ({ header, menuItems, ...rest }: SidebarProps) => {
             icon={link.icon}
             url={link.url}
             isActive={activeMenuIndex === index}
-            toggleActive={handleActiveMenu(index)}
           >
             {link.name}
           </NavItem>

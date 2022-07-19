@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { NavigationBar } from "@/modules/components/NavigationBar";
 import { MenuItemType } from "@/types/shared";
 
+import { MobileNav } from "./MobileNav";
 import Sidebar from "./Sidebar";
 
 type SidebarLayoutProps = {
@@ -15,9 +16,10 @@ export const SidebarLayoutHOC =
   ({ menu, header }: SidebarLayoutProps) =>
   ({ children }) => {
     return (
-      <div className="relative h-full min-h-full">
+      <div className="relative h-full min-h-full w-[100vw]">
         <NavigationBar />
-        <Flex maxH="calc(100vh - 58px)">
+        <MobileNav menuItems={menu} />
+        <Flex h="full" maxH="calc(100vh - 58px)">
           <Sidebar header={header} menuItems={menu} />
           <Box className="grow overflow-y-scroll">{children}</Box>
         </Flex>

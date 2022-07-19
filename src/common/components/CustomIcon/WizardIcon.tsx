@@ -70,9 +70,9 @@ export const WizardIcon = ({
           <path
             d="M7 11.4286L10.5556 14L15 8"
             stroke="#3E33BB"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </>
       ) : (
