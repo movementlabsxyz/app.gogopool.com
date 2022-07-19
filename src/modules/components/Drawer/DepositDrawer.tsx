@@ -1,4 +1,5 @@
 import { Box, DrawerProps } from "@chakra-ui/react";
+import Image from "next/image";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
@@ -51,7 +52,20 @@ export const DepositDrawer: FunctionComponent<DepositDrawerProps> = ({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      headerImage={<Box width="178px" height="98px" bgColor="red.300" mb="8" />}
+      headerImage={
+        <Box width="178px" height="98px" mb="8">
+          <Image
+            src={
+              status === "success"
+                ? "/assets/img/deposit/success_deposit.svg"
+                : "/assets/img/deposit/failed_deposit.svg"
+            }
+            width={178}
+            height={98}
+            alt={`${status}_image`}
+          />
+        </Box>
+      }
       ctaButton={renderCta()}
       {...drawerProps}
     >
