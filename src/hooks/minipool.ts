@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BigNumber, providers } from "ethers";
 import { useEffect, useState } from "react";
 
+import { overrides } from "../utils";
 import useMinipoolManagerContract from "./contracts/minipoolManager";
 import useTokenGGPContract from "./contracts/tokenGGP";
 
@@ -20,7 +20,9 @@ export interface UseCreateMinipool {
   success?: boolean;
 }
 
-const useCreateMinipool = (provider: providers.Web3Provider | undefined): UseCreateMinipool => {
+const useCreateMinipool = (
+  provider: providers.Web3Provider | undefined
+): UseCreateMinipool => {
   const contract = useMinipoolManagerContract(provider);
   const token = useTokenGGPContract(provider);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -90,9 +92,30 @@ const useCreateMinipool = (provider: providers.Web3Provider | undefined): UseCre
     }
 
     try {
-      const tx = await contract.createMinipool(nodeID, duration, delegationFee, ggpBondAmt, {
-        value: depositAmount,
-      });
+      const testTx = await contract.callStatic.createMinipool(
+        nodeID,
+        duration,
+        delegationFee,
+        ggpBondAmt,
+        {
+          ...overrides,
+          value: depositAmount,
+        }
+      );
+      // console.log("This is a test wait.");
+      // const testResp = await testTx.wait();
+      // console.log(testResp);
+
+      const tx = await contract.createMinipool(
+        nodeID,
+        duration,
+        delegationFee,
+        ggpBondAmt,
+        {
+          ...overrides,
+          value: depositAmount,
+        }
+      );
       const resp = await tx.wait();
       setResponse(resp);
     } catch (e) {
