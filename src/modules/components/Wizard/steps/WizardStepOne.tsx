@@ -1,5 +1,5 @@
 import { Stack, Text } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
+import { BigNumber  } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react";
 
@@ -56,6 +56,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
   const handleSubmit = (): void => {
     setCurrentStep(2);
     createMinipoolGGP()
+    // approveGGP()
   };
 
   useEffect(() => {
