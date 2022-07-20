@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 
-interface DrawerProps extends ChakraDrawerProps {
+export interface DrawerProps extends ChakraDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   headerImage?: ReactNode;

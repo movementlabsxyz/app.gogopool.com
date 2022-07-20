@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 
-interface ModalProps extends ChakraModalProps {
+export interface ModalProps extends ChakraModalProps {
   isOpen: boolean;
   onClose: () => void;
   headerImage?: ReactNode;

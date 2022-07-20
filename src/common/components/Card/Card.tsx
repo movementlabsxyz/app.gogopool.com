@@ -1,7 +1,7 @@
 import { Box, BoxProps, Heading, TextProps } from "@chakra-ui/react";
 import { forwardRef } from "react";
 
-interface BoxPropsWithStyles extends BoxProps {
+export interface BoxPropsWithStyles extends BoxProps {
   outer?: boolean;
   customStyles?: React.CSSProperties;
 }
