@@ -1,35 +1,30 @@
 import { Stack, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import { Input } from "@/common/components/Input";
+import useBalance from "@/hooks/balance";
 import useCreateMinipool from "@/hooks/minipool";
 import useWallet from "@/hooks/wallet";
-import { WizardStep } from "@/types/wizard";
 import { nodeID, parseDelta } from "@/utils";
+import { roundedBigNumber } from "@/utils/numberFormatter";
 
 export interface WizardStepOneProps {
-  setCurrentStep: Dispatch<SetStateAction<WizardStep>>;
-  avax: number;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
 }
 
 export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
   setCurrentStep,
-  avax,
 }): JSX.Element => {
   const [nodeId, setNodeId] = useState("");
-  const [error, setError] = useState("");
   const { account, provider } = useWallet();
+  const balance = useBalance()
 
   const {
     createMinipool,
     approve,
-    error: minipoolError,
-    response: minipoolResponse,
-    success: minipoolSuccess,
-    approveResponse: minipoolApproveResponse,
   } = useCreateMinipool(provider);
 
   const approveGGP = async () => {
@@ -54,33 +49,11 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
   };
 
   const handleSubmit = (): void => {
-    setCurrentStep(2);
+    setCurrentStep(2)
+    approveGGP()
     createMinipoolGGP()
   };
 
-  useEffect(() => {
-    if (minipoolResponse) {
-      setError(minipoolResponse);
-    }
-    if (minipoolError) {
-      setError(minipoolError);
-    }
-    if (minipoolSuccess) {
-      approveGGP()
-    }
-
-    // if (minipoolApproveResponse) {
-    //   console.log(minipoolApproveResponse);
-    // }
-  }, [
-    minipoolError,
-    minipoolResponse,
-    minipoolSuccess,
-    minipoolApproveResponse,
-  ]);
-  if (error) {
-    return <div>{error}</div>
-  }
   return (
     <Stack direction="column" gap="4px">
       <Stack direction="row" gap="8px">
@@ -96,7 +69,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
       <Text color="grey.500" size="xs">
         AVAX available for Swap:{" "}
         <Text as="span" size="xs" fontWeight={700} color="grey.1000">
-          {avax} AVAX
+          {roundedBigNumber(balance) || 0} AVAX
         </Text>
       </Text>
     </Stack>

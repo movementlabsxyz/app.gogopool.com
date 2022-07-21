@@ -1,4 +1,5 @@
 import { Box, Flex, Text, useTheme } from "@chakra-ui/react";
+import { useState } from "react";
 
 import { Button } from "@/common/components/Button";
 import {
@@ -12,6 +13,8 @@ import { Wizard } from "@/modules/components/Wizard";
 
 function NodeOperator() {
   const theme = useTheme()
+  const [currentStep, setCurrentStep] = useState<number>(1)
+
   return (
     <Box bg="#FF21130D" minH="full" p={{ base: 4, md: 6 }} pt={{ base: 0, md: 2 }}>
       <PageHead
@@ -33,16 +36,16 @@ function NodeOperator() {
           </Text>
         </Button>
       </Flex>
-        <Wizard />
-
+        <Wizard currentStep={currentStep} setCurrentStep={setCurrentStep} />
       <Flex
         mb="80px"
-        mt={{ base: 0, md: "110px" }}
+        mt={{ base: 0, md: "100px" }}
         justifyContent={{ base: "center", md: "space-between" }}
         direction={{ base: "column", md: "row" }}
       >
         <Button
-          disabled
+          disabled={currentStep === 1}
+          onClick={() => setCurrentStep(s => s - 1)}
           _disabled={{
             boxShadow: `inset 0 0 0 2px ${theme.colors.blue[500]}`,
             opacity: 0.4,
@@ -54,6 +57,8 @@ function NodeOperator() {
           <Text>Previous</Text>
         </Button>
         <Button
+          disabled={currentStep === 4}
+          onClick={() => setCurrentStep(s => s + 1)}
           variant="secondary-outline"
           w={{ base: "full", md: "144px" }}
           mt={{ base: 6, md: 0 }}

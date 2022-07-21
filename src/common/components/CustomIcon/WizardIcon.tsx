@@ -1,10 +1,9 @@
-import { WizardStep } from "@/types/wizard";
 
 import { CustomIcon } from "./CustomIcon";
 import { CustomIconProps } from "./types";
 
 export interface WizardIconProps extends CustomIconProps {
-  step: WizardStep;
+  step: number;
   active?: boolean;
   complete?: boolean;
 }

@@ -2,7 +2,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { expect } from "@storybook/jest";
 import { Meta, Story } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
-import React from "react";
+import React, { useState } from "react";
 import { Provider } from "react-redux";
 
 import { WalletState } from "@/types/wallet";
@@ -35,7 +35,10 @@ export default {
   decorators: [(story) => <Provider store={store}>{story()}</Provider>],
 } as Meta<typeof Wizard>;
 
-const Template: Story<typeof Wizard> = () => <Wizard />;
+const Template: Story<typeof Wizard> = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  return <Wizard currentStep={currentStep} setCurrentStep={setCurrentStep} />;
+};
 
 export const Default = Template.bind({});
 Default.play = async ({ canvasElement }) => {
@@ -52,7 +55,9 @@ Default.play = async ({ canvasElement }) => {
   await expect(canvas.getByTestId("register-node")).not.toBeDisabled();
 
   await userEvent.click(canvas.getByTestId("register-node"));
-  await expect(canvas.getByText("Approve and Stake your GGP")).toBeInTheDocument();
+  await expect(
+    canvas.getByText("Approve and Stake your GGP")
+  ).toBeInTheDocument();
 
   await userEvent.click(canvas.getByTestId("stake-now"));
   await expect(canvas.getAllByText("Deposit AVAX")).toHaveLength(3);

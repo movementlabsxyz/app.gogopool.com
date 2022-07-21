@@ -1,7 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { FunctionComponent, useState } from "react";
-
-import { WizardStep } from "@/types/wizard";
+import { Dispatch, FunctionComponent, SetStateAction } from "react";
 
 import { WizardStepFour } from "./steps/WizardStepFour";
 import { WizardStepOne } from "./steps/WizardStepOne";
@@ -11,16 +9,16 @@ import { WizardContent } from "./WizardContent";
 import { WizardHeader } from "./WizardHeader";
 
 export interface WizardProps {
-  step?: WizardStep;
+  currentStep: number;
+  setCurrentStep: Dispatch<SetStateAction<number>>
 }
 
-export const Wizard: FunctionComponent<WizardProps> = ({ step = 1 }): JSX.Element => {
-  const [currentStep, setCurrentStep] = useState<WizardStep>(step);
+export const Wizard: FunctionComponent<WizardProps> = ({ currentStep, setCurrentStep }): JSX.Element => {
 
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
       case 1:
-        return <WizardStepOne setCurrentStep={setCurrentStep} avax={299995} />;
+        return <WizardStepOne setCurrentStep={setCurrentStep} />
       case 2:
         return <WizardStepTwo setCurrentStep={setCurrentStep} avax={299995} />;
       case 3:
@@ -33,7 +31,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({ step = 1 }): JSX.Elemen
   };
 
   return (
-    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000" maxW={780} marginX="auto">
+    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000" maxW={780} marginX="auto" h="660px">
       <WizardHeader step={currentStep} />
       <Box mx="auto" maxWidth="528px">
         <WizardContent step={currentStep} />

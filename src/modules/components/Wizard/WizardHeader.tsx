@@ -2,12 +2,11 @@ import { Box, Divider, Stack, Text, useTheme } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { WizardIcon } from "@/common/components/CustomIcon/WizardIcon";
-import { WizardStep } from "@/types/wizard";
 
 import { wizardSteps } from "./data";
 
 export interface WizardHeaderProps {
-  step: WizardStep;
+  step: number;
 }
 
 export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({

@@ -9,7 +9,9 @@ export interface WizardStepFourProps {
   hash: string;
 }
 
-export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({ hash }): JSX.Element => {
+export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({
+  hash,
+}): JSX.Element => {
   const handleSubmit = (): void => {
     alert("Discord link");
   };
@@ -48,6 +50,7 @@ export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({ hash })
       </Box>
       <Stack direction="row" gap="8px" justify="center">
         <Button
+          mt={6}
           size="sm"
           variant="secondary-filled"
           onClick={handleSubmit}

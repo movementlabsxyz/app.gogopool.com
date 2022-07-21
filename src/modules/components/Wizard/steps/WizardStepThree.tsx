@@ -1,35 +1,44 @@
-import { Stack, Text } from "@chakra-ui/react";
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { Flex } from "@chakra-ui/react";
+import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 
 import { Button } from "@/common/components/Button";
-import { WizardStep } from "@/types/wizard";
+import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
+import useBalance from "@/hooks/balance";
+import { roundedBigNumber } from "@/utils/numberFormatter";
+
+import { StakeInput } from "../StakeInput";
 
 export interface WizardStepThreeProps {
-  setCurrentStep: Dispatch<SetStateAction<WizardStep>>;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
   avax: number;
 }
 
 export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
   setCurrentStep,
-  avax,
 }): JSX.Element => {
+  const [amount, setAmount] = useState(10);
+  const balance = useBalance()
   const handleSubmit = (): void => {
     setCurrentStep(4);
   };
 
   return (
-    <Stack direction="column" gap="4px">
-      <Stack direction="row" gap="8px" justify="center">
-        <Button size="sm" onClick={handleSubmit} data-testid="deposit-avax">
-          Deposit AVAX
-        </Button>
-      </Stack>
-      <Text color="grey.500" size="xs" align="center">
-        AVAX available:{" "}
-        <Text as="span" size="xs" fontWeight={700} color="grey.1000">
-          {avax} AVAX
-        </Text>
-      </Text>
-    </Stack>
+    <Flex direction="column">
+      <StakeInput
+        hasIcon
+        icon={<AvalancheIcon />}
+        minInputWidth="96px"
+        inputWidth={`${amount.toString().length * 16 + 24}px`}
+        token="AVAX"
+        amount={amount}
+        setAmount={setAmount}
+        balance={roundedBigNumber(balance) || 0}
+        exchangeRate={10}
+        title="DEPOSIT AVAX"
+      />
+      <Button full onClick={handleSubmit} data-testid="deposit-avax" mt={4}>
+        Deposit AVAX
+      </Button>
+    </Flex>
   );
 };

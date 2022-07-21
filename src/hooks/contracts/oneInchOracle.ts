@@ -4,7 +4,6 @@ import useAsyncEffect from "use-async-effect";
 
 // this will be changed to the real contract when its available
 import OneInchOracle from "../../contracts/OneInchMock.json";
-import { useStorageAddress } from "../storage";
 
 const useOneInchOracle = (provider: providers.Web3Provider | undefined) => {
   const [contract, setContract] = useState<Contract | undefined>(undefined);
