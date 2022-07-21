@@ -12,7 +12,7 @@ const useOneInchOracle = (provider: providers.Web3Provider | undefined) => {
   // this will be changed to the real contract when its available
   // const oneInchOracleAddress = useStorageAddress("OneInchOracle");
   // testnet address that isn't in storage for some reason
-  const oneInchOracleAddress = "0x085E3a930E34D15E96b50e1E98FF77A9241B822e";
+  const oneInchOracleAddress = "0x5DB9A7629912EBF95876228C24A848de0bfB43A9";
 
   useAsyncEffect(() => {
     if (!provider || !oneInchOracleAddress) return;
