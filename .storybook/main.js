@@ -46,6 +46,10 @@ module.exports = {
   },
   webpackFinal: async (config, { configType }) => {
     config.resolve.plugins = [new TsconfigPathsPlugin()];
+    config.resolve.fallback = {
+      "stream": require.resolve("stream-browserify"),
+      "crypto": require.resolve("crypto-browserify")
+    }
     return config;
   },
 };

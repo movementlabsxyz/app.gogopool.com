@@ -30,6 +30,7 @@
     "@usedapp/core": "^1.0.14",
     "avalanche": "^3.15.3",
     "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "ethers": "^5.6.9",
     "framer-motion": "^6.3.15",
     "json-stream-stringify": "^2.0.4",
@@ -40,7 +41,7 @@
     "react-dom": "^18.1.0",
     "react-redux": "^8.0.2",
     "sass": "^1.53.0",
-    "stream": "^0.0.2",
+    "stream-browserify": "^3.0.0",
     "use-async-effect": "^2.2.6"
   },
   "devDependencies": {
