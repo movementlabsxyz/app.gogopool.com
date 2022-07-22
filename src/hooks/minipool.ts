@@ -92,16 +92,16 @@ const useCreateMinipool = (
     }
 
     try {
-      const testTx = await contract.callStatic.createMinipool(
-        nodeID,
-        duration,
-        delegationFee,
-        ggpBondAmt,
-        {
-          ...overrides,
-          value: depositAmount,
-        }
-      );
+      // const testTx = await contract.callStatic.createMinipool(
+      //   nodeID,
+      //   duration,
+      //   delegationFee,
+      //   ggpBondAmt,
+      //   {
+      //     ...overrides,
+      //     value: depositAmount,
+      //   }
+      // );
       // console.log("This is a test wait.");
       // const testResp = await testTx.wait();
       // console.log(testResp);

@@ -1,68 +1,66 @@
-import { Stack, Text } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
-import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
+import { Stack, Text, useToast } from "@chakra-ui/react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useState,
+} from "react";
 
 import { Button } from "@/common/components/Button";
 import { Input } from "@/common/components/Input";
 import useBalance from "@/hooks/balance";
-import useCreateMinipool from "@/hooks/minipool";
-import useWallet from "@/hooks/wallet";
-import { nodeID, parseDelta } from "@/utils";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 export interface WizardStepOneProps {
-  setCurrentStep: Dispatch<SetStateAction<number>>;
+  nodeId: string;
+  handleChangeNodeId: (e: ChangeEvent<HTMLInputElement>) => void;
+  nextStep: () => void 
+  isConnected: boolean;
 }
 
 export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
-  setCurrentStep,
+  nodeId,
+  handleChangeNodeId,
+  nextStep,
+  isConnected
 }): JSX.Element => {
-  const [nodeId, setNodeId] = useState("");
-  const { account, provider } = useWallet();
-  const balance = useBalance()
+  const balance = useBalance();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast()
 
-  const {
-    createMinipool,
-    approve,
-  } = useCreateMinipool(provider);
-
-  const approveGGP = async () => {
-    if (!account) return;
-    const amount = parseEther("1000"); // placeholder. Should be read from UI. Units in nAVAX.
-    await approve(account, BigNumber.from(amount));
+  const verifyNodeId = async (id: string) => {
+    // call backend to verify dupplication
+    return await new Promise((resolve) => setTimeout(() => resolve(id), 1000));
   };
 
-  const createMinipoolGGP = async () => {
-    if (!account) return;
-    const amount = parseEther("1000");
-    const fee = parseEther("200");
-    // This is a placeholder. I have to talk to John about
-    // how to properly format the Avalanche Node IDs as an
-    // eth address - Chandler.
-    const nID = nodeID("randomUUID()");
-    // These are also placeholder values. They should be read from
-    // the UI.
-    const duration = BigNumber.from(parseDelta("1m"));
-    const delegationFee = BigNumber.from(20000);
-    await createMinipool(nID, duration, delegationFee, fee, amount);
-  };
-
-  const handleSubmit = (): void => {
-    setCurrentStep(2)
-    approveGGP()
-    createMinipoolGGP()
+  const handleSubmit = async (): Promise<void> => {
+    if (!isConnected) {
+      toast({ description: "Please connect to your wallet", status: "warning"})
+      return 
+    }
+    setLoading(true);
+    await verifyNodeId(nodeId);
+    nextStep()
+    setLoading(false);
   };
 
   return (
     <Stack direction="column" gap="4px">
-      <Stack direction="row" gap="8px">
+      <Stack direction={{ md: "row", base: "column" }} gap="8px">
         <Input
           placeholder="Enter your Node ID"
           value={nodeId}
-          onChange={(e) => setNodeId(e.target.value)}
+          onChange={handleChangeNodeId}
         />
-        <Button size="sm" disabled={!nodeId} onClick={handleSubmit} data-testid="register-node">
+        <Button
+          size="sm"
+          isLoading={loading}
+          disabled={!nodeId}
+          onClick={handleSubmit}
+          data-testid="register-node"
+          width={{ md: "auto", base: "100%" }}
+        >
           Register Node
         </Button>
       </Stack>

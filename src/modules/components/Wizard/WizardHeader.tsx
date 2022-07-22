@@ -1,5 +1,5 @@
-import { Box, Divider, Stack, Text, useTheme } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { Box, Divider, Stack, Text, useBreakpointValue, useTheme } from "@chakra-ui/react";
+import { FunctionComponent, MutableRefObject } from "react";
 
 import { WizardIcon } from "@/common/components/CustomIcon/WizardIcon";
 
@@ -7,24 +7,31 @@ import { wizardSteps } from "./data";
 
 export interface WizardHeaderProps {
   step: number;
+  headerRef: MutableRefObject<HTMLDivElement>
 }
 
 export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({
   step,
+  headerRef
 }): JSX.Element => {
   const { colors } = useTheme();
+  const size = useBreakpointValue({ base: 16, md: 21 })
 
   return (
-    <Box overflow="scroll" w="full">
+    <Box
+      overflow="hidden"
+      w="full"
+      border={`1px solid ${colors.grey[200]}`}
+      borderRadius="16px"
+      ref={headerRef}
+    >
       <Stack
-        border={`1px solid ${colors.grey[200]}`}
         px="16px"
         py="12px"
         direction="row"
-        borderRadius="16px"
         position="relative"
         justify="space-between"
-        minWidth="696px"
+        minWidth={{ md: "696px", base: "420px"}}
         width="100%"
       >
         {wizardSteps.map((wizard) => (
@@ -38,11 +45,13 @@ export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({
             pl={wizard.step !== 1 ? 2 : 0}
           >
             <WizardIcon
+              width={size}
+              height={size}
               step={wizard.step}
               active={wizard.step === step}
               complete={wizard.step < step}
             />
-            <Text fontWeight={wizard.step === step ? 700 : 400} size="sm">
+            <Text fontWeight={wizard.step === step ? 700 : 400} size={{ md: "sm", base: "xxs" }}>
               {wizard.header}
             </Text>
           </Stack>

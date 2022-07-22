@@ -54,14 +54,4 @@ Default.play = async ({ canvasElement }) => {
   );
   await expect(canvas.getByTestId("register-node")).not.toBeDisabled();
 
-  await userEvent.click(canvas.getByTestId("register-node"));
-  await expect(
-    canvas.getByText("Approve and Stake your GGP")
-  ).toBeInTheDocument();
-
-  await userEvent.click(canvas.getByTestId("stake-now"));
-  await expect(canvas.getAllByText("Deposit AVAX")).toHaveLength(3);
-
-  await userEvent.click(canvas.getByTestId("deposit-avax"));
-  await expect(canvas.getAllByText("Success!")).toHaveLength(2);
 };

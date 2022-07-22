@@ -34,13 +34,19 @@ export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({
         justifyContent="center"
         gap="4px"
         width="384px"
+        maxWidth="full"
         mx="auto"
       >
         <Text size="sm" align="center">
           Minipool TX Hash:
         </Text>
-        <Stack direction="row" justify="center">
-          <Text size="sm" color="#000000" fontWeight={700}>
+        <Stack direction="row" justify="center" maxW="full">
+          <Text
+            size="sm"
+            color="#000000"
+            fontWeight={700}
+            overflowWrap="anywhere"
+          >
             {hash}
           </Text>
           <Box as="button" aria-label="copy" onClick={handleCopy}>
@@ -50,7 +56,7 @@ export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({
       </Box>
       <Stack direction="row" gap="8px" justify="center">
         <Button
-          mt={6}
+          mt={{ md: 6, base: 3 }}
           size="sm"
           variant="secondary-filled"
           onClick={handleSubmit}

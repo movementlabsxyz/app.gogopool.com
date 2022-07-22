@@ -44,7 +44,7 @@ function NodeOperator() {
         direction={{ base: "column", md: "row" }}
       >
         <Button
-          disabled={currentStep === 1}
+          disabled
           onClick={() => setCurrentStep(s => s - 1)}
           _disabled={{
             boxShadow: `inset 0 0 0 2px ${theme.colors.blue[500]}`,
@@ -57,7 +57,7 @@ function NodeOperator() {
           <Text>Previous</Text>
         </Button>
         <Button
-          disabled={currentStep === 4}
+          disabled
           onClick={() => setCurrentStep(s => s + 1)}
           variant="secondary-outline"
           w={{ base: "full", md: "144px" }}

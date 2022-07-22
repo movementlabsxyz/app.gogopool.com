@@ -10,20 +10,35 @@ import { roundedBigNumber } from "@/utils/numberFormatter";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepTwoProps {
-  setCurrentStep: Dispatch<SetStateAction<number>>;
-  avax: number;
+  createMinipoolGGP: () => Promise<void>;
+  approveGGP: () => Promise<void>;
+  amount: number;
+  setAmount: Dispatch<SetStateAction<number>>;
+  approveSuccess: boolean;
 }
 
 export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
-  setCurrentStep,
+  createMinipoolGGP,
+  amount,
+  setAmount,
+  approveGGP,
+  approveSuccess,
 }): JSX.Element => {
-  const [amount, setAmount] = useState(0);
-  const { account, provider } = useWallet()
-  const ggpBalance = useGGPBalance(provider, account)
-  const rate = useExchangeRate(provider)
+  const { account, provider } = useWallet();
+  const [loading, setLoading] = useState(false);
+  const ggpBalance = useGGPBalance(provider, account);
+  const rate = useExchangeRate(provider);
 
-  const handleSubmit = (): void => {
-    setCurrentStep(3);
+  const handleSubmit = async (): Promise<void> => {
+    setLoading(true);
+    await approveGGP();
+    setLoading(false);
+  };
+
+  const callMinipool = async (): Promise<void> => {
+    setLoading(true);
+    await createMinipoolGGP();
+    setLoading(false);
   };
 
   return (
@@ -36,10 +51,26 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
         exchangeRate={roundedBigNumber(rate) || 1}
         title="DEPOSIT GGP"
       />
-      <Flex justify="center" mt={6} mb={4}>
-        <Button size="sm" onClick={handleSubmit} data-testid="stake-now">
-          Stake now
-        </Button>
+      <Flex justify="center" mt={{ md: 6, base: 3 }} mb={{ md: 4, base: 2 }}>
+        {!approveSuccess ? (
+          <Button
+            size="sm"
+            onClick={handleSubmit}
+            data-testid="stake-now"
+            isLoading={loading}
+          >
+            Approve
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            onClick={callMinipool}
+            data-testid="stake-now"
+            isLoading={loading}
+          >
+            Stake now
+          </Button>
+        )}
       </Flex>
       <Text color="grey.500" size="xs" align="center">
         Currently staked:{" "}

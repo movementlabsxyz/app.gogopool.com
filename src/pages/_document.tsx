@@ -32,8 +32,8 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <CustomFonts />
-          <Favicon />
+          <CustomFonts key="custom-font" />
+          <Favicon key="favicon"/>
         </Head>
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
