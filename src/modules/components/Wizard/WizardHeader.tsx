@@ -15,7 +15,7 @@ export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({
   headerRef
 }): JSX.Element => {
   const { colors } = useTheme();
-  const size = useBreakpointValue({ base: 16, md: 21 })
+  const size = useBreakpointValue({ base: 16, md: 21 });
 
   return (
     <Box

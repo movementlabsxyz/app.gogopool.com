@@ -10,6 +10,7 @@ module.exports = {
   parserOptions: { project: ["./tsconfig.json"] },
   plugins: ["@typescript-eslint", "simple-import-sort", "tailwindcss"],
   rules: {
+    semi: ["error", "always"],
     quotes: ["error", "double"],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",

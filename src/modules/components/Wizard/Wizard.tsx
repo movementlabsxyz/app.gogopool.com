@@ -35,7 +35,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
 
   const { account, provider } = useWallet();
   const toast = useToast();
-  const headerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null);
   const { createMinipool, approve, approveResponse, error, success } =
     useCreateMinipool(provider);
 
@@ -55,19 +55,19 @@ export const Wizard: FunctionComponent<WizardProps> = ({
         description: "Please connect to your wallet",
         status: "warning",
       });
-  }
+  };
   const nextStep = () => {
     setCurrentStep(s => {
       if (s === 1) {
-        headerRef.current.scrollLeft = 100 // scroll right in MObile view
+        headerRef.current.scrollLeft = 100; // scroll right in MObile view
       }
-      return s + 1
-    })
-  }
+      return s + 1;
+    });
+  };
 
   const depositAvax = async () => {
     if (!account) {
-      remindConnect()
+      remindConnect();
       return;
     }
     await send(avaxAmount);
@@ -75,7 +75,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
 
   const approveGGP = async () => {
     if (!account) {
-      remindConnect()
+      remindConnect();
       return;
     }
     const amount = parseEther(ggpAmount.toString()); // placeholder. Should be read from UI. Units in nAVAX.
@@ -84,7 +84,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
 
   const createMinipoolGGP = async () => {
     if (!account) {
-      remindConnect()
+      remindConnect();
       return;
     }
     const amount = parseEther(ggpAmount.toString());
@@ -98,7 +98,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     const duration = BigNumber.from(parseDelta("1m"));
     const delegationFee = BigNumber.from(20000);
     await createMinipool(nID, duration, delegationFee, fee, amount);
-  }
+  };
 
   useEffect(() => {
     if (depositError) {
@@ -109,7 +109,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       return;
     }
     if (depositSuccess) {
-      nextStep()
+      nextStep();
       return;
     }
   }, [depositError, depositSuccess]);
@@ -125,7 +125,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
 
     if (success) {
       toast({ description: "Create Pool success", status: "success" });
-      nextStep()
+      nextStep();
       return;
     }
 

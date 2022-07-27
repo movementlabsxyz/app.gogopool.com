@@ -27,7 +27,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
 }): JSX.Element => {
   const balance = useBalance();
   const [loading, setLoading] = useState(false);
-  const toast = useToast()
+  const toast = useToast();
 
   const verifyNodeId = async (id: string) => {
     // call backend to verify dupplication
@@ -36,12 +36,12 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
 
   const handleSubmit = async (): Promise<void> => {
     if (!isConnected) {
-      toast({ description: "Please connect to your wallet", status: "warning"})
-      return 
+      toast({ description: "Please connect to your wallet", status: "warning"});
+      return; 
     }
     setLoading(true);
     await verifyNodeId(nodeId);
-    nextStep()
+    nextStep();
     setLoading(false);
   };
 
