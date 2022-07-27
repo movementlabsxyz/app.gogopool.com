@@ -1,22 +1,14 @@
-import { Contract, providers, utils } from "ethers";
-import { useEffect, useState } from "react";
+import { utils } from "ethers";
 
 import TokenggAVAX from "../../contracts/TokenggAVAX.json";
 import { useStorageAddress } from "../storage";
 
-const useTokenContract = (provider: providers.Web3Provider | undefined) => {
-  const [contract, setContract] = useState<Contract | undefined>(undefined);
+const useTokenGGPContract = () => {
+  const { data } = useStorageAddress("TokenggAVAX");
 
-  const tokenContractAddress = useStorageAddress("TokenggAVAX");
+  const contractInterface = new utils.Interface(TokenggAVAX.abi);
 
-  useEffect(() => {
-    if (!provider || !tokenContractAddress) return;
-    const i = new utils.Interface(TokenggAVAX.abi);
-    const c = new Contract(tokenContractAddress, i, provider.getSigner());
-    setContract(c);
-  }, [provider, tokenContractAddress]);
-
-  return contract;
+  return { address: data?.toString() || "", contractInterface };
 };
 
-export default useTokenContract;
+export default useTokenGGPContract;

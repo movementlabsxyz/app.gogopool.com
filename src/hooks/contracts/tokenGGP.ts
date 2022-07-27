@@ -1,23 +1,14 @@
-import { Contract, providers, utils } from "ethers";
-import { useState } from "react";
-import useAsyncEffect from "use-async-effect";
+import { utils } from "ethers";
 
 import TokenGGP from "../../contracts/TokenGGP.json";
 import { useStorageAddress } from "../storage";
 
-const useTokenGGPContract = (provider: providers.Web3Provider | undefined) => {
-  const [contract, setContract] = useState<Contract | undefined>(undefined);
+const useTokenGGPContract = () => {
+  const { data } = useStorageAddress("TokenGGP");
 
-  const tokenContractAddress = useStorageAddress("TokenGGP");
+  const contractInterface = new utils.Interface(TokenGGP.abi);
 
-  useAsyncEffect(() => {
-    if (!provider || !tokenContractAddress) return;
-    const i = new utils.Interface(TokenGGP.abi);
-    const c = new Contract(tokenContractAddress, i, provider.getSigner());
-    setContract(c);
-  }, [provider, tokenContractAddress]);
-
-  return contract;
+  return { address: data?.toString() || "", contractInterface };
 };
 
 export default useTokenGGPContract;
