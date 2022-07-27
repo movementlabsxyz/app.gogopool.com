@@ -2,10 +2,6 @@
 
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
 
-# Tickets
-
-Main Ticket # (linear)
-
 ## Type of Change
 
 - [ ] Bug fix
@@ -20,5 +16,7 @@ Main Ticket # (linear)
 - [ ] Unused code cleanup
 - [ ] Clean console
 - [ ] Commented code, particularly in hard-to-understand areas
+- [ ] I have created the storybook of the component
+- [ ] I have created the unit test of the component
 
-# Screenshots
+# Video Recording/Screenshots Showcasing Implementation

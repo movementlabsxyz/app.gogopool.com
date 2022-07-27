@@ -1,0 +1,30 @@
+$grey-800:#323441;
+
+[data-popper-arrow-inner="true"] {
+  border: 1px solid $grey-800;
+}
+
+.tooltip_bottom {
+  [data-popper-arrow-inner="true"] {
+    border-bottom: 0;
+    border-right: 0;
+  }
+}
+.tooltip_top {
+  [data-popper-arrow-inner="true"] {
+    border-top: 0;
+    border-left: 0;
+  }
+}
+.tooltip_left {
+  [data-popper-arrow-inner="true"] {
+    border-bottom: 0;
+    border-left: 0;
+  }
+}
+.tooltip_right {
+  [data-popper-arrow-inner="true"] {
+    border-top: 0;
+    border-right: 0;
+  }
+}
