@@ -14,7 +14,7 @@ module.exports = {
     quotes: ["error", "double"],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
-    "no-console": "error",
+    "no-console": "warn",
     "tailwindcss/no-custom-classname": "off",
     "@typescript-eslint/no-empty-interface": "off",
   },

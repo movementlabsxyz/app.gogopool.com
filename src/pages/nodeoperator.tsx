@@ -76,7 +76,7 @@ function NodeOperator() {
 }
 
 const menu = [
-  { name: "Node Operator", icon: NodeOperatorIcon, url: "/nodeoperator" },
+  { name: "New GGP Node", icon: NodeOperatorIcon, url: "/nodeoperator" },
   { name: "GGP Reward", icon: RewardIcon, url: "/ggpreward" },
 ];
 

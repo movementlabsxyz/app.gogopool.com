@@ -1,17 +1,16 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
-import useExchangeRate from "@/hooks/ggexchange";
-import { useGGPBalance } from "@/hooks/ggpbalance";
-import useWallet from "@/hooks/wallet";
+import useTokenGGPContract from "@/hooks/contracts/tokenGGP";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepTwoProps {
   createMinipoolGGP: () => Promise<void>;
-  approveGGP: () => Promise<void>;
+  approveGGP: () => void;
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
   approveSuccess: boolean;
@@ -24,10 +23,15 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
   approveGGP,
   approveSuccess,
 }): JSX.Element => {
-  const { account, provider } = useWallet();
   const [loading, setLoading] = useState(false);
-  const ggpBalance = useGGPBalance(provider, account);
-  const rate = useExchangeRate(provider);
+
+  const { address: account } = useAccount();
+  const { address: ggpAddress } = useTokenGGPContract();
+
+  const { data: balance } = useBalance({
+    addressOrName: account,
+    token: ggpAddress,
+  });
 
   const handleSubmit = async (): Promise<void> => {
     setLoading(true);
@@ -47,8 +51,7 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
         token="GGP"
         amount={amount}
         setAmount={setAmount}
-        balance={roundedBigNumber(ggpBalance) || 0}
-        exchangeRate={roundedBigNumber(rate) || 1}
+        balance={roundedBigNumber(balance?.value) || 0}
         title="DEPOSIT GGP"
       />
       <Flex justify="center" mt={{ md: 6, base: 3 }} mb={{ md: 4, base: 2 }}>

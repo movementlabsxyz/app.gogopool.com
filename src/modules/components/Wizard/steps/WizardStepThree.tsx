@@ -1,9 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
-import useBalance from "@/hooks/balance";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { StakeInput } from "../StakeInput";
@@ -12,7 +12,7 @@ export interface WizardStepThreeProps {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  depositAvax: () => Promise<void>;
+  depositAvax?: () => Promise<void>;
   loading: boolean;
 }
 
@@ -22,10 +22,16 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
   loading,
   depositAvax,
 }): JSX.Element => {
-  const balance = useBalance();
+  const { address: account } = useAccount();
+
+  const { data: balance } = useBalance({
+    addressOrName: account,
+  });
 
   const handleSubmit = (): void => {
-    depositAvax();
+    if (depositAvax) {
+      depositAvax();
+    }
   };
 
   return (
@@ -38,9 +44,9 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
         token="AVAX"
         amount={amount}
         setAmount={setAmount}
-        balance={roundedBigNumber(balance) || 0}
+        balance={roundedBigNumber(balance?.value) || 0}
         exchangeRate={10}
-        title="DEPOSIT AVAX"
+        title="AVAX STAKING DEPOSIT AMOUNT"
       />
       <Button
         full

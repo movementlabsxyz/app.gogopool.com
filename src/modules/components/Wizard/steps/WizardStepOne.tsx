@@ -1,21 +1,15 @@
 import { Stack, Text, useToast } from "@chakra-ui/react";
-import {
-  ChangeEvent,
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useState,
-} from "react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { Input } from "@/common/components/Input";
-import useBalance from "@/hooks/balance";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 export interface WizardStepOneProps {
   nodeId: string;
   handleChangeNodeId: (e: ChangeEvent<HTMLInputElement>) => void;
-  nextStep: () => void 
+  nextStep: () => void;
   isConnected: boolean;
 }
 
@@ -23,9 +17,12 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
   nodeId,
   handleChangeNodeId,
   nextStep,
-  isConnected
+  isConnected,
 }): JSX.Element => {
-  const balance = useBalance();
+  const { address: account } = useAccount();
+  const { data: balance } = useBalance({
+    addressOrName: account,
+  });
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
@@ -36,8 +33,11 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
 
   const handleSubmit = async (): Promise<void> => {
     if (!isConnected) {
-      toast({ description: "Please connect to your wallet", status: "warning"});
-      return; 
+      toast({
+        description: "Please connect to your wallet",
+        status: "warning",
+      });
+      return;
     }
     setLoading(true);
     await verifyNodeId(nodeId);
@@ -67,7 +67,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
       <Text color="grey.500" size="xs">
         AVAX available for Swap:{" "}
         <Text as="span" size="xs" fontWeight={700} color="grey.1000">
-          {roundedBigNumber(balance) || 0} AVAX
+          {roundedBigNumber(balance?.value || 0)} AVAX
         </Text>
       </Text>
     </Stack>

@@ -1,18 +1,20 @@
 import { Box, useToast } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { BigNumber, utils } from "ethers";
 import {
   ChangeEvent,
   Dispatch,
   FunctionComponent,
-  SetStateAction, useEffect, useRef, useState
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
+import { useAccount } from "wagmi";
 
-import useDeposit from "@/hooks/deposit";
-import useCreateMinipool from "@/hooks/minipool";
-import useWallet from "@/hooks/wallet";
-import { nodeID, parseDelta } from "@/utils";
+import { useApproveGGP, useCreateMinipool } from "@/hooks/minipool";
+import { nodeID } from "@/utils";
 
+// I hate this ordering but this is how ESLint wants it.
 import { WizardStepFour } from "./steps/WizardStepFour";
 import { WizardStepOne } from "./steps/WizardStepOne";
 import { WizardStepThree } from "./steps/WizardStepThree";
@@ -30,92 +32,83 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   setCurrentStep,
 }): JSX.Element => {
   const [nodeId, setNodeId] = useState("");
-  const [ggpAmount, setGGPAmount] = useState(1000);
+  const [ggpAmount, setGGPAmount] = useState(200);
   const [avaxAmount, setAvaxAmount] = useState(1000);
+  const [txid, setTxid] = useState("");
 
-  const { account, provider } = useWallet();
-  const toast = useToast();
-  const headerRef = useRef<HTMLDivElement>(null);
-  const { createMinipool, approve, approveResponse, error, success } =
-    useCreateMinipool(provider);
+  const { isConnected, address: account } = useAccount();
 
   const {
-    send,
-    error: depositError,
-    isLoading: depositLoading,
-    success: depositSuccess,
-  } = useDeposit(provider);
+    writeAsync: approve,
+    isLoading: isApproveLoading,
+    status: approveStatus,
+  } = useApproveGGP(utils.parseEther(ggpAmount.toString()));
+
+  const {
+    writeAsync: createMinipool,
+    isLoading: isCreateMinipoolLoading,
+    status: createMinipoolStatus,
+    error: createMinipoolError,
+  } = useCreateMinipool({
+    nodeId: nodeID(nodeId),
+    bondAmount: utils.parseEther(ggpAmount.toString()),
+    amount: utils.parseEther(avaxAmount.toString()),
+    // These need to me made user changeable in the future
+    fee: BigNumber.from(20000),
+    // 15 minutes from now
+    startTime: new Date(Date.now() + 15 * 60 * 1000),
+    // 15 minutes and 2 weeks from now
+    endTime: new Date(Date.now() + 15 * 60 * 1000 + 14 * 24 * 60 * 60 * 1000),
+  });
+
+  const toast = useToast();
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const handleChangeNodeId = (e: ChangeEvent<HTMLInputElement>) => {
     setNodeId(e.target.value);
   };
 
   const remindConnect = () => {
-      toast({
-        description: "Please connect to your wallet",
-        status: "warning",
-      });
+    toast({
+      description: "Please connect to your wallet",
+      status: "warning",
+    });
   };
   const nextStep = () => {
-    setCurrentStep(s => {
+    setCurrentStep((s) => {
+      // what?
       if (s === 1) {
-        headerRef.current.scrollLeft = 100; // scroll right in MObile view
+        headerRef.current.scrollLeft = 100; // scroll right in Mobile view
       }
       return s + 1;
     });
   };
 
-  const depositAvax = async () => {
-    if (!account) {
-      remindConnect();
-      return;
-    }
-    await send(avaxAmount);
-  };
-
   const approveGGP = async () => {
-    if (!account) {
+    if (!isConnected) {
       remindConnect();
       return;
     }
-    const amount = parseEther(ggpAmount.toString()); // placeholder. Should be read from UI. Units in nAVAX.
-    await approve(account, BigNumber.from(amount));
+    await approve();
   };
 
   const createMinipoolGGP = async () => {
-    if (!account) {
+    if (!isConnected) {
       remindConnect();
       return;
     }
-    const amount = parseEther(ggpAmount.toString());
-    const fee = parseEther("200");
-    // This is a placeholder. I have to talk to John about
-    // how to properly format the Avalanche Node IDs as an
-    // eth address - Chandler.
-    const nID = nodeID(nodeId);
-    // These are also placeholder values. They should be read from
-    // the UI.
-    const duration = BigNumber.from(parseDelta("1m"));
-    const delegationFee = BigNumber.from(20000);
-    await createMinipool(nID, duration, delegationFee, fee, amount);
+    if (createMinipool) {
+      const resp = await createMinipool();
+      // wait until the transaction is mined
+      const receipt = await resp.wait();
+      setTxid(receipt.transactionHash);
+    }
   };
 
-  useEffect(() => {
-    if (depositError) {
-      toast({
-        description: "Error when making trans",
-        status: "error",
-      });
-      return;
-    }
-    if (depositSuccess) {
-      nextStep();
-      return;
-    }
-  }, [depositError, depositSuccess]);
+  const isLoading = isApproveLoading || isCreateMinipoolLoading;
 
   useEffect(() => {
-    if (error) {
+    if (approveStatus === "error") {
       toast({
         description: "Error when making trans",
         status: "error",
@@ -123,17 +116,29 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       return;
     }
 
-    if (success) {
-      toast({ description: "Create Pool success", status: "success" });
-      nextStep();
-      return;
-    }
-
-    if (approveResponse && approveResponse.status === 1) {
+    if (approveStatus === "success") {
       toast({ description: "Approve successful", status: "success" });
+      nextStep();
       return;
     }
-  }, [approveResponse, error, success]);
+  }, [approveStatus]);
+
+  useEffect(() => {
+    console.error(createMinipoolError);
+    if (createMinipoolStatus === "error") {
+      toast({
+        description: "Error when sending the create minipool transaction",
+        status: "error",
+      });
+      return;
+    }
+
+    if (createMinipoolStatus === "success") {
+      toast({ description: "Create minipool successful", status: "success" });
+      nextStep();
+      return;
+    }
+  }, [createMinipoolStatus, createMinipoolError]);
 
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
@@ -153,29 +158,36 @@ export const Wizard: FunctionComponent<WizardProps> = ({
             approveGGP={approveGGP}
             setAmount={setGGPAmount}
             createMinipoolGGP={createMinipoolGGP}
-            approveSuccess={!!approveResponse && approveResponse.status === 1}
+            approveSuccess={approveStatus === "success"}
           />
         );
       case 3:
         return (
           <WizardStepThree
-            setCurrentStep={setCurrentStep}
             amount={avaxAmount}
             setAmount={setAvaxAmount}
-            loading={depositLoading}
-            depositAvax={depositAvax}
+            setCurrentStep={setCurrentStep}
+            loading={isLoading}
           />
         );
       case 4:
-        return <WizardStepFour hash="#es2435213153f4639434693942e2341bd" />;
+        return <WizardStepFour hash={txid} />;
       default:
         throw Error("Invalid step");
     }
   };
 
   return (
-    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000" maxW={780} marginX="auto" h="660px">
-      <WizardHeader step={currentStep} headerRef={headerRef}/>
+    <Box
+      bg="#ffffff"
+      padding="32px"
+      borderRadius="24px"
+      color="#000000"
+      maxW={780}
+      marginX="auto"
+      h="660px"
+    >
+      <WizardHeader step={currentStep} headerRef={headerRef} />
       <Box mx="auto" maxWidth="528px">
         <WizardContent step={currentStep} />
         {renderStepAction()}
