@@ -3,32 +3,18 @@ import "@/styles/components.scss";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import Head from "next/head";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
+import { WagmiConfig } from "wagmi";
 
 import { CoreLayout } from "@/common/components/CoreLayout";
 import { ChakraFonts } from "@/common/components/CustomFont";
 import { PageHead } from "@/common/components/PageHead";
-import chain from "@/config/chains";
+import configWagmiClient from "@/config/wagmi";
 import { wrapper } from "@/store";
 import theme from "@/theme";
 
-const { chains, provider } = configureChains(
-  [chain.avalanche, chain.fuji, /*chain.local,*/ chain.anr],
-  [publicProvider()]
-);
-const { connectors } = getDefaultWallets({
-  appName: "GoGoPool",
-  chains,
-});
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-});
+const { wagmiClient, chains } = configWagmiClient();
 
 export const App = ({ Component, pageProps }) => {
   const Layout = Component.layout ? Component.layout : CoreLayout;
