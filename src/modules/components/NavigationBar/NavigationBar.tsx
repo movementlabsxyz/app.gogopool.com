@@ -1,22 +1,9 @@
 import { Box, Flex, Stack } from "@chakra-ui/react";
 
-import { Button } from "@/common/components/Button";
+import ConnectButton from "@/common/components/ConnectButton";
 import { GogopoolIcon } from "@/common/components/CustomIcon/GogopoolIcon";
-import useWallet from "@/hooks/wallet";
-
-import { Wallet } from "../Wallet";
 
 export const NavigationBar = () => {
-  const { account, activate, deactivate } = useWallet();
-
-  const handleConnect = () => {
-    activate();
-  };
-
-  const handleDisconnect = () => {
-    deactivate();
-  };
-
   return (
     <Box
       p="0.75rem 1.5rem"
@@ -32,13 +19,7 @@ export const NavigationBar = () => {
 
         <Flex alignItems="center">
           <Stack direction="row" spacing="7">
-            {account ? (
-              <Wallet address={account} onDisconnect={handleDisconnect} />
-            ) : (
-              <Button size="xs" variant="secondary-outline" onClick={handleConnect}>
-                Connect Wallet
-              </Button>
-            )}
+            <ConnectButton />
           </Stack>
         </Flex>
       </Flex>
