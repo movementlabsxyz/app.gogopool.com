@@ -15,7 +15,7 @@ import {
 } from "./SuccessfulDepositModal";
 
 type DepositModalProps = {
-  status: "success" | "failed";
+  status: "success" | "error" | "idle" | "loading";
   successProps?: SuccessfulDepositModalProps;
   failedProps?: FailedDepositModalProps;
 } & Omit<ModalProps, "children">;
@@ -29,10 +29,17 @@ export const DepositModal: FunctionComponent<DepositModalProps> = ({
   ...modalProps
 }) => {
   const renderCta = () => {
-    if (status === "success") {
+    if (status === "success" || status === "idle") {
       return (
         <Button size="sm" variant="secondary-filled" full onClick={onClose}>
           Done
+        </Button>
+      );
+    }
+    if (status === "loading") {
+      return (
+        <Button disabled size="sm" variant="secondary-filled" full>
+          Loading...
         </Button>
       );
     }

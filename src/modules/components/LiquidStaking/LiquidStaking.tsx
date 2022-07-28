@@ -11,22 +11,21 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  FunctionComponent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { utils } from "ethers";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { InfoCircleIcon } from "@/common/components/CustomIcon";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
-import useBalance from "@/hooks/balance";
+import useCoinPrice from "@/hooks/coinPrice";
+import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
 import useDeposit from "@/hooks/deposit";
 import useExchangeRate from "@/hooks/ggexchange";
-import useWallet from "@/hooks/wallet";
+import { useStorageAddress } from "@/hooks/storage";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { DepositDrawer } from "../Drawer";
@@ -117,24 +116,42 @@ const statisticData = [
 export const LiquidStaking: FunctionComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { account, activate, provider } = useWallet();
-  const balance = useBalance(); // AVAX balance
-  const { send, success, error, isLoading } = useDeposit(provider);
-  const exchangeRate = useExchangeRate(provider);
+  const { openConnectModal } = useConnectModal();
 
   const [amount, setAmount] = useState<number>(); // stake value
   const [reward, setReward] = useState<number>(0); // reward value
-  const [depositStatus, setDepositStatus] = useState<"success" | "failed">(
-    "failed"
-  );
 
-  const handleDeposit = async () => {
-    await send(amount);
-  };
+  const { isConnected, address: account } = useAccount();
 
-  const handleConnect = () => {
-    activate();
-  };
+  const { address: ggAVAXAddress } = useTokenggAVAXContract();
+
+  // AVAX balance
+  const { data: balance, isLoading: isBalanceLoading } = useBalance({
+    addressOrName: account,
+  });
+
+  // ggAVAX balance
+  const { data: ggAVAXBalance } = useBalance({
+    addressOrName: account,
+    token: ggAVAXAddress,
+  });
+
+  // deposit the AVAX
+  const {
+    write: deposit,
+    isLoading: isDepositLoading,
+    status: depositStatus,
+  } = useDeposit(utils.parseEther(amount?.toString() || "0"));
+
+  // ggAVAX to AVAX exchange rate
+  const { data: exchangeRate, isLoading: isLoadingExchangeRate } =
+    useExchangeRate();
+
+  // Current market price for AVAX
+  const { price: AVAXPrice } = useCoinPrice("avalanche-2");
+
+  const isLoading =
+    isBalanceLoading || isDepositLoading || isLoadingExchangeRate;
 
   const handleSwap = () => {
     const temporaryAmount = amount;
@@ -144,20 +161,21 @@ export const LiquidStaking: FunctionComponent = () => {
     setReward(temporaryAmount);
   };
 
-  const isMounted = useRef(true);
   useEffect(() => {
-    if (isMounted.current) {
-      isMounted.current = false;
-      return;
-    }
-    if (success === true) {
-      setDepositStatus("success");
-      (() => onOpen())();
-    } else if (success === false) {
-      setDepositStatus("failed");
+    if (depositStatus === "success" || depositStatus === "error") {
       (() => onOpen())();
     }
-  }, [success, error]);
+  }, [depositStatus]);
+
+  useEffect(() => {
+    const rate = parseInt(utils.formatEther(exchangeRate || 0));
+    const rewardAmount = rate * amount;
+    if (isNaN(rewardAmount)) {
+      setReward(0);
+    } else {
+      setReward(rewardAmount);
+    }
+  }, [amount, exchangeRate]);
 
   return (
     <>
@@ -200,8 +218,8 @@ export const LiquidStaking: FunctionComponent = () => {
                     amount={amount}
                     setAmount={setAmount}
                     setReward={setReward}
-                    balance={roundedBigNumber(balance) || 0}
-                    exchangeRate={roundedBigNumber(exchangeRate) || 0}
+                    balance={roundedBigNumber(balance?.value || 0)}
+                    exchangeRate={AVAXPrice || 0}
                   />
                 </Content>
               </Card>
@@ -222,7 +240,10 @@ export const LiquidStaking: FunctionComponent = () => {
             </Box>
             <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
               <Content>
-                <RewardForm reward={reward} balance={0} />
+                <RewardForm
+                  reward={reward}
+                  balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
+                />
               </Content>
             </Card>
             <Card rounded="12px" p="0" backgroundColor="grey.100" mb="2">
@@ -253,13 +274,13 @@ export const LiquidStaking: FunctionComponent = () => {
           </FormControl>
         </Content>
         <Footer>
-          {account ? (
-            <Button full disabled={!amount} onClick={handleDeposit}>
+          {isConnected ? (
+            <Button full disabled={!amount || isLoading} onClick={deposit}>
               {isLoading ? "Loading..." : "Deposit"}
             </Button>
           ) : (
-            <Button full onClick={handleConnect}>
-              Connect wallet
+            <Button full onClick={openConnectModal}>
+              Connect Wallet
             </Button>
           )}
         </Footer>

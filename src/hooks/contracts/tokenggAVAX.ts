@@ -3,7 +3,7 @@ import { utils } from "ethers";
 import TokenggAVAX from "../../contracts/TokenggAVAX.json";
 import { useStorageAddress } from "../storage";
 
-const useTokenGGPContract = () => {
+const useTokenggAVAXContract = () => {
   const { data } = useStorageAddress("TokenggAVAX");
 
   const contractInterface = new utils.Interface(TokenggAVAX.abi);
@@ -11,4 +11,4 @@ const useTokenGGPContract = () => {
   return { address: data?.toString() || "", contractInterface };
 };
 
-export default useTokenGGPContract;
+export default useTokenggAVAXContract;

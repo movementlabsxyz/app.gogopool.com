@@ -14,6 +14,7 @@ import { Dispatch, SetStateAction } from "react";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 import { CaretRightIcon } from "@/common/components/CustomIcon/CaretRightIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import useCoinPrice from "@/hooks/coinPrice";
 
 export interface StakeFormProps {
   amount: number;
@@ -31,6 +32,8 @@ export const StakeForm = ({
   exchangeRate,
 }: StakeFormProps): JSX.Element => {
   const parse = (val) => (!val || val < 0 ? 0 : val);
+
+  const price = exchangeRate * amount;
 
   return (
     <>
@@ -101,7 +104,7 @@ export const StakeForm = ({
             <Box as="span" display={{ base: null, sm: "none" }}>
               Value:{" "}
             </Box>
-            {`$${exchangeRate * amount || 0}`}
+            {`$${price.toFixed(2) || 0}`}
           </Text>
         </Flex>
       </Flex>
