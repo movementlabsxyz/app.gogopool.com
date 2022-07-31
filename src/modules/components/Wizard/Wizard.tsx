@@ -14,7 +14,8 @@ import { useAccount } from "wagmi";
 import { useApproveGGP, useCreateMinipool } from "@/hooks/minipool";
 import { nodeID } from "@/utils";
 
-// I hate this ordering but this is how ESLint wants it.
+// I hate this ordering but this is how ESLint wants it
+// - Chandler.
 import { WizardStepFour } from "./steps/WizardStepFour";
 import { WizardStepOne } from "./steps/WizardStepOne";
 import { WizardStepThree } from "./steps/WizardStepThree";
@@ -35,31 +36,14 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   const [ggpAmount, setGGPAmount] = useState(200);
   const [avaxAmount, setAvaxAmount] = useState(1000);
   const [txid, setTxid] = useState("");
+  const [approveStatus, setApproveStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
+  const [createMinipoolStatus, setCreateMinipoolStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
 
-  const { isConnected, address: account } = useAccount();
-
-  const {
-    writeAsync: approve,
-    isLoading: isApproveLoading,
-    status: approveStatus,
-  } = useApproveGGP(utils.parseEther(ggpAmount.toString()));
-
-  const {
-    writeAsync: createMinipool,
-    isLoading: isCreateMinipoolLoading,
-    status: createMinipoolStatus,
-    error: createMinipoolError,
-  } = useCreateMinipool({
-    nodeId: nodeID(nodeId),
-    bondAmount: utils.parseEther(ggpAmount.toString()),
-    amount: utils.parseEther(avaxAmount.toString()),
-    // These need to me made user changeable in the future
-    fee: BigNumber.from(20000),
-    // 15 minutes from now
-    startTime: new Date(Date.now() + 15 * 60 * 1000),
-    // 15 minutes and 2 weeks from now
-    endTime: new Date(Date.now() + 15 * 60 * 1000 + 14 * 24 * 60 * 60 * 1000),
-  });
+  const { address: account } = useAccount();
 
   const toast = useToast();
   const headerRef = useRef<HTMLDivElement>(null);
@@ -68,12 +52,6 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     setNodeId(e.target.value);
   };
 
-  const remindConnect = () => {
-    toast({
-      description: "Please connect to your wallet",
-      status: "warning",
-    });
-  };
   const nextStep = () => {
     setCurrentStep((s) => {
       // what?
@@ -83,29 +61,6 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       return s + 1;
     });
   };
-
-  const approveGGP = async () => {
-    if (!isConnected) {
-      remindConnect();
-      return;
-    }
-    await approve();
-  };
-
-  const createMinipoolGGP = async () => {
-    if (!isConnected) {
-      remindConnect();
-      return;
-    }
-    if (createMinipool) {
-      const resp = await createMinipool();
-      // wait until the transaction is mined
-      const receipt = await resp.wait();
-      setTxid(receipt.transactionHash);
-    }
-  };
-
-  const isLoading = isApproveLoading || isCreateMinipoolLoading;
 
   useEffect(() => {
     if (approveStatus === "error") {
@@ -124,7 +79,6 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   }, [approveStatus]);
 
   useEffect(() => {
-    console.error(createMinipoolError);
     if (createMinipoolStatus === "error") {
       toast({
         description: "Error when sending the create minipool transaction",
@@ -133,12 +87,12 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       return;
     }
 
-    if (createMinipoolStatus === "success") {
+    if (createMinipoolStatus === "success" && txid !== "") {
       toast({ description: "Create minipool successful", status: "success" });
       nextStep();
       return;
     }
-  }, [createMinipoolStatus, createMinipoolError]);
+  }, [createMinipoolStatus, txid]);
 
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
@@ -155,19 +109,19 @@ export const Wizard: FunctionComponent<WizardProps> = ({
         return (
           <WizardStepTwo
             amount={ggpAmount}
-            approveGGP={approveGGP}
+            setApproveStatus={setApproveStatus}
             setAmount={setGGPAmount}
-            createMinipoolGGP={createMinipoolGGP}
-            approveSuccess={approveStatus === "success"}
           />
         );
       case 3:
         return (
           <WizardStepThree
             amount={avaxAmount}
+            ggpAmount={ggpAmount}
             setAmount={setAvaxAmount}
-            setCurrentStep={setCurrentStep}
-            loading={isLoading}
+            nodeId={nodeId}
+            setCreateMinipoolStatus={setCreateMinipoolStatus}
+            setTxID={setTxid}
           />
         );
       case 4:
