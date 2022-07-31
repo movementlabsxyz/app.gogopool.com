@@ -48,6 +48,7 @@ function NodeOperator() {
         justifyContent={{ base: "center", md: "space-between" }}
         direction={{ base: "column", md: "row" }}
       >
+        {/* I'm not sure we need these. - Chandler 
         <Button
           disabled
           onClick={() => setCurrentStep((s) => s - 1)}
@@ -69,7 +70,7 @@ function NodeOperator() {
           mt={{ base: 6, md: 0 }}
         >
           <Text>Next</Text>
-        </Button>
+        </Button> */}
       </Flex>
     </Box>
   );

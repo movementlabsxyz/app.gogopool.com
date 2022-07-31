@@ -1,9 +1,11 @@
 import { Stack, Text, useToast } from "@chakra-ui/react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { ChangeEvent, FunctionComponent, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { Input } from "@/common/components/Input";
+import { nodeID } from "@/utils";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 export interface WizardStepOneProps {
@@ -24,24 +26,31 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
     addressOrName: account,
   });
   const [loading, setLoading] = useState(false);
-  const toast = useToast();
 
-  const verifyNodeId = async (id: string) => {
-    // call backend to verify dupplication
-    return await new Promise((resolve) => setTimeout(() => resolve(id), 1000));
-  };
+  const toast = useToast();
+  const { openConnectModal } = useConnectModal();
 
   const handleSubmit = async (): Promise<void> => {
-    if (!isConnected) {
-      toast({
-        description: "Please connect to your wallet",
-        status: "warning",
-      });
-      return;
-    }
     setLoading(true);
-    await verifyNodeId(nodeId);
-    nextStep();
+
+    try {
+      if (!nodeId.startsWith("NodeID-") && !nodeId.startsWith("0x")) {
+        throw new Error("Invalid node ID");
+      }
+      // strip all whitespace
+      const id = nodeID(nodeId.replace(/\s/g, ""));
+      if (id) {
+        nextStep();
+      }
+    } catch (e) {
+      toast({
+        title: "Invalid node ID",
+        description: "Please check the node ID and try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
     setLoading(false);
   };
 
@@ -53,16 +62,27 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
           value={nodeId}
           onChange={handleChangeNodeId}
         />
-        <Button
-          size="sm"
-          isLoading={loading}
-          disabled={!nodeId}
-          onClick={handleSubmit}
-          data-testid="register-node"
-          width={{ md: "auto", base: "100%" }}
-        >
-          Register Node
-        </Button>
+        {isConnected ? (
+          <Button
+            size="sm"
+            isLoading={loading}
+            disabled={!nodeId}
+            onClick={handleSubmit}
+            data-testid="register-node"
+            width={{ md: "auto", base: "100%" }}
+          >
+            Continue
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            onClick={openConnectModal}
+            data-testid="connect"
+            isLoading={loading}
+          >
+            Connect Wallet
+          </Button>
+        )}
       </Stack>
       <Text color="grey.500" size="xs">
         AVAX available for Swap:{" "}
