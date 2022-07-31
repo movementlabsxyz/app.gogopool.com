@@ -15,7 +15,7 @@ import {
 } from "./SuccessfulDepositDrawer";
 
 type DepositDrawerProps = {
-  status: "success" | "failed";
+  status: "success" | "error" | "idle" | "loading";
   successProps?: SuccessfulDepositDrawerProps;
   failedProps?: FailedDepositDrawerProps;
 } & Omit<DrawerProps, "children">;
@@ -29,10 +29,17 @@ export const DepositDrawer: FunctionComponent<DepositDrawerProps> = ({
   ...drawerProps
 }) => {
   const renderCta = () => {
-    if (status === "success") {
+    if (status === "success" || status === "idle") {
       return (
         <Button size="sm" variant="secondary-filled" full onClick={onClose}>
           Done
+        </Button>
+      );
+    }
+    if (status === "loading") {
+      return (
+        <Button disabled size="sm" variant="secondary-filled" full>
+          Loading...
         </Button>
       );
     }

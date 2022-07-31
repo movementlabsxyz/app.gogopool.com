@@ -19,7 +19,7 @@ const Template: Story<FailedDepositModalProps> = () => {
   return (
     <>
       <Button onClick={onOpen}>Open Modal</Button>
-      <DepositModal status="failed" isOpen={isOpen} onClose={onClose} />
+      <DepositModal status="error" isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

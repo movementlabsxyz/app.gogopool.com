@@ -1,1 +1,1 @@
-export * from "./MetamaskConnect"
+export * from "./MetamaskConnect";

@@ -1,33 +1,35 @@
 import {
-    Divider,
-    Flex,
-    InputGroup,
-    InputLeftElement,
-    NumberInput,
-    NumberInputField,
-    Stack,
-    Text
+  Divider,
+  Flex,
+  InputGroup,
+  InputLeftElement,
+  NumberInput,
+  NumberInputField,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 const parse = (val) => (!val || val < 0 ? 0 : val);
 
-type HasIconInput = {
-    hasIcon: true;
-    icon: ReactNode;
-    minInputWidth: string;
-    inputWidth: string;
-} | {
-    hasIcon?: false;
-    icon?: undefined;
-    minInputWidth?: undefined;
-    inputWidth?: undefined;
-}
+type HasIconInput =
+  | {
+      hasIcon: true;
+      icon: ReactNode;
+      minInputWidth: string;
+      inputWidth: string;
+    }
+  | {
+      hasIcon?: false;
+      icon?: undefined;
+      minInputWidth?: undefined;
+      inputWidth?: undefined;
+    };
 
 type StakeInputProps = {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  exchangeRate: number;
+  exchangeRate?: number;
   balance: number;
   token: string;
   title: string;
@@ -45,7 +47,6 @@ export const StakeInput = ({
   exchangeRate,
   balance,
 }: StakeInputProps) => {
-
   return (
     <Stack bg="grey.100" rounded="2xl" px="4" py={3}>
       <Flex justifyContent="space-between" alignItems="center" mb={2} gap="2">
@@ -82,9 +83,9 @@ export const StakeInput = ({
         <Text size="xs" color="grey.600">
           {`BALANCE: ${balance} ${token}`}
         </Text>
-        <Text color="grey.600">
-          {`${token} Value: $${exchangeRate}`}
-        </Text>
+        {exchangeRate && (
+          <Text color="grey.600">{`${token} Value: $${exchangeRate}`}</Text>
+        )}
       </Flex>
     </Stack>
   );

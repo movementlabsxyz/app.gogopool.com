@@ -1,31 +1,75 @@
 import { Flex } from "@chakra-ui/react";
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { BigNumber, utils } from "ethers";
+import {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
-import useBalance from "@/hooks/balance";
+import { useCreateMinipool } from "@/hooks/minipool";
+import { nodeID } from "@/utils";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepThreeProps {
-  setCurrentStep: Dispatch<SetStateAction<number>>;
+  ggpAmount: number;
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  depositAvax: () => Promise<void>;
-  loading: boolean;
+  nodeId: string;
+  setTxID: Dispatch<SetStateAction<string>>;
+  setCreateMinipoolStatus: Dispatch<"error" | "loading" | "success" | "idle">;
 }
 
 export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
   amount,
   setAmount,
-  loading,
-  depositAvax,
+  ggpAmount,
+  nodeId,
+  setCreateMinipoolStatus,
+  setTxID,
 }): JSX.Element => {
-  const balance = useBalance();
+  const [isWaitingOnResult, setIsWaitingOnResult] = useState(false);
 
-  const handleSubmit = (): void => {
-    depositAvax();
+  const { openConnectModal } = useConnectModal();
+  const { address: account, isConnected } = useAccount();
+
+  const { data: balance } = useBalance({
+    addressOrName: account,
+  });
+
+  const {
+    writeAsync: createMinipool,
+    isLoading: isCreateMinipoolLoading,
+    status: createMinipoolStatus,
+  } = useCreateMinipool({
+    nodeId: nodeID(nodeId),
+    bondAmount: utils.parseEther(ggpAmount.toString()),
+    amount: utils.parseEther(amount.toString()),
+    // These need to me made user changeable in the future
+    fee: BigNumber.from(20000),
+    // 15 minutes from now
+    startTime: new Date(Date.now() + 15 * 60 * 1000),
+    // 15 minutes and 2 weeks from now
+    endTime: new Date(Date.now() + 15 * 60 * 1000 + 14 * 24 * 60 * 60 * 1000),
+  });
+
+  useEffect(() => {
+    setCreateMinipoolStatus(createMinipoolStatus);
+  }, [createMinipoolStatus]);
+
+  const handleSubmit = async () => {
+    setIsWaitingOnResult(true);
+    const txResult = await createMinipool();
+    const receipt = await txResult.wait();
+    setTxID(receipt.transactionHash);
+    setIsWaitingOnResult(false);
   };
 
   return (
@@ -38,19 +82,25 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
         token="AVAX"
         amount={amount}
         setAmount={setAmount}
-        balance={roundedBigNumber(balance) || 0}
+        balance={roundedBigNumber(balance?.value) || 0}
         exchangeRate={10}
-        title="DEPOSIT AVAX"
+        title="AVAX STAKING DEPOSIT AMOUNT"
       />
-      <Button
-        full
-        onClick={handleSubmit}
-        data-testid="deposit-avax"
-        mt={4}
-        isLoading={loading}
-      >
-        Deposit AVAX
-      </Button>
+      {isConnected ? (
+        <Button
+          full
+          onClick={handleSubmit}
+          data-testid="deposit-avax"
+          mt={4}
+          isLoading={isCreateMinipoolLoading || isWaitingOnResult}
+        >
+          Deposit AVAX &#38; Stake!
+        </Button>
+      ) : (
+        <Button size="sm" onClick={openConnectModal} data-testid="connect">
+          Connect Wallet
+        </Button>
+      )}
     </Flex>
   );
 };

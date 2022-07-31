@@ -42,7 +42,7 @@ const NavItem = ({ icon, isActive, children, url, ...rest }: NavItemProps) => {
 };
 
 const Sidebar = ({ header, menuItems, ...rest }: SidebarProps) => {
-  const activeMenuIndex = 0
+  const activeMenuIndex = 0;
 
   return (
     <Flex

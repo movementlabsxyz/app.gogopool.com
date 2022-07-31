@@ -30,6 +30,7 @@ module.exports = {
   framework: "@storybook/react",
   core: {
     builder: "@storybook/builder-webpack5",
+    disableTelemetry: true,
   },
   features: {
     emotionAlias: false,
@@ -41,15 +42,16 @@ module.exports = {
     reactDocgen: "react-docgen-typescript",
     reactDocgenTypescriptOptions: {
       shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+      propFilter: (prop) =>
+        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
     },
   },
   webpackFinal: async (config, { configType }) => {
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     config.resolve.fallback = {
-      "stream": require.resolve("stream-browserify"),
-      "crypto": require.resolve("crypto-browserify")
-    }
+      stream: require.resolve("stream-browserify"),
+      crypto: require.resolve("crypto-browserify"),
+    };
     return config;
   },
 };

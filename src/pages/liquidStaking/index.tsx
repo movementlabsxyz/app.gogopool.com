@@ -14,8 +14,8 @@ const Stake = () => {
       <div className="h-full p-4 xs:py-[50px]">
         <PageHead
           append={false}
-          description="Home page description"
-          name="Home"
+          description="Liquid Staking"
+          name="Liquid Staking"
         />
         <VStack spacing="8">
           <LiquidStaking />
