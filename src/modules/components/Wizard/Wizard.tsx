@@ -1,5 +1,4 @@
 import { Box, useToast } from "@chakra-ui/react";
-import { BigNumber, utils } from "ethers";
 import {
   ChangeEvent,
   Dispatch,
@@ -10,9 +9,6 @@ import {
   useState,
 } from "react";
 import { useAccount } from "wagmi";
-
-import { useApproveGGP, useCreateMinipool } from "@/hooks/minipool";
-import { nodeID } from "@/utils";
 
 // I hate this ordering but this is how ESLint wants it
 // - Chandler.
