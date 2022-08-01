@@ -38,7 +38,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
         throw new Error("Invalid node ID");
       }
       // strip all whitespace
-      const id = nodeID(nodeId.replace(/\s/g, ""));
+      const id = nodeID(nodeId);
       if (id) {
         nextStep();
       }

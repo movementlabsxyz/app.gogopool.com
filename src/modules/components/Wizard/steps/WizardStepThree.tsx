@@ -90,7 +90,8 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
         currencySymbol="$"
         title="AVAX STAKING DEPOSIT AMOUNT"
       />
-      {isConnected ? (
+      {/* Wallet is connected and createMinipool callStatic worked */}
+      {isConnected && createMinipool && (
         <Button
           full
           onClick={handleSubmit}
@@ -100,7 +101,16 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
         >
           Deposit AVAX &#38; Stake!
         </Button>
-      ) : (
+      )}
+      {/* Wallet is connected but the createMinipool callStatic failed */}
+      {isConnected && !createMinipool && (
+        <Button disabled full mt={4} variant="destructive-outline">
+          {" "}
+          Cannot deposit AVAX. Please try again later.{" "}
+        </Button>
+      )}
+      {/* Wallet is not connected */}
+      {!isConnected && (
         <Button size="sm" onClick={openConnectModal} data-testid="connect">
           Connect Wallet
         </Button>

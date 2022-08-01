@@ -82,12 +82,11 @@ export const StakeInput = ({
       </Flex>
       <Divider borderColor="grey.300" mb="2" />
       <Flex justifyContent="space-between">
-        {balance && (
-          <Text size="xs" color="grey.600">
-            {`BALANCE: ${balance} ${token}`}
-          </Text>
-        )}
-        {exchangeRate.toString() && exchangeRate !== 0 ? (
+        <Text size="xs" color="grey.600">
+          {`BALANCE: ${balance} ${token}`}
+        </Text>
+
+        {exchangeRate?.toString() && exchangeRate !== 0 ? (
           <Text color="grey.600">
             1 {token} = {currencySymbol}
             {exchangeRate}

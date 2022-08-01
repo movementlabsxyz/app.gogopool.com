@@ -48,6 +48,7 @@ const emptyWallet = (seed: string) => {
 
 // Actual nodeID or random addresses to use for nodeIDs
 export const nodeID = (seed: string) => {
+  seed = seed.replace(/[^a-zA-Z0-9-]/gi, "");
   if (seed.startsWith("NodeID-")) {
     return nodeIDToHex(seed);
   } else if (seed.startsWith("0x")) {

@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack, Text, useToast } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 import { Button } from "@/common/components/Button";
@@ -12,11 +12,20 @@ export interface WizardStepFourProps {
 export const WizardStepFour: FunctionComponent<WizardStepFourProps> = ({
   hash,
 }): JSX.Element => {
+  const toast = useToast();
+
   const handleSubmit = (): void => {
-    alert("Discord link");
+    window.open("https://discord.gg/RWvx3TugqW");
   };
 
   const handleCopy = (): void => {
+    toast({
+      title: "Copied to clipboard!",
+      description: "Your hash has been copied to your clipboard.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
     navigator.clipboard.writeText(hash);
   };
 
