@@ -12,6 +12,7 @@ import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
+import useCoinPrice from "@/hooks/coinPrice";
 import { useCreateMinipool } from "@/hooks/minipool";
 import { nodeID } from "@/utils";
 import { roundedBigNumber } from "@/utils/numberFormatter";
@@ -39,6 +40,8 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
 
   const { openConnectModal } = useConnectModal();
   const { address: account, isConnected } = useAccount();
+
+  const { price } = useCoinPrice("avalanche-2");
 
   const { data: balance } = useBalance({
     addressOrName: account,
@@ -83,7 +86,8 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
         amount={amount}
         setAmount={setAmount}
         balance={roundedBigNumber(balance?.value) || 0}
-        exchangeRate={10}
+        exchangeRate={price}
+        currencySymbol="$"
         title="AVAX STAKING DEPOSIT AMOUNT"
       />
       {isConnected ? (

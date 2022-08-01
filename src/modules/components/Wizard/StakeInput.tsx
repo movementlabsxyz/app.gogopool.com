@@ -30,6 +30,7 @@ type StakeInputProps = {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
   exchangeRate?: number;
+  currencySymbol?: string;
   balance: number;
   token: string;
   title: string;
@@ -46,6 +47,7 @@ export const StakeInput = ({
   setAmount,
   exchangeRate,
   balance,
+  currencySymbol,
 }: StakeInputProps) => {
   return (
     <Stack bg="grey.100" rounded="2xl" px="4" py={3}>
@@ -80,12 +82,17 @@ export const StakeInput = ({
       </Flex>
       <Divider borderColor="grey.300" mb="2" />
       <Flex justifyContent="space-between">
-        <Text size="xs" color="grey.600">
-          {`BALANCE: ${balance} ${token}`}
-        </Text>
-        {exchangeRate && (
-          <Text color="grey.600">{`${token} Value: $${exchangeRate}`}</Text>
+        {balance && (
+          <Text size="xs" color="grey.600">
+            {`BALANCE: ${balance} ${token}`}
+          </Text>
         )}
+        {exchangeRate.toString() && exchangeRate !== 0 ? (
+          <Text color="grey.600">
+            1 {token} = {currencySymbol}
+            {exchangeRate}
+          </Text>
+        ) : null}
       </Flex>
     </Stack>
   );
