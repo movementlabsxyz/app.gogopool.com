@@ -10,9 +10,10 @@ import {
   Show,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
@@ -114,6 +115,7 @@ const statisticData = [
 ];
 
 export const LiquidStaking: FunctionComponent = () => {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { openConnectModal } = useConnectModal();
@@ -162,8 +164,16 @@ export const LiquidStaking: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (depositStatus === "success" || depositStatus === "error") {
+    if (depositStatus === "success") {
       (() => onOpen())();
+      return;
+    }
+    if (depositStatus === "error") {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+      });
+      return;
     }
   }, [depositStatus]);
 
@@ -176,6 +186,35 @@ export const LiquidStaking: FunctionComponent = () => {
       setReward(rewardAmount);
     }
   }, [amount, exchangeRate]);
+
+  const displayButton = () => {
+    if (!isConnected) {
+      return (
+        <Button full onClick={openConnectModal}>
+          Connect Wallet
+        </Button>
+      );
+    }
+    if (balance?.value.lte(utils.parseEther(amount.toString()))) {
+      return (
+        <Button full disabled variant="destructive-outline">
+          Insufficient Funds
+        </Button>
+      );
+    }
+    if (depositStatus === "error") {
+      return (
+        <Button full disabled variant="destructive-outline">
+          Deposit Unavailable
+        </Button>
+      );
+    }
+    return (
+      <Button full disabled={!amount || isLoading} onClick={deposit}>
+        {isLoading ? "Loading..." : "Deposit"}
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -273,17 +312,7 @@ export const LiquidStaking: FunctionComponent = () => {
             </Card>
           </FormControl>
         </Content>
-        <Footer>
-          {isConnected ? (
-            <Button full disabled={!amount || isLoading} onClick={deposit}>
-              {isLoading ? "Loading..." : "Deposit"}
-            </Button>
-          ) : (
-            <Button full onClick={openConnectModal}>
-              Connect Wallet
-            </Button>
-          )}
-        </Footer>
+        <Footer>{displayButton()}</Footer>
       </Card>
     </>
   );
