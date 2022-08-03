@@ -81,3 +81,11 @@ export const randomHexString = (
 export const overrides = {
   gasLimit: 8000000,
 };
+
+export const sanitizeNumbers = (input: string): string => {
+  const s = input.replace(/[^0-9.]/g, "");
+  if (s.length === 0) {
+    return "0";
+  }
+  return s;
+};

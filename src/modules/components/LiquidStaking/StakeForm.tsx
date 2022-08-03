@@ -14,6 +14,7 @@ import { Dispatch, SetStateAction } from "react";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 import { CaretRightIcon } from "@/common/components/CustomIcon/CaretRightIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import { sanitizeNumbers } from "@/utils";
 
 export interface StakeFormProps {
   amount: number;
@@ -83,6 +84,7 @@ export const StakeForm = ({
             ml="8"
             value={amount}
             onChange={(value) => {
+              value = sanitizeNumbers(value);
               setAmount(parse(value));
               setReward(0); // change Reward accordingly
             }}

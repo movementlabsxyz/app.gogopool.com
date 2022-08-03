@@ -10,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
+import { sanitizeNumbers } from "@/utils";
+
 const parse = (val) => (!val || val < 0 ? 0 : val);
 
 type HasIconInput =
@@ -59,6 +61,7 @@ export const StakeInput = ({
           <NumberInput
             value={amount}
             onChange={(value) => {
+              value = sanitizeNumbers(value);
               setAmount(parse(value));
             }}
             min={0}

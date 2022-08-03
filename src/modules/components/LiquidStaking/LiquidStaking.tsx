@@ -13,8 +13,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { BigNumber, utils } from "ethers";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { utils } from "ethers";
+import { FunctionComponent, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
@@ -26,7 +26,6 @@ import useCoinPrice from "@/hooks/coinPrice";
 import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
 import useDeposit from "@/hooks/deposit";
 import useExchangeRate from "@/hooks/ggexchange";
-import { useStorageAddress } from "@/hooks/storage";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { DepositDrawer } from "../Drawer";
@@ -195,7 +194,7 @@ export const LiquidStaking: FunctionComponent = () => {
         </Button>
       );
     }
-    if (balance?.value.lte(utils.parseEther(amount.toString()))) {
+    if (balance?.value.lte(utils.parseEther(amount?.toString() || "0"))) {
       return (
         <Button full disabled variant="destructive-outline">
           Insufficient Funds
