@@ -13,7 +13,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { utils } from "ethers";
+import { BigNumberish, utils } from "ethers";
+import ms from "ms";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
@@ -25,7 +26,8 @@ import { Tooltip } from "@/common/components/Tooltip";
 import useCoinPrice from "@/hooks/coinPrice";
 import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
 import useDeposit from "@/hooks/deposit";
-import useExchangeRate from "@/hooks/ggexchange";
+import useLiquidStakingData from "@/hooks/useLiquidStakingData";
+import { formatEtherFixed } from "@/utils/formatEtherFixed";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { DepositDrawer } from "../Drawer";
@@ -34,84 +36,81 @@ import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
 import { Statistics } from "./Statistics";
 
-const statisticData = [
-  {
-    label: (
-      <>
-        Annual Percentage Rate
-        <Tooltip
-          placement="right"
-          content="Percentage reward you get per year on your staked AVAX."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "~7.20%",
-  },
-  {
-    label: (
-      <>
-        Exchange Rate
-        <Tooltip
-          placement="right"
-          content="Rate of exchange between AVAX and ggAVAX."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "1 AVAX = 0.0000 sAVAX",
-  },
-  {
-    label: <># of Stakers</>,
-    value: "0",
-  },
-  {
-    label: <>Total AVAX Staked</>,
-    value: "0 AVAX",
-  },
-  {
-    label: <>sAVAX Market Cap</>,
-    value: "$0",
-  },
-  {
-    label: (
-      <>
-        Unstaking Cooldown Period
-        <Tooltip
-          placement="right"
-          content="The waiting period before all funds become available."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "0 days",
-  },
-  {
-    label: (
-      <>
-        Redemption Period
-        <Tooltip
-          placement="right"
-          content="The time period where redemption is allowed."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "0 days",
-  },
-];
+const generateStatistics = (
+  apr: number | string,
+  exchangeRate: BigNumberish,
+  stakedAmount: BigNumberish,
+  stakers: BigNumberish | string,
+  marketCap: BigNumberish | string,
+  rewardPeriod: number = 84600000 * 14
+) => {
+  return [
+    {
+      label: (
+        <>
+          Annual Percentage Rate
+          <Tooltip
+            placement="right"
+            content="Percentage reward you get per year on your staked AVAX."
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: typeof apr === "string" ? apr : `~${apr.toFixed(2)}%`,
+    },
+    {
+      label: (
+        <>
+          Exchange Rate
+          <Tooltip
+            placement="right"
+            content="Rate of exchange between AVAX and ggAVAX."
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: `1 AVAX = ${formatEtherFixed(exchangeRate)} ggAVAX`,
+    },
+    {
+      label: <># of Stakers</>,
+      value:
+        typeof stakers === "string" ? stakers : formatEtherFixed(stakers, 0),
+    },
+    {
+      label: <>Total AVAX Staked</>,
+      value: `${formatEtherFixed(stakedAmount)} AVAX`,
+    },
+    {
+      label: <>ggAVAX Market Cap</>,
+      value:
+        typeof marketCap === "string"
+          ? marketCap
+          : `$${formatEtherFixed(marketCap, 0)}`,
+    },
+    {
+      label: (
+        <>
+          Reward Period
+          <Tooltip
+            placement="right"
+            content="The waiting period before rewards are gained"
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: ms(rewardPeriod, { long: true }),
+    },
+  ];
+};
 
 export const LiquidStaking: FunctionComponent = () => {
   const toast = useToast();
@@ -125,6 +124,13 @@ export const LiquidStaking: FunctionComponent = () => {
   const { isConnected, address: account } = useAccount();
 
   const { address: ggAVAXAddress } = useTokenggAVAXContract();
+
+  const {
+    exchangeRate,
+    isLoading: isLoadingStats,
+    totalStakedAVAX,
+    apr,
+  } = useLiquidStakingData();
 
   // AVAX balance
   const { data: balance, isLoading: isBalanceLoading } = useBalance({
@@ -144,15 +150,18 @@ export const LiquidStaking: FunctionComponent = () => {
     status: depositStatus,
   } = useDeposit(utils.parseEther(amount?.toString() || "0"));
 
-  // ggAVAX to AVAX exchange rate
-  const { data: exchangeRate, isLoading: isLoadingExchangeRate } =
-    useExchangeRate();
-
   // Current market price for AVAX
   const { price: AVAXPrice } = useCoinPrice("avalanche-2");
 
-  const isLoading =
-    isBalanceLoading || isDepositLoading || isLoadingExchangeRate;
+  const isLoading = isBalanceLoading || isDepositLoading || isLoadingStats;
+
+  const statisticData = generateStatistics(
+    apr,
+    exchangeRate || 0,
+    totalStakedAVAX || 0,
+    "Coming Soon",
+    "Coming Soon"
+  );
 
   const handleSwap = () => {
     const temporaryAmount = amount;

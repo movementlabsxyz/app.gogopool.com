@@ -1,5 +1,6 @@
 import { BigNumberish, utils } from "ethers";
 
+// formats a BigNumber to a number with a given number of decimals
 export const roundedBigNumber = (
   num: BigNumberish | undefined,
   decimals = 4
