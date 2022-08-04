@@ -42,8 +42,12 @@ const generateStatistics = (
   stakedAmount: BigNumberish,
   stakers: BigNumberish | string,
   marketCap: BigNumberish | string,
-  rewardPeriod: number = 84600000 * 14
+  rewardPeriod?: number | null | undefined
 ) => {
+  if (!rewardPeriod) {
+    rewardPeriod = 84600000 * 14;
+  }
+
   return [
     {
       label: (
@@ -130,6 +134,7 @@ export const LiquidStaking: FunctionComponent = () => {
     isLoading: isLoadingStats,
     totalStakedAVAX,
     apr,
+    rewardsCycleLength,
   } = useLiquidStakingData();
 
   // AVAX balance
@@ -160,7 +165,8 @@ export const LiquidStaking: FunctionComponent = () => {
     exchangeRate || 0,
     totalStakedAVAX || 0,
     "Coming Soon",
-    "Coming Soon"
+    "Coming Soon",
+    (rewardsCycleLength as unknown as number) * 1000
   );
 
   const handleSwap = () => {
