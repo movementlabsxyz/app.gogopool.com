@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 const { parseEther } = utils;
 
-import fetcher from "@/utils/fetcher";
+import fetcher from "../utils/fetcher";
 
 const useCoinPrice = (
   currencyId: string,

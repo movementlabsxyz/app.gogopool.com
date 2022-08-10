@@ -1,6 +1,7 @@
 import { utils } from "ethers";
 
-import TokenGGP from "../../contracts/TokenGGP.json";
+import TokenGGP from "@/contracts/TokenGGP.json";
+
 import { useStorageAddress } from "../storage";
 
 const useTokenGGPContract = () => {

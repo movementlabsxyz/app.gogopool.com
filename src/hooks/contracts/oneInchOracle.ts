@@ -1,7 +1,7 @@
 // import { useStorageAddress } from "../storage";
 import { utils } from "ethers";
 
-import OneInchOracle from "../../contracts/OneInchMock.json";
+import OneInchOracle from "@/contracts/OneInchMock.json";
 
 const useOneInchOracle = () => {
   // this will be changed to the real contract when its available

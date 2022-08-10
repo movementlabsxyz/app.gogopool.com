@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumber, utils } from "ethers";
+import ms from "ms";
 import {
   Dispatch,
   FunctionComponent,
@@ -20,7 +21,6 @@ import { roundedBigNumber } from "@/utils/numberFormatter";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepThreeProps {
-  ggpAmount: number;
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
   nodeId: string;
@@ -31,7 +31,6 @@ export interface WizardStepThreeProps {
 export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
   amount,
   setAmount,
-  ggpAmount,
   nodeId,
   setCreateMinipoolStatus,
   setTxID,
@@ -47,20 +46,17 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
     addressOrName: account,
   });
 
+  // this is reverting now, need to find out why
   const {
     writeAsync: createMinipool,
     isLoading: isCreateMinipoolLoading,
     status: createMinipoolStatus,
   } = useCreateMinipool({
     nodeId: nodeID(nodeId),
-    bondAmount: utils.parseEther(ggpAmount.toString()),
     amount: utils.parseEther(amount.toString()),
     // These need to me made user changeable in the future
     fee: BigNumber.from(20000),
-    // 15 minutes from now
-    startTime: new Date(Date.now() + 15 * 60 * 1000),
-    // 15 minutes and 2 weeks from now
-    endTime: new Date(Date.now() + 15 * 60 * 1000 + 14 * 24 * 60 * 60 * 1000),
+    duration: "14d",
   });
 
   useEffect(() => {
@@ -99,7 +95,7 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
           mt={4}
           isLoading={isCreateMinipoolLoading || isWaitingOnResult}
         >
-          Deposit AVAX &#38; Stake!
+          Stake AVAX!
         </Button>
       )}
       {/* Wallet is connected but the createMinipool callStatic failed */}

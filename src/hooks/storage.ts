@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import { useContractRead } from "wagmi";
 
+import Storage from "@/contracts/Storage.json";
+
 import { storageAddress } from "../constants/anr";
-import Storage from "../contracts/Storage.json";
 
 export const useStorageAddress = (key: string, storageAddr?: string) => {
   const addr = storageAddr || storageAddress;

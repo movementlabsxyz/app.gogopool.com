@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import {
   Dispatch,
   FunctionComponent,
@@ -10,17 +9,18 @@ import {
 } from "react";
 import { useAccount, useBalance } from "wagmi";
 
-import { Button } from "@/common/components/Button";
+import useGGPAllowance from "@/hooks/allowance";
 import useTokenGGPContract from "@/hooks/contracts/tokenGGP";
-import { useApproveGGP } from "@/hooks/minipool";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
+import ApproveButton from "../Buttons/ApproveButton";
+import StakeButton from "../Buttons/StakeButton";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepTwoProps {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  setApproveStatus: Dispatch<
+  setStakeStatus: Dispatch<
     SetStateAction<"error" | "loading" | "success" | "idle">
   >;
 }
@@ -28,44 +28,30 @@ export interface WizardStepTwoProps {
 export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
   amount,
   setAmount,
-  setApproveStatus,
+  setStakeStatus,
 }): JSX.Element => {
-  // These hooks need to be organized better - Chandler
-  const [loading, setLoading] = useState(false);
+  const [approved, setApproved] = useState(false);
+  const [approveStatus, setApproveStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
 
-  const {
-    writeAsync: approve,
-    isLoading: isApproveLoading,
-    status: approveGGPStatus,
-  } = useApproveGGP(utils.parseEther(amount.toString()));
-
-  const { openConnectModal } = useConnectModal();
-
-  const { address: account, isConnected } = useAccount();
+  const { address: account } = useAccount();
   const { address: ggpAddress } = useTokenGGPContract();
+  const { data: ggpAllowance } = useGGPAllowance(account);
 
   const { data: balance } = useBalance({
     addressOrName: account,
     token: ggpAddress,
   });
 
-  const handleSubmit = async (): Promise<void> => {
-    try {
-      const txResult = await approve();
-      await txResult.wait();
-    } catch (e) {
-      setLoading(false);
-    }
-  };
+  const allowance = (ggpAllowance as unknown as BigNumber) || BigNumber.from(0);
+  const amountBN = utils.parseEther(amount.toString());
 
   useEffect(() => {
-    if (isApproveLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
+    if (!approved && approveStatus === "success") {
+      setApproved(true);
     }
-    setApproveStatus(approveGGPStatus);
-  }, [approveGGPStatus, setApproveStatus, isApproveLoading]);
+  }, [approved, approveStatus, setApproved]);
 
   return (
     <Flex direction="column">
@@ -77,24 +63,10 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
         title="DEPOSIT GGP"
       />
       <Flex justify="center" mt={{ md: 6, base: 3 }} mb={{ md: 4, base: 2 }}>
-        {isConnected ? (
-          <Button
-            size="sm"
-            onClick={handleSubmit}
-            data-testid="approve-ggp"
-            isLoading={loading}
-          >
-            Approve
-          </Button>
+        {allowance.gte(amountBN) || approved ? (
+          <StakeButton amount={amount} setStakeStatus={setStakeStatus} />
         ) : (
-          <Button
-            size="sm"
-            onClick={openConnectModal}
-            data-testid="connect"
-            isLoading={loading}
-          >
-            Connect Wallet
-          </Button>
+          <ApproveButton amount={amount} setApproveStatus={setApproveStatus} />
         )}
       </Flex>
       {/* I'm not sure we'll use this? Maybe? - Chandler

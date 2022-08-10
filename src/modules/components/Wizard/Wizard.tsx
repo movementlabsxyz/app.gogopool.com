@@ -105,7 +105,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
         return (
           <WizardStepTwo
             amount={ggpAmount}
-            setApproveStatus={setApproveStatus}
+            setStakeStatus={setApproveStatus}
             setAmount={setGGPAmount}
           />
         );
@@ -113,7 +113,6 @@ export const Wizard: FunctionComponent<WizardProps> = ({
         return (
           <WizardStepThree
             amount={avaxAmount}
-            ggpAmount={ggpAmount}
             setAmount={setAvaxAmount}
             nodeId={nodeId}
             setCreateMinipoolStatus={setCreateMinipoolStatus}

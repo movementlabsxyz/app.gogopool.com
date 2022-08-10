@@ -1,6 +1,7 @@
 import { utils } from "ethers";
 
-import MinipoolManager from "../../contracts/MinipoolManager.json";
+import MinipoolManager from "@/contracts/MinipoolManager.json";
+
 import { useStorageAddress } from "../storage";
 
 const useMinipoolManagerContract = () => {

@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useTheme } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { Button } from "@/common/components/Button";
@@ -12,7 +12,6 @@ import { SidebarLayoutHOC } from "@/common/components/SidebarLayout";
 import { Wizard } from "@/modules/components/Wizard";
 
 function NodeOperator() {
-  const theme = useTheme();
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   return (
