@@ -26,6 +26,7 @@ function NodeOperator() {
         description="Node Operator description"
         name="Node Operator"
       />
+      {/* A tutorial should be made. See issue #79 
       <Flex justifyContent="flex-end">
         <Button
           bg="white"
@@ -39,7 +40,7 @@ function NodeOperator() {
             Watch a quick tutorial
           </Text>
         </Button>
-      </Flex>
+      </Flex> */}
       <Wizard currentStep={currentStep} setCurrentStep={setCurrentStep} />
       <Flex
         mb="80px"
