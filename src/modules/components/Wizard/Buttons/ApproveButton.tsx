@@ -1,10 +1,11 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumber, utils } from "ethers";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
 import useApproveGGP from "@/hooks/approve";
+import useTokenGGPContract from "@/hooks/contracts/tokenGGP";
 
 export interface ApproveProps {
   amount: number | BigNumber;
@@ -14,12 +15,21 @@ export interface ApproveProps {
 }
 
 const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
-  const { isConnected } = useAccount();
+  const { address: account, isConnected } = useAccount();
+  const { address: ggpAddress } = useTokenGGPContract();
+
+  const { data: balance } = useBalance({
+    addressOrName: account,
+    token: ggpAddress,
+  });
+
   const { openConnectModal } = useConnectModal();
 
   if (typeof amount === "number") {
     amount = utils.parseEther(amount.toString());
   }
+
+  const notAllowed = (balance && balance?.value.lt(amount)) || amount.isZero();
 
   const {
     writeAsync: approve,
@@ -39,7 +49,7 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
   return isConnected ? (
     <Button
       onClick={handleSubmit}
-      disabled={isApproveLoading || !amount.gt(0) || !approve}
+      disabled={isApproveLoading || notAllowed || !approve}
       isLoading={isApproveLoading}
     >
       Approve
