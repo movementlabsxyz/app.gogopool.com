@@ -18,6 +18,7 @@ import { useCreateMinipool } from "@/hooks/minipool";
 import { nodeID } from "@/utils";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
+import WeekInput from "../components/WeekInput";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepThreeProps {
@@ -36,6 +37,7 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
   setTxID,
 }): JSX.Element => {
   const [isWaitingOnResult, setIsWaitingOnResult] = useState(false);
+  const [stakingPeriod, setStakingPeriod] = useState(2);
 
   const { openConnectModal } = useConnectModal();
   const { address: account, isConnected } = useAccount();
@@ -56,7 +58,7 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
     amount: utils.parseEther(amount.toString()),
     // These need to me made user changeable in the future
     fee: BigNumber.from(20000),
-    duration: "14d",
+    duration: stakingPeriod.toString() + "w",
   });
 
   useEffect(() => {
@@ -73,6 +75,12 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
 
   return (
     <Flex direction="column">
+      <WeekInput
+        title="Staking Duration (Weeks)"
+        value={stakingPeriod}
+        setValue={setStakingPeriod}
+        disabled
+      />
       <StakeInput
         hasIcon
         icon={<AvalancheIcon />}

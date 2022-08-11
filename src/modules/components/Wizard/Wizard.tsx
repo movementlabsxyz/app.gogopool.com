@@ -134,7 +134,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       color="#000000"
       maxW={780}
       marginX="auto"
-      h="660px"
+      h="775px"
     >
       <WizardHeader step={currentStep} headerRef={headerRef} />
       <Box mx="auto" maxWidth="528px">

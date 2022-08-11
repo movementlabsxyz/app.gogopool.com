@@ -13,8 +13,8 @@ import useGGPAllowance from "@/hooks/allowance";
 import useTokenGGPContract from "@/hooks/contracts/tokenGGP";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
-import ApproveButton from "../Buttons/ApproveButton";
-import StakeButton from "../Buttons/StakeButton";
+import ApproveButton from "../components/ApproveButton";
+import StakeButton from "../components/StakeButton";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepTwoProps {

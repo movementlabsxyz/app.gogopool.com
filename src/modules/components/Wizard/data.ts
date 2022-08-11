@@ -11,8 +11,8 @@ export const wizardSteps: WizardData[] = [
     image: images.wizardStep1,
     size: {
       width: 211,
-      height: 213 
-    }
+      height: 213,
+    },
   },
   {
     step: 2,
@@ -21,20 +21,20 @@ export const wizardSteps: WizardData[] = [
     image: images.wizardStep2,
     size: {
       width: 211,
-      height: 213 
-    }
+      height: 213,
+    },
   },
   {
     step: 3,
     header: "Deposit AVAX",
     title: "Deposit AVAX",
     description:
-      "Create your minipool by depositing 1000AVAX. GoGoPool will match your friends, and register you as a new valstepator node.",
+      "Create your minipool by depositing 1000 AVAX. GoGoPool will match your funds, and register you as a new validator node.",
     image: images.wizardStep3,
     size: {
       width: 183,
-      height:164 
-    }
+      height: 164,
+    },
   },
   {
     step: 4,
@@ -44,7 +44,7 @@ export const wizardSteps: WizardData[] = [
     image: images.wizardStep4,
     size: {
       width: 211,
-      height: 213 
-    }
+      height: 213,
+    },
   },
 ];
