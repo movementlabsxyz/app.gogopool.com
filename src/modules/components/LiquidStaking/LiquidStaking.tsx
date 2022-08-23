@@ -18,6 +18,7 @@ import ms from "ms";
 import { FunctionComponent, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
+import { Address } from "@/common/components/Address";
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { InfoCircleIcon } from "@/common/components/CustomIcon";
@@ -44,13 +45,33 @@ const generateStatistics = (
   stakedAmount: BigNumberish,
   stakers: BigNumberish | string,
   marketCap: BigNumberish | string,
-  rewardPeriod?: number | null | undefined
+  rewardPeriod?: number | null | undefined,
+  tokenAddress?: string | null | undefined
 ) => {
   if (!rewardPeriod) {
     rewardPeriod = 84600000 * 14;
   }
 
   return [
+    {
+      label: (
+        <>
+          Token Address
+          <Tooltip placement="right" content="The address of the ggAVAX token">
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: tokenAddress ? (
+        <Address fontWeight="bold" copyable>
+          {tokenAddress}
+        </Address>
+      ) : (
+        "Loading..."
+      ),
+    },
     {
       label: (
         <>
@@ -177,7 +198,8 @@ export const LiquidStaking: FunctionComponent = () => {
     totalStakedAVAX || 0,
     "Coming Soon",
     "Coming Soon",
-    (rewardsCycleLength as unknown as number) * 1000
+    (rewardsCycleLength as unknown as number) * 1000,
+    ggAVAXAddress
   );
 
   const handleSwap = () => {
