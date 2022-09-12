@@ -84,12 +84,6 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
           </Button>
         )}
       </Stack>
-      <Text color="grey.500" size="xs">
-        AVAX available for Swap:{" "}
-        <Text as="span" size="xs" fontWeight={700} color="grey.1000">
-          {roundedBigNumber(balance?.value || 0)} AVAX
-        </Text>
-      </Text>
     </Stack>
   );
 };

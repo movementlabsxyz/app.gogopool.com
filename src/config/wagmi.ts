@@ -6,7 +6,7 @@ import chain from "@/config/chains";
 
 export const configWagmiClient = () => {
   const { chains, provider } = configureChains(
-    [chain.avalanche, chain.fuji, /*chain.local,*/ chain.anr],
+    [/*chain.avalanche, chain.fuji, chain.local,*/ chain.anr],
     [publicProvider()]
   );
 

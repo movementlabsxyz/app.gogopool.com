@@ -29,7 +29,9 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
     amount = utils.parseEther(amount.toString());
   }
 
-  const notAllowed = (balance && balance?.value.lt(amount)) || amount.isZero();
+  const notAllowed =
+    (balance && balance?.value.lt(amount)) ||
+    (amount?.isZero && amount?.isZero());
 
   const {
     writeAsync: approve,

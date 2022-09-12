@@ -1,13 +1,11 @@
 /* eslint-disable no-undef */
 module.exports = {
   root: true,
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:tailwindcss/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:tailwindcss/recommended", "plugin:storybook/recommended"],
   parser: "@typescript-eslint/parser",
-  parserOptions: { project: ["./tsconfig.json"] },
+  parserOptions: {
+    project: ["./tsconfig.json"]
+  },
   plugins: ["@typescript-eslint", "simple-import-sort", "tailwindcss"],
   rules: {
     semi: ["error", "always"],
@@ -16,7 +14,7 @@ module.exports = {
     "simple-import-sort/exports": "error",
     "no-console": "warn",
     "tailwindcss/no-custom-classname": "off",
-    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-empty-interface": "off"
   },
-  ignorePatterns: ["src/**/*.test.ts"],
+  ignorePatterns: ["src/**/*.test.ts"]
 };

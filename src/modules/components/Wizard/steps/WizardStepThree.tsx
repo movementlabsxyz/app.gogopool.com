@@ -58,7 +58,8 @@ export const WizardStepThree: FunctionComponent<WizardStepThreeProps> = ({
     amount: utils.parseEther(amount.toString()),
     // These need to me made user changeable in the future
     fee: BigNumber.from(20000),
-    duration: stakingPeriod.toString() + "w",
+    // duration: stakingPeriod.toString() + "w",
+    duration: "15m",
   });
 
   useEffect(() => {

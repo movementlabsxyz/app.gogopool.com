@@ -41,7 +41,7 @@ export const useCreateMinipool = ({
     addressOrName: address,
     contractInterface,
     functionName: "createMinipool",
-    args: [formattedID, BigNumber.from(duration), fee],
+    args: [formattedID, BigNumber.from(duration), fee, amount],
     overrides: {
       value: amount,
     },

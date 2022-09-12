@@ -1,12 +1,7 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { Button } from "@/common/components/Button";
-import {
-  NodeOperatorIcon,
-  PlayButtonIcon,
-  RewardIcon,
-} from "@/common/components/CustomIcon";
+import { NodeOperatorIcon, RewardIcon } from "@/common/components/CustomIcon";
 import { PageHead } from "@/common/components/PageHead";
 import { SidebarLayoutHOC } from "@/common/components/SidebarLayout";
 import { Wizard } from "@/modules/components/Wizard";
@@ -42,36 +37,6 @@ function NodeOperator() {
         </Button>
       </Flex> */}
       <Wizard currentStep={currentStep} setCurrentStep={setCurrentStep} />
-      <Flex
-        mb="80px"
-        mt={{ base: 0, md: "100px" }}
-        justifyContent={{ base: "center", md: "space-between" }}
-        direction={{ base: "column", md: "row" }}
-      >
-        {/* I'm not sure we need these. - Chandler 
-        <Button
-          disabled
-          onClick={() => setCurrentStep((s) => s - 1)}
-          _disabled={{
-            boxShadow: `inset 0 0 0 2px ${theme.colors.blue[500]}`,
-            opacity: 0.4,
-          }}
-          variant="secondary-outline"
-          w={{ base: "full", md: "144px" }}
-          mt={{ base: 8, md: 0 }}
-        >
-          <Text>Previous</Text>
-        </Button>
-        <Button
-          disabled
-          onClick={() => setCurrentStep((s) => s + 1)}
-          variant="secondary-outline"
-          w={{ base: "full", md: "144px" }}
-          mt={{ base: 6, md: 0 }}
-        >
-          <Text>Next</Text>
-        </Button> */}
-      </Flex>
     </Box>
   );
 }

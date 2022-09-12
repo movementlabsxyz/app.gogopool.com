@@ -12,7 +12,7 @@ export const colors: Colors = {
     600: "#2E25A0",
     550: "#382EA8",
     500: "#3E33BB",
-    400: "#6B61D6",
+    400: "#5D43EF",
     300: "#8E84EA",
     200: "#B7AFF8",
     100: "#DBD7FB",

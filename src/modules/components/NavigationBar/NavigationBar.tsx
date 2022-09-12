@@ -1,26 +1,44 @@
-import { Box, Flex, Stack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Link } from "@chakra-ui/react";
+import Image from "next/image";
 
 import ConnectButton from "@/common/components/ConnectButton";
-import { GogopoolIcon } from "@/common/components/CustomIcon/GogopoolIcon";
 
 export const NavigationBar = () => {
   return (
     <Box
-      p="0.75rem 1.5rem"
+      p="0.75rem 1.5rem 0.75rem 1.5rem"
       borderBottomWidth="1px"
       borderBottomColor="#0000001A"
       bgColor="grey.0"
-      h="58px"
+      h="70px"
     >
       <Flex alignItems="center" justifyContent="space-between">
-        <Box>
-          <GogopoolIcon />
-        </Box>
+        <HStack gap={6}>
+          <Link href="/">
+            <Image src={"/assets/img/nav/logo.svg"} width={118} height={32} />
+          </Link>
+          <HStack gap={2}>
+            <Link href="/alphaWelcome" color="blue.400" fontWeight="bold">
+              Welcome
+            </Link>
+            <Link
+              href="https://docs.gogopool.com"
+              color="blue.400"
+              fontWeight="bold"
+            >
+              Docs
+            </Link>
+            <Link href="/liquidStaking" color="blue.400" fontWeight="bold">
+              Liquid Staking
+            </Link>
+            <Link href="/nodeOperator" color="blue.400" fontWeight="bold">
+              Node Operator
+            </Link>
+          </HStack>
+        </HStack>
 
         <Flex alignItems="center">
-          <Stack direction="row" spacing="7">
-            <ConnectButton />
-          </Stack>
+          <ConnectButton />
         </Flex>
       </Flex>
     </Box>

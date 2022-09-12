@@ -1,5 +1,6 @@
-import { Button } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+
+import { Button } from "@/common/components/Button";
 
 export const CB = () => {
   return (
@@ -26,12 +27,21 @@ export const CB = () => {
             {(() => {
               if (!mounted || !account || !chain) {
                 return (
-                  <Button onClick={openConnectModal}>Connect Wallet</Button>
+                  <Button variant="secondary-filled" onClick={openConnectModal}>
+                    Connect Wallet
+                  </Button>
                 );
               }
 
               if (chain.unsupported) {
-                return <Button onClick={openChainModal}>Wrong network</Button>;
+                return (
+                  <Button
+                    variant="destructive-outline"
+                    onClick={openChainModal}
+                  >
+                    Wrong network
+                  </Button>
+                );
               }
 
               return (
@@ -55,7 +65,8 @@ export const CB = () => {
                           <img
                             alt={chain.name ?? "Chain icon"}
                             src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
+                            width={12}
+                            height={12}
                           />
                         )}
                       </div>
