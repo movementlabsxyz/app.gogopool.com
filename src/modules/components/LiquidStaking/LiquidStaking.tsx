@@ -22,7 +22,7 @@ import { Address } from "@/common/components/Address";
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { InfoCircleIcon } from "@/common/components/CustomIcon";
-import { GGPBallonIcon } from "@/common/components/CustomIcon/GGPBalloonIcon";
+import { GGPToken } from "@/common/components/CustomIcon/GGPToken";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
 import useCoinPrice from "@/hooks/coinPrice";
@@ -356,7 +356,7 @@ export const LiquidStaking: FunctionComponent = () => {
                       balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
                       token="ggAVAX"
                       header="REDEEM ggAVAX"
-                      icon={<GGPBallonIcon />}
+                      icon={<GGPToken />}
                     />
                   ) : (
                     <StakeForm
@@ -396,7 +396,7 @@ export const LiquidStaking: FunctionComponent = () => {
                   <RewardForm
                     reward={reward}
                     balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
-                    icon={<GGPBallonIcon />}
+                    icon={<GGPToken />}
                   />
                 )}
               </Content>
