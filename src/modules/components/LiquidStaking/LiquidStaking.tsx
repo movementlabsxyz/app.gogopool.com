@@ -154,8 +154,8 @@ export const LiquidStaking: FunctionComponent = () => {
   const { address: ggAVAXAddress } = useTokenggAVAXContract();
 
   const {
-    exchangeRate: tokenExchangeRate,
     isLoading: isLoadingStats,
+    ggAvaxExchangeRate,
     totalStakedAVAX,
     apr,
     rewardsCycleLength,
@@ -194,7 +194,7 @@ export const LiquidStaking: FunctionComponent = () => {
 
   const statisticData = generateStatistics(
     apr,
-    tokenExchangeRate || 0,
+    ggAvaxExchangeRate || 0,
     totalStakedAVAX || 0,
     "Coming Soon",
     "Coming Soon",
@@ -240,7 +240,7 @@ export const LiquidStaking: FunctionComponent = () => {
 
   useEffect(() => {
     if (swapDirection) {
-      const rate = parseInt(utils.formatEther(tokenExchangeRate || 0));
+      const rate = Number(utils.formatEther(ggAvaxExchangeRate || 0));
       const rewardAmount = amount / rate;
       if (isNaN(rewardAmount)) {
         setReward(0);
@@ -248,7 +248,7 @@ export const LiquidStaking: FunctionComponent = () => {
         setReward(rewardAmount);
       }
     } else {
-      const rate = parseInt(utils.formatEther(tokenExchangeRate || 0));
+      const rate = Number(utils.formatEther(ggAvaxExchangeRate || 0));
       const rewardAmount = rate * amount;
       if (isNaN(rewardAmount)) {
         setReward(0);
@@ -256,7 +256,7 @@ export const LiquidStaking: FunctionComponent = () => {
         setReward(rewardAmount);
       }
     }
-  }, [amount, tokenExchangeRate, swapDirection]);
+  }, [amount, ggAvaxExchangeRate, swapDirection]);
 
   const displayButton = () => {
     if (!isConnected) {

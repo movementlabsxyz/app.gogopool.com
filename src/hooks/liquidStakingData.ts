@@ -10,7 +10,7 @@ const useLiquidStakingData = () => {
   const { address: ggAVAXAddr, contractInterface: ggAVAXInterface } =
     useTokenggAVAXContract();
 
-  const { data: exchangeRate, isLoading: isExchangeRateLoading } =
+  const { data: ggAvaxExchangeRate, isLoading: isExchangeRateLoading } =
     useExchangeRate();
 
   const { data: totalStakedAVAX, isLoading: isStakingBalanceLoading } =
@@ -27,7 +27,7 @@ const useLiquidStakingData = () => {
       functionName: "rewardsCycleLength",
     });
 
-  const apr = 1 - roundedBigNumber(exchangeRate, 4);
+  const apr = 1 - roundedBigNumber(ggAvaxExchangeRate, 4);
 
   const isLoading =
     isExchangeRateLoading ||
@@ -35,7 +35,7 @@ const useLiquidStakingData = () => {
     isRewardsCycleLengthLoading;
 
   return {
-    exchangeRate,
+    ggAvaxExchangeRate,
     isLoading,
     rewardsCycleLength,
     totalStakedAVAX,
