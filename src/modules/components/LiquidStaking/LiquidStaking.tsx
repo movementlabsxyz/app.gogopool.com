@@ -16,7 +16,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumberish, utils } from "ethers";
 import ms from "ms";
 import { FunctionComponent, useEffect, useState } from "react";
-import { useAccount, useBalance } from "wagmi";
+import { useNetwork, useAccount, useBalance } from "wagmi";
 
 import { Address } from "@/common/components/Address";
 import { Button } from "@/common/components/Button";
@@ -145,6 +145,8 @@ export const LiquidStaking: FunctionComponent = () => {
 
   const { openConnectModal } = useConnectModal();
 
+  const { chain } = useNetwork();
+
   const [swapDirection, setSwapDirection] = useState(false); // false for AVAX -> ggAVAX, true for ggAVAX -> AVAX
   const [amount, setAmount] = useState<number>(); // stake value
   const [reward, setReward] = useState<number>(0); // reward value
@@ -263,6 +265,13 @@ export const LiquidStaking: FunctionComponent = () => {
       return (
         <Button full onClick={openConnectModal}>
           Connect Wallet
+        </Button>
+      );
+    }
+    if (chain.unsupported) {
+      return (
+        <Button full disabled variant="destructive-outline">
+          Wrong Network
         </Button>
       );
     }
