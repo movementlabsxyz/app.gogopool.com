@@ -151,6 +151,12 @@ export const LiquidStaking: FunctionComponent = () => {
   const [amount, setAmount] = useState<number>(); // stake value
   const [reward, setReward] = useState<number>(0); // reward value
 
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
   const { isConnected, address: account } = useAccount();
 
   const { address: ggAVAXAddress } = useTokenggAVAXContract();
@@ -437,7 +443,7 @@ export const LiquidStaking: FunctionComponent = () => {
             </Card>
           </FormControl>
         </Content>
-        <Footer>{displayButton()}</Footer>
+        <Footer>{!isSSR && displayButton()}</Footer>
       </Card>
     </>
   );

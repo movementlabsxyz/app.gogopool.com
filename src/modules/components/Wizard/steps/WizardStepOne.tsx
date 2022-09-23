@@ -1,6 +1,6 @@
 import { Stack, Text, useToast } from "@chakra-ui/react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { ChangeEvent, FunctionComponent, useState } from "react";
+import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { Button } from "@/common/components/Button";
@@ -26,6 +26,12 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
     addressOrName: account,
   });
   const [loading, setLoading] = useState(false);
+
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
 
   const toast = useToast();
   const { openConnectModal } = useConnectModal();
@@ -62,7 +68,7 @@ export const WizardStepOne: FunctionComponent<WizardStepOneProps> = ({
           value={nodeId}
           onChange={handleChangeNodeId}
         />
-        {isConnected ? (
+        {!isSSR && isConnected ? (
           <Button
             size="sm"
             isLoading={loading}
