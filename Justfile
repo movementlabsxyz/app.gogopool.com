@@ -14,7 +14,7 @@ get-contracts gcpath="../gogopool-contracts":
   #!/bin/zsh
   gcpath={{gcpath}}/artifacts
   CURRENT=$PWD
-  CONTRACTS=("Oracle" "Storage" "MinipoolManager" "TokenGGP" "TokenggAVAX" "Staking" "OneInchMock")
+  CONTRACTS=("Oracle" "Storage" "MinipoolManager" "TokenGGP" "TokenggAVAX" "Staking" "OneInchMock" "RewardsPool" "NOPClaim")
 
   cd {{gcpath}}
   if [[ ! -d "node_modules" ]]; then

@@ -8,6 +8,7 @@ import { Button } from "./components/button";
 import { Card } from "./components/card";
 import { Drawer } from "./components/drawer";
 import { Heading } from "./components/heading";
+import { Link } from "./components/link";
 import { Modal } from "./components/modal";
 import { Text } from "./components/text";
 import { config } from "./config";
@@ -20,6 +21,7 @@ const theme = extendTheme(
       Heading,
       Text,
       Button,
+      Link,
       Card,
       Modal,
       Drawer,

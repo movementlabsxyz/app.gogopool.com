@@ -3,19 +3,22 @@ import { FunctionComponent } from "react";
 
 import { ModalBody, ModalHeader } from "@/common/components/Modal";
 
+import { TransactionHash } from "./TransactionHash";
+
 export interface SuccessfulDepositModalProps {
   amount: number;
   token: string;
+  transactionHash: string;
 }
 
 export const SuccessfulDepositModal: FunctionComponent<
   SuccessfulDepositModalProps
-> = ({ amount, token }) => {
+> = ({ amount, token, transactionHash }) => {
   return (
     <>
       <ModalHeader>
         <Heading textAlign="center" size="h5" color="grey.1000">
-          Congratulations! 👏
+          successful deposit modal
         </Heading>
       </ModalHeader>
       <ModalBody>
@@ -23,6 +26,7 @@ export const SuccessfulDepositModal: FunctionComponent<
           You've successfully deposited{" "}
           <Box as="span" fontWeight={700}>{`${amount} ${token}!`}</Box> 😄
         </Text>
+        <TransactionHash transactionHash={transactionHash} />
       </ModalBody>
     </>
   );

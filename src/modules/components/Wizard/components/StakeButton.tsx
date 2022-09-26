@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useAccount } from "wagmi";
 
 import { Button } from "@/common/components/Button";
-import useStake from "@/hooks/stake";
+import { useGetGGPStake, useStakeGGP } from "@/hooks/useStake";
 
 export interface StakeButtonProps {
   amount: number | BigNumber;
@@ -14,7 +14,7 @@ export interface StakeButtonProps {
 }
 
 const StakeButton = ({ amount, setStakeStatus }: StakeButtonProps) => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   if (typeof amount === "number") {
@@ -25,11 +25,18 @@ const StakeButton = ({ amount, setStakeStatus }: StakeButtonProps) => {
     writeAsync: stake,
     isLoading: isStakeLoading,
     status: stakeStatus,
-  } = useStake(amount);
+  } = useStakeGGP(amount);
+  const { data: ggpStake } = useGetGGPStake(address, true);
 
   useEffect(() => {
-    setStakeStatus(stakeStatus);
-  }, [stakeStatus, setStakeStatus]);
+    if (stakeStatus !== "success") {
+      setStakeStatus(stakeStatus);
+    } else {
+      if (ggpStake > 0) {
+        setStakeStatus("success");
+      }
+    }
+  }, [stakeStatus, setStakeStatus, ggpStake]);
 
   const handleSubmit = async () => {
     const result = await stake();

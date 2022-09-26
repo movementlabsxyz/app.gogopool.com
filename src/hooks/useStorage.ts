@@ -4,8 +4,19 @@ import { useContractRead } from "wagmi";
 import Storage from "@/contracts/Storage.json";
 
 import { storageAddress } from "../constants/anr";
+// import { storageAddress } from "../constants/local";
+// import { storageAddress } from "../constants/newanr";
 
-export const useStorageAddress = (key: string, storageAddr?: string) => {
+export const useGetUint = (args) => {
+  return useContractRead({
+    addressOrName: storageAddress,
+    contractInterface: Storage.abi,
+    functionName: "getUint",
+    args,
+  });
+};
+
+export const useGetAddress = (key: string, storageAddr?: string) => {
   const addr = storageAddr || storageAddress;
 
   const args = ethers.utils.solidityKeccak256(

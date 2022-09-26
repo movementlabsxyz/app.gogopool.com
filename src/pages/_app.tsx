@@ -12,6 +12,7 @@ import { CoreLayout } from "@/common/components/CoreLayout";
 import { ChakraFonts } from "@/common/components/CustomFont";
 import { PageHead } from "@/common/components/PageHead";
 import configWagmiClient from "@/config/wagmi";
+import { CurrencyProvider } from "@/context/Currency";
 import { wrapper } from "@/store";
 import theme from "@/theme";
 
@@ -40,9 +41,11 @@ export const App = ({ Component, pageProps }) => {
             />
             <PageHead />
           </Head>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <CurrencyProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </CurrencyProvider>
         </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>

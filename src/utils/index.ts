@@ -1,4 +1,5 @@
 import { BinTools } from "avalanche";
+import { Buffer } from "buffer/"; // note: the slash is important!
 import { ethers } from "ethers";
 import ms from "ms";
 
@@ -12,6 +13,11 @@ const nodeIDToHex = (pk: string) => {
   const pksplit = pk.split("-");
   const buff = bintools.cb58Decode(pksplit[pksplit.length - 1]);
   return ethers.utils.getAddress(ethers.utils.hexlify(buff));
+};
+
+export const nodeHexToID = (h) => {
+  const b = Buffer.from(ethers.utils.arrayify(ethers.utils.getAddress(h)));
+  return `NodeID-${bintools.cb58Encode(b)}`;
 };
 
 const randomBytes = (

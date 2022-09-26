@@ -16,6 +16,7 @@ const useANRNodes = () => {
 
   const data = resp as ANRNodesResponse;
 
+  // TODO make this random
   const nodeID = data?.available_nodes?.[0];
 
   return {

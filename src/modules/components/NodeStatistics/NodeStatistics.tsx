@@ -2,9 +2,10 @@ import { Box, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
 import ms from "ms";
 import { FunctionComponent, ReactElement } from "react";
+import { useAccount } from "wagmi";
 
 import { Address } from "@/common/components/Address";
-import useAllMinipools from "@/hooks/useAllMinipools";
+import { useAllMinipools } from "@/hooks/minipool";
 // import useMinipoolByID from "@/hooks/useMinipoolByID";
 // import useMinipoolsByOwner from "@/hooks/useMinipoolsByOwner";
 // import useMinipoolsByStatus from "@/hooks/useMinipoolsByStatus";
@@ -14,7 +15,7 @@ export interface StatsProps {
   address?: string;
   nodeID?: string;
 }
-
+// TODO make the "status" field a string instead of an int
 const formatData = (
   input: Minipool
 ): { label: string | ReactElement; value: string | ReactElement }[] => {
@@ -100,11 +101,17 @@ export const Statistics: FunctionComponent<StatsProps> = ({
   //   minipools.push(minipoolByID);
   // }
 
+  const { isConnected } = useAccount();
+
   const { minipools, isLoading } = useAllMinipools();
 
   const skeletons = Array.from({ length: 10 }, (_, i) => (
     <Skeleton endColor="blue.200" width="500px" key={i} height="18px" />
   ));
+
+  if (!isConnected) {
+    return <Text>Please connect a wallet to see node statistics.</Text>;
+  }
 
   if (isLoading) {
     return (

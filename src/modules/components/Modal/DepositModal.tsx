@@ -1,31 +1,33 @@
-import { Box, ModalProps } from "@chakra-ui/react";
+import { Box, Center, ModalProps, Spinner, useToken } from "@chakra-ui/react";
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { ClimbingBoxLoader } from "react-spinners";
 
 import { Button } from "@/common/components/Button";
 import { Modal } from "@/common/components/Modal";
 
-import {
-  FailedDepositModal,
-  FailedDepositModalProps,
-} from "./FailedDepositModal";
-import {
-  SuccessfulDepositModal,
-  SuccessfulDepositModalProps,
-} from "./SuccessfulDepositModal";
+import { FailedDepositModal } from "./FailedDepositModal";
+import { PendingDepositModal } from "./PendingDepositModal";
+import { SuccessfulDepositModal } from "./SuccessfulDepositModal";
 
 type DepositModalProps = {
   status: "success" | "error" | "idle" | "loading";
-  successProps?: SuccessfulDepositModalProps;
-  failedProps?: FailedDepositModalProps;
+  transactionHash: string;
+  isLoading: boolean;
+  isSuccess: boolean;
+  amount: number;
+  token: string;
 } & Omit<ModalProps, "children">;
 
 export const DepositModal: FunctionComponent<DepositModalProps> = ({
   status,
   isOpen,
   onClose,
-  successProps,
-  failedProps,
+  transactionHash,
+  isLoading,
+  isSuccess,
+  amount,
+  token,
   ...modalProps
 }) => {
   const renderCta = () => {
@@ -61,25 +63,43 @@ export const DepositModal: FunctionComponent<DepositModalProps> = ({
       onClose={onClose}
       headerImage={
         <Box width="178px" height="98px" mb="8">
-          <Image
-            src={
-              status === "success"
-                ? "/assets/img/deposit/success_deposit.svg"
-                : "/assets/img/deposit/failed_deposit.svg"
-            }
-            width={178}
-            height={98}
-            alt={`${status}_image`}
-          />
+          {isLoading && (
+            <Center>
+              <ClimbingBoxLoader color={useToken("color", "blue.400")} />
+            </Center>
+          )}
+
+          {!isLoading && (
+            <Image
+              src={
+                isSuccess
+                  ? "/assets/img/deposit/success_deposit.svg"
+                  : "/assets/img/deposit/failed_deposit.svg"
+              }
+              width={178}
+              height={98}
+              alt={`${status}_image`}
+            />
+          )}
         </Box>
       }
       ctaButton={renderCta()}
       {...modalProps}
     >
-      {status === "success" ? (
-        <SuccessfulDepositModal {...successProps} />
-      ) : (
-        <FailedDepositModal {...failedProps} />
+      {isLoading && transactionHash && (
+        <PendingDepositModal transactionHash={transactionHash} />
+      )}
+
+      {isSuccess && !isLoading && (
+        <SuccessfulDepositModal
+          amount={amount}
+          token={token}
+          transactionHash={transactionHash}
+        />
+      )}
+
+      {!isSuccess && !isLoading && (
+        <FailedDepositModal transactionHash={transactionHash} />
       )}
     </Modal>
   );

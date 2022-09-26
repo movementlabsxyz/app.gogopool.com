@@ -2,8 +2,17 @@ import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import Image from "next/image";
 
 import ConnectButton from "@/common/components/ConnectButton";
+import useSelectedCurrency from "@/hooks/useSelectedCurrency";
+
+import CurrencySelection from "../CurrencySelection/CurrencySelection";
+
+export interface NavigationBarProps {
+  currency?: string;
+  setCurrency?: (currency: string) => void;
+}
 
 export const NavigationBar = () => {
+  const { selectedCurrency, setSelectedCurrency } = useSelectedCurrency();
   return (
     <Box
       p="0.75rem 1.5rem 0.75rem 1.5rem"
@@ -31,13 +40,18 @@ export const NavigationBar = () => {
             <Link href="/liquidStaking" color="blue.400" fontWeight="bold">
               Liquid Staking
             </Link>
-            <Link href="/nodeOperator" color="blue.400" fontWeight="bold">
-              Node Operator
+            <Link href="/dashboard" color="blue.400" fontWeight="bold">
+              Minipool Dashboard
             </Link>
           </HStack>
         </HStack>
 
-        <Flex alignItems="center">
+        <Flex gap={4} alignItems="center">
+          <CurrencySelection
+            currency={selectedCurrency}
+            setCurrency={setSelectedCurrency}
+          />
+
           <ConnectButton />
         </Flex>
       </Flex>

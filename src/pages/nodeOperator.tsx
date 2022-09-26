@@ -1,9 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { NodeOperatorIcon, RewardIcon } from "@/common/components/CustomIcon";
 import { PageHead } from "@/common/components/PageHead";
-import { SidebarLayoutHOC } from "@/common/components/SidebarLayout";
 import { Wizard } from "@/modules/components/Wizard";
 
 function NodeOperator() {
@@ -40,14 +38,5 @@ function NodeOperator() {
     </Box>
   );
 }
-
-const menu = [
-  { name: "New GGP Node", icon: NodeOperatorIcon, url: "/nodeOperator" },
-  { name: "GGP Reward", icon: RewardIcon, url: "/ggpreward" },
-];
-
-const Layout = SidebarLayoutHOC({ header: "Welcome Node Operator! 👋🏼", menu });
-
-NodeOperator.layout = Layout;
 
 export default NodeOperator;

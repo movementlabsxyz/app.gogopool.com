@@ -43,6 +43,28 @@ export const fuji: Chain = {
 };
 
 export const local: Chain = {
+  id: 31337,
+  name: "Local",
+  network: "local",
+  iconUrl:
+    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dota2.com%2Fhero%2Fanti-mage&psig=AOvVaw2UtLD5zXGTNlRjTBKHvsVa&ust=1663961278909000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPDPhPqQqfoCFQAAAAAdAAAAABAD",
+  iconBackground: "#fff",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Avalanche",
+    symbol: "AVAX",
+  },
+  rpcUrls: {
+    // default: "http://localhost:8545/ext/bc/C/rpc",
+    default: "http://127.0.0.1:8545/ext/bc/C/rpc",
+  },
+  testnet: true,
+  blockExplorers: {
+    default: { name: "SnowTrace", url: "https://testnet.snowtrace.io" },
+  },
+};
+
+export const localanr: Chain = {
   id: 43_112,
   name: "Local",
   network: "local",

@@ -2,10 +2,10 @@ import { utils } from "ethers";
 
 import MinipoolManager from "@/contracts/MinipoolManager.json";
 
-import { useStorageAddress } from "../storage";
+import { useGetAddress } from "../useStorage";
 
 const useMinipoolManagerContract = () => {
-  const { data } = useStorageAddress("MinipoolManager");
+  const { data } = useGetAddress("MinipoolManager");
 
   const contractInterface = new utils.Interface(MinipoolManager.abi);
 

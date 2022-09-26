@@ -66,7 +66,7 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
         {allowance.gte(amountBN) || approved ? (
           <StakeButton amount={amount} setStakeStatus={setStakeStatus} />
         ) : (
-          <ApproveButton amount={amount} setApproveStatus={setApproveStatus} />
+          <ApproveButton setApproveStatus={setApproveStatus} />
         )}
       </Flex>
       {/* I'm not sure we'll use this? Maybe? - Chandler

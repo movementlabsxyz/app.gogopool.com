@@ -7,6 +7,7 @@ import {
   Box,
   FormControl,
   Hide,
+  Link,
   Show,
   Text,
   useDisclosure,
@@ -16,7 +17,12 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumberish, utils } from "ethers";
 import ms from "ms";
 import { FunctionComponent, useEffect, useState } from "react";
-import { useNetwork, useAccount, useBalance } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
 
 import { Address } from "@/common/components/Address";
 import { Button } from "@/common/components/Button";
@@ -30,6 +36,7 @@ import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
 import useDeposit from "@/hooks/deposit";
 import useLiquidStakingData from "@/hooks/liquidStakingData";
 import useRedeem from "@/hooks/redeem";
+import addToken from "@/utils/addToken";
 import { formatEtherFixed } from "@/utils/formatEtherFixed";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
@@ -182,10 +189,18 @@ export const LiquidStaking: FunctionComponent = () => {
 
   // deposit the AVAX
   const {
+    data: depositData,
     write: deposit,
     isLoading: isDepositLoading,
     status: depositStatus,
   } = useDeposit(utils.parseEther(amount?.toString() || "0"));
+
+  const {
+    isLoading: isLoadingDepositTransaction,
+    isSuccess: isSuccessDepositTransaction,
+  } = useWaitForTransaction({
+    hash: depositData?.hash,
+  });
 
   // redeem ggAVAX
   const {
@@ -336,10 +351,11 @@ export const LiquidStaking: FunctionComponent = () => {
             onClose();
             setAmount(0);
           }}
-          successProps={{
-            amount: amount,
-            token: swapDirection ? "ggAVAX" : "AVAX",
-          }}
+          transactionHash={depositData?.hash}
+          isLoading={true}
+          isSuccess={isSuccessDepositTransaction}
+          amount={amount}
+          token={swapDirection ? "ggAVAX" : "AVAX"}
         />
       </Show>
       <Hide above="sm">
@@ -442,8 +458,25 @@ export const LiquidStaking: FunctionComponent = () => {
               </Content>
             </Card>
           </FormControl>
+          <Text pt={1} size={"sm"}>
+            Don't have ggAVAX added to your wallet?{" "}
+            <Link
+              onClick={() => {
+                addToken(ggAVAXAddress, "ggAVAX");
+              }}
+            >
+              Add it now!
+            </Link>
+          </Text>
         </Content>
-        <Footer>{!isSSR && displayButton()}</Footer>
+        <Footer>
+          {!amount && (
+            <Tooltip placement="top" content="No amount set">
+              <div>{displayButton()}</div>
+            </Tooltip>
+          )}
+          {amount && displayButton()}
+        </Footer>
       </Card>
     </>
   );

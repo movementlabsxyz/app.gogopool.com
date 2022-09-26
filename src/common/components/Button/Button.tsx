@@ -1,9 +1,17 @@
-import { Box, Button as ChakraButton, ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
+import {
+  Box,
+  Button as ChakraButton,
+  ButtonProps as ChakraButtonProps,
+} from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactElement } from "react";
 
 export interface ButtonProps extends ChakraButtonProps {
   size?: "xs" | "sm" | "md" | "lg";
-  variant?: "primary" | "secondary-filled" | "secondary-outline" | "destructive-outline";
+  variant?:
+    | "primary"
+    | "secondary-filled"
+    | "secondary-outline"
+    | "destructive-outline";
   iconLeft?: ReactElement;
   iconRight?: ReactElement;
   iconOnly?: ReactElement;
@@ -34,7 +42,13 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
       {iconOnly ? (
         iconOnly
       ) : (
-        <Box display="flex" flexDir="row" alignItems="center" justifyContent="center" columnGap="2">
+        <Box
+          display="flex"
+          flexDir="row"
+          alignItems="center"
+          justifyContent="center"
+          columnGap="2"
+        >
           {iconLeft}
           {children}
           {iconRight}
