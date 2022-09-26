@@ -12,6 +12,7 @@ const useGGPAllowance = (address: string | undefined) => {
     contractInterface: contractInterface,
     functionName: "allowance",
     args: [address, stakingAddr],
+    watch: true,
   });
 
   return resp;

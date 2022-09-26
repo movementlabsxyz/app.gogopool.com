@@ -1,5 +1,5 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useAccount } from "wagmi";
 
@@ -18,7 +18,11 @@ const StakeButton = ({ amount, setStakeStatus }: StakeButtonProps) => {
   const { openConnectModal } = useConnectModal();
 
   if (typeof amount === "number") {
-    amount = BigNumber.from(amount);
+    amount = utils.parseEther(amount.toString());
+  }
+
+  if (!amount) {
+    amount = BigNumber.from(0);
   }
 
   const {
@@ -31,16 +35,19 @@ const StakeButton = ({ amount, setStakeStatus }: StakeButtonProps) => {
   useEffect(() => {
     if (stakeStatus !== "success") {
       setStakeStatus(stakeStatus);
-    } else {
-      if (ggpStake > 0) {
-        setStakeStatus("success");
-      }
+    }
+    if (Math.floor(ggpStake) >= 200) {
+      setStakeStatus("success");
     }
   }, [stakeStatus, setStakeStatus, ggpStake]);
 
   const handleSubmit = async () => {
     const result = await stake();
-    await result?.wait();
+    const resp = await result?.wait();
+    console.log({ resp });
+    if (resp.transactionHash) {
+      setStakeStatus("success");
+    }
   };
 
   return isConnected ? (

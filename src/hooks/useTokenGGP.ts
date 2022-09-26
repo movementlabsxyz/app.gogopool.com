@@ -16,21 +16,20 @@ export const useAllowance = (addr: string, spender: string) => {
     contractInterface,
     functionName: "allowance",
     args: [addr, spender],
+    watch: true,
   });
 };
 
 export const newApproveGGP = (amount: BigNumber) => {
   const { address: ggpTokenAddress, contractInterface } = useTokenGGPContract();
   const { address: stakingAddr } = useStakingContract();
-  console.log("tokenggp address", ggpTokenAddress);
 
-  const { config, error } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     addressOrName: ggpTokenAddress,
     contractInterface,
     functionName: "approve",
     args: [stakingAddr, amount],
   });
-  console.log("approval error", error);
 
   return useContractWrite(config);
 };

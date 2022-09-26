@@ -31,6 +31,7 @@ export const useGetAVAXStake = (stakerAddr: string) => {
     contractInterface: contractInterface,
     functionName: "getAVAXStake",
     args: [stakerAddr],
+    watch: true,
   });
 
   return { data: Number(formatEther(data || 0)), isLoading, isError };

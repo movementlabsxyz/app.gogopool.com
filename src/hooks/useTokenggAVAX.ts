@@ -10,5 +10,6 @@ export const useBalanceOf = (addr: string) => {
     contractInterface,
     functionName: "balanceOf",
     args: [addr],
+    watch: true,
   });
 };

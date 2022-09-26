@@ -25,6 +25,7 @@ const useLiquidStakingData = () => {
       addressOrName: ggAVAXAddr,
       contractInterface: ggAVAXInterface,
       functionName: "rewardsCycleLength",
+      watch: true,
     });
 
   const apr = 1 - roundedBigNumber(ggAvaxExchangeRate, 4);
