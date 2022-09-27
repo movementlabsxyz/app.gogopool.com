@@ -1,18 +1,17 @@
 import { Box, useToast } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
 import {
   ChangeEvent,
   Dispatch,
   FunctionComponent,
-  SetStateAction, useEffect, useRef, useState
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
+import { useAccount } from "wagmi";
 
-import useDeposit from "@/hooks/deposit";
-import useCreateMinipool from "@/hooks/minipool";
-import useWallet from "@/hooks/wallet";
-import { nodeID, parseDelta } from "@/utils";
-
+// I hate this ordering but this is how ESLint wants it
+// - Chandler.
 import { WizardStepFour } from "./steps/WizardStepFour";
 import { WizardStepOne } from "./steps/WizardStepOne";
 import { WizardStepThree } from "./steps/WizardStepThree";
@@ -30,92 +29,37 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   setCurrentStep,
 }): JSX.Element => {
   const [nodeId, setNodeId] = useState("");
-  const [ggpAmount, setGGPAmount] = useState(1000);
+  const [ggpAmount, setGGPAmount] = useState(200);
   const [avaxAmount, setAvaxAmount] = useState(1000);
+  const [txid, setTxid] = useState("");
+  const [approveStatus, setApproveStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
+  const [createMinipoolStatus, setCreateMinipoolStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
 
-  const { account, provider } = useWallet();
+  const { address: account } = useAccount();
+
   const toast = useToast();
-  const headerRef = useRef<HTMLDivElement>(null)
-  const { createMinipool, approve, approveResponse, error, success } =
-    useCreateMinipool(provider);
-
-  const {
-    send,
-    error: depositError,
-    isLoading: depositLoading,
-    success: depositSuccess,
-  } = useDeposit(provider);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const handleChangeNodeId = (e: ChangeEvent<HTMLInputElement>) => {
     setNodeId(e.target.value);
   };
 
-  const remindConnect = () => {
-      toast({
-        description: "Please connect to your wallet",
-        status: "warning",
-      });
-  }
   const nextStep = () => {
-    setCurrentStep(s => {
+    setCurrentStep((s) => {
+      // what?
       if (s === 1) {
-        headerRef.current.scrollLeft = 100 // scroll right in MObile view
+        headerRef.current.scrollLeft = 100; // scroll right in Mobile view
       }
-      return s + 1
-    })
-  }
-
-  const depositAvax = async () => {
-    if (!account) {
-      remindConnect()
-      return;
-    }
-    await send(avaxAmount);
+      return s + 1;
+    });
   };
 
-  const approveGGP = async () => {
-    if (!account) {
-      remindConnect()
-      return;
-    }
-    const amount = parseEther(ggpAmount.toString()); // placeholder. Should be read from UI. Units in nAVAX.
-    await approve(account, BigNumber.from(amount));
-  };
-
-  const createMinipoolGGP = async () => {
-    if (!account) {
-      remindConnect()
-      return;
-    }
-    const amount = parseEther(ggpAmount.toString());
-    const fee = parseEther("200");
-    // This is a placeholder. I have to talk to John about
-    // how to properly format the Avalanche Node IDs as an
-    // eth address - Chandler.
-    const nID = nodeID(nodeId);
-    // These are also placeholder values. They should be read from
-    // the UI.
-    const duration = BigNumber.from(parseDelta("1m"));
-    const delegationFee = BigNumber.from(20000);
-    await createMinipool(nID, duration, delegationFee, fee, amount);
-  }
-
   useEffect(() => {
-    if (depositError) {
-      toast({
-        description: "Error when making trans",
-        status: "error",
-      });
-      return;
-    }
-    if (depositSuccess) {
-      nextStep()
-      return;
-    }
-  }, [depositError, depositSuccess]);
-
-  useEffect(() => {
-    if (error) {
+    if (approveStatus === "error") {
       toast({
         description: "Error when making trans",
         status: "error",
@@ -123,17 +67,28 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       return;
     }
 
-    if (success) {
-      toast({ description: "Create Pool success", status: "success" });
-      nextStep()
-      return;
-    }
-
-    if (approveResponse && approveResponse.status === 1) {
+    if (approveStatus === "success") {
       toast({ description: "Approve successful", status: "success" });
+      nextStep();
       return;
     }
-  }, [approveResponse, error, success]);
+  }, [approveStatus]);
+
+  useEffect(() => {
+    if (createMinipoolStatus === "error") {
+      toast({
+        description: "Error when sending the create minipool transaction",
+        status: "error",
+      });
+      return;
+    }
+
+    if (createMinipoolStatus === "success" && txid !== "") {
+      toast({ description: "Create minipool successful", status: "success" });
+      nextStep();
+      return;
+    }
+  }, [createMinipoolStatus, txid]);
 
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
@@ -150,32 +105,38 @@ export const Wizard: FunctionComponent<WizardProps> = ({
         return (
           <WizardStepTwo
             amount={ggpAmount}
-            approveGGP={approveGGP}
+            setStakeStatus={setApproveStatus}
             setAmount={setGGPAmount}
-            createMinipoolGGP={createMinipoolGGP}
-            approveSuccess={!!approveResponse && approveResponse.status === 1}
           />
         );
       case 3:
         return (
           <WizardStepThree
-            setCurrentStep={setCurrentStep}
             amount={avaxAmount}
             setAmount={setAvaxAmount}
-            loading={depositLoading}
-            depositAvax={depositAvax}
+            nodeId={nodeId}
+            setCreateMinipoolStatus={setCreateMinipoolStatus}
+            setTxID={setTxid}
           />
         );
       case 4:
-        return <WizardStepFour hash="#es2435213153f4639434693942e2341bd" />;
+        return <WizardStepFour hash={txid} />;
       default:
         throw Error("Invalid step");
     }
   };
 
   return (
-    <Box bg="#ffffff" padding="32px" borderRadius="24px" color="#000000" maxW={780} marginX="auto" h="660px">
-      <WizardHeader step={currentStep} headerRef={headerRef}/>
+    <Box
+      bg="#ffffff"
+      padding="32px"
+      borderRadius="24px"
+      color="#000000"
+      maxW={780}
+      marginX="auto"
+      h="775px"
+    >
+      <WizardHeader step={currentStep} headerRef={headerRef} />
       <Box mx="auto" maxWidth="528px">
         <WizardContent step={currentStep} />
         {renderStepAction()}

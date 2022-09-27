@@ -1,4 +1,5 @@
 import { BinTools } from "avalanche";
+import { Buffer } from "buffer/"; // note: the slash is important!
 import { ethers } from "ethers";
 import ms from "ms";
 
@@ -12,6 +13,11 @@ const nodeIDToHex = (pk: string) => {
   const pksplit = pk.split("-");
   const buff = bintools.cb58Decode(pksplit[pksplit.length - 1]);
   return ethers.utils.getAddress(ethers.utils.hexlify(buff));
+};
+
+export const nodeHexToID = (h) => {
+  const b = Buffer.from(ethers.utils.arrayify(ethers.utils.getAddress(h)));
+  return `NodeID-${bintools.cb58Encode(b)}`;
 };
 
 const randomBytes = (
@@ -48,6 +54,7 @@ const emptyWallet = (seed: string) => {
 
 // Actual nodeID or random addresses to use for nodeIDs
 export const nodeID = (seed: string) => {
+  seed = seed.replace(/[^a-zA-Z0-9-]/gi, "");
   if (seed.startsWith("NodeID-")) {
     return nodeIDToHex(seed);
   } else if (seed.startsWith("0x")) {
@@ -79,4 +86,12 @@ export const randomHexString = (
 // ANR fails lots of txs with gaslimit estimation errors, so override here
 export const overrides = {
   gasLimit: 8000000,
+};
+
+export const sanitizeNumbers = (input: string): string => {
+  const s = input.replace(/[^0-9.]/g, "");
+  if (s.length === 0) {
+    return "0";
+  }
+  return s;
 };

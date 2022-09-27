@@ -59,7 +59,10 @@ export const Button: ComponentStyleConfig = {
     primary: {
       bgColor: "green.500",
       _hover: {
-        bgColor: "green.550",
+        bgColor: "green.600",
+        _disabled: {
+          bgColor: "green.500",
+        },
       },
     },
     "secondary-filled": {

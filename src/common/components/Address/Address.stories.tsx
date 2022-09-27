@@ -18,11 +18,11 @@ Primary.args = {
 export const NoTruncate = Template.bind({});
 NoTruncate.args = {
   children: "VeryLongAddressWithNoTruncate",
-  truncate: false
+  truncate: false,
 };
 
 export const Copyable = Template.bind({});
 Copyable.args = {
-  children: "VeryLongAddressWithNoTruncate",
-  copyable: true
+  children: "VeryLongAddressWithCopy",
+  copyable: true,
 };

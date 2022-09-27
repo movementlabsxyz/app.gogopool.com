@@ -1,23 +1,15 @@
-import { Contract, providers, utils } from "ethers";
-import { useState } from "react";
-import useAsyncEffect from "use-async-effect";
+import { utils } from "ethers";
 
-import MinipoolManager from "../../contracts/MinipoolManager.json";
-import { useStorageAddress } from "../storage";
+import MinipoolManager from "@/contracts/MinipoolManager.json";
 
-const useMinipoolManagerContract = (provider: providers.Web3Provider | undefined) => {
-  const [contract, setContract] = useState<Contract | undefined>(undefined);
+import { useGetAddress } from "../useStorage";
 
-  const minipoolManagerAddress = useStorageAddress("MinipoolManager");
+const useMinipoolManagerContract = () => {
+  const { data } = useGetAddress("MinipoolManager");
 
-  useAsyncEffect(() => {
-    if (!provider || !minipoolManagerAddress) return;
-    const i = new utils.Interface(MinipoolManager.abi);
-    const c = new Contract(minipoolManagerAddress, i, provider.getSigner());
-    setContract(c);
-  }, [provider, minipoolManagerAddress]);
+  const contractInterface = new utils.Interface(MinipoolManager.abi);
 
-  return contract;
+  return { address: data?.toString() || "", contractInterface };
 };
 
 export default useMinipoolManagerContract;

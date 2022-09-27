@@ -1,27 +1,20 @@
-import { BigNumber, providers } from "ethers";
-import { useEffect, useState } from "react";
+import { parseUnits } from "ethers/lib/utils";
+import { useContractRead } from "wagmi";
 
-import useOneInchOracle from "./contracts/oneInchOracle";
-import useTokenContract from "./contracts/tokenggAVAX";
+import useTokenggAVAX from "./contracts/tokenggAVAX";
 
-const useExchangeRate = (provider: providers.Web3Provider | undefined) => {
-  const [exchangeRate, setExchangeRate] = useState<BigNumber>(
-    BigNumber.from(0)
-  );
-  const oracle = useOneInchOracle(provider);
-  const token = useTokenContract(provider);
+const useExchangeRate = () => {
+  const { address: tokenggAVAXAddr, contractInterface: tokenggAVAXInterface } =
+    useTokenggAVAX();
 
-  useEffect(() => {
-    if (!provider) return;
-    if (!oracle || !token) return;
-    const getExchangeRate = async () => {
-      const rate = await oracle.getRateToEth(token?.address, true);
-      setExchangeRate(rate);
-    };
-    getExchangeRate();
-  }, [provider, oracle, token]);
+  const resp = useContractRead({
+    addressOrName: tokenggAVAXAddr,
+    contractInterface: tokenggAVAXInterface,
+    functionName: "previewDeposit",
+    args: [parseUnits("1.0")],
+  });
 
-  return exchangeRate;
+  return resp;
 };
 
 export default useExchangeRate;

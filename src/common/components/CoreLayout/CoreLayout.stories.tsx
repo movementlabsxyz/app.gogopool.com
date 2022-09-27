@@ -29,5 +29,5 @@ const Template: Story<{ children: ReactNode }> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   children: "content"
-}
+};
 

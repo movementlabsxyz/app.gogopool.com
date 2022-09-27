@@ -14,13 +14,17 @@ import { Dispatch, SetStateAction } from "react";
 import { AvalancheIcon } from "@/common/components/CustomIcon/AvalancheIcon";
 import { CaretRightIcon } from "@/common/components/CustomIcon/CaretRightIcon";
 import { Tooltip } from "@/common/components/Tooltip";
+import { sanitizeNumbers } from "@/utils";
 
 export interface StakeFormProps {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
   setReward: Dispatch<SetStateAction<number>>;
   balance: number;
-  exchangeRate: number;
+  exchangeRate?: number;
+  token?: string;
+  header?: string;
+  icon?: JSX.Element;
 }
 
 export const StakeForm = ({
@@ -29,14 +33,19 @@ export const StakeForm = ({
   setReward,
   balance,
   exchangeRate,
+  token = "AVAX",
+  header,
+  icon = <AvalancheIcon />,
 }: StakeFormProps): JSX.Element => {
   const parse = (val) => (!val || val < 0 ? 0 : val);
+
+  const price = isNaN(exchangeRate * amount) ? 0 : exchangeRate * amount;
 
   return (
     <>
       <FormLabel mb="1" id="stake-avax" htmlFor="stake-avax-form">
         <Text size="sm" fontWeight="600" color="grey.600">
-          STAKE AVAX
+          {header || "STAKE AVAX"}
         </Text>
       </FormLabel>
       <Flex
@@ -49,7 +58,7 @@ export const StakeForm = ({
           <Tooltip
             placement="bottom_right"
             variant="persistent"
-            defaultIsOpen={amount >= 1000 && true}
+            defaultIsOpen={amount >= 1000 && token === "AVAX"}
             content={
               <>
                 <Text size="xxs">
@@ -75,12 +84,13 @@ export const StakeForm = ({
               </>
             }
           >
-            <InputLeftElement height="full" children={<AvalancheIcon />} />
+            <InputLeftElement height="full" children={icon} />
           </Tooltip>
           <NumberInput
             ml="8"
             value={amount}
             onChange={(value) => {
+              value = sanitizeNumbers(value);
               setAmount(parse(value));
               setReward(0); // change Reward accordingly
             }}
@@ -96,14 +106,16 @@ export const StakeForm = ({
             />
           </NumberInput>
         </InputGroup>
-        <Flex>
-          <Text size={{ base: "xs", sm: "xl" }} fontWeight="bold">
-            <Box as="span" display={{ base: null, sm: "none" }}>
-              Value:{" "}
-            </Box>
-            {`$${exchangeRate * amount || 0}`}
-          </Text>
-        </Flex>
+        {exchangeRate !== undefined && (
+          <Flex>
+            <Text size={{ base: "xs", sm: "xl" }} fontWeight="bold">
+              <Box as="span" display={{ base: null, sm: "none" }}>
+                Value:{" "}
+              </Box>
+              {`$${price?.toFixed(2) || 0}`}
+            </Text>
+          </Flex>
+        )}
       </Flex>
       <Divider
         borderColor="grey.300"
@@ -112,7 +124,7 @@ export const StakeForm = ({
       />
       <FormLabel m="0">
         <Text size="xs" color="grey.600">
-          {`BALANCE: ${balance} AVAX`}
+          {`BALANCE: ${balance} ${token}`}
         </Text>
       </FormLabel>
     </>

@@ -19,7 +19,18 @@ const Template: Story<FailedDepositModalProps> = () => {
   return (
     <>
       <Button onClick={onOpen}>Open Modal</Button>
-      <DepositModal status="failed" isOpen={isOpen} onClose={onClose} />
+      <DepositModal
+        status="error"
+        isOpen={isOpen}
+        onClose={onClose}
+        transactionHash={"failedhash"}
+        isLoading={false}
+        isSuccess={true}
+        amount={100}
+        token={
+          "0x4766ecd489b648199cbc083e124243b95091a2c136c8cebb3b16267f0c4f3b61"
+        }
+      />
     </>
   );
 };

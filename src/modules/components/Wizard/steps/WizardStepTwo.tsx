@@ -1,45 +1,57 @@
-import { Flex, Text } from "@chakra-ui/react";
-import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
+import { Flex } from "@chakra-ui/react";
+import { BigNumber, utils } from "ethers";
+import {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import { useAccount, useBalance } from "wagmi";
 
-import { Button } from "@/common/components/Button";
-import useExchangeRate from "@/hooks/ggexchange";
-import { useGGPBalance } from "@/hooks/ggpbalance";
-import useWallet from "@/hooks/wallet";
+import useGGPAllowance from "@/hooks/allowance";
+import useTokenGGPContract from "@/hooks/contracts/tokenGGP";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
+import ApproveButton from "../components/ApproveButton";
+import StakeButton from "../components/StakeButton";
 import { StakeInput } from "../StakeInput";
 
 export interface WizardStepTwoProps {
-  createMinipoolGGP: () => Promise<void>;
-  approveGGP: () => Promise<void>;
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  approveSuccess: boolean;
+  setStakeStatus: Dispatch<
+    SetStateAction<"error" | "loading" | "success" | "idle">
+  >;
 }
 
 export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
-  createMinipoolGGP,
   amount,
   setAmount,
-  approveGGP,
-  approveSuccess,
+  setStakeStatus,
 }): JSX.Element => {
-  const { account, provider } = useWallet();
-  const [loading, setLoading] = useState(false);
-  const ggpBalance = useGGPBalance(provider, account);
-  const rate = useExchangeRate(provider);
+  const [approved, setApproved] = useState(false);
+  const [approveStatus, setApproveStatus] = useState<
+    "error" | "loading" | "success" | "idle"
+  >("idle");
 
-  const handleSubmit = async (): Promise<void> => {
-    setLoading(true);
-    await approveGGP();
-    setLoading(false);
-  };
+  const { address: account } = useAccount();
+  const { address: ggpAddress } = useTokenGGPContract();
+  const { data: ggpAllowance } = useGGPAllowance(account);
 
-  const callMinipool = async (): Promise<void> => {
-    setLoading(true);
-    await createMinipoolGGP();
-    setLoading(false);
-  };
+  const { data: balance } = useBalance({
+    addressOrName: account,
+    token: ggpAddress,
+  });
+
+  const allowance = (ggpAllowance as unknown as BigNumber) || BigNumber.from(0);
+  const amountBN = utils.parseEther(amount.toString());
+
+  useEffect(() => {
+    if (!approved && approveStatus === "success") {
+      setApproved(true);
+    }
+  }, [approved, approveStatus, setApproved]);
 
   return (
     <Flex direction="column">
@@ -47,37 +59,23 @@ export const WizardStepTwo: FunctionComponent<WizardStepTwoProps> = ({
         token="GGP"
         amount={amount}
         setAmount={setAmount}
-        balance={roundedBigNumber(ggpBalance) || 0}
-        exchangeRate={roundedBigNumber(rate) || 1}
+        balance={roundedBigNumber(balance?.value) || 0}
         title="DEPOSIT GGP"
       />
       <Flex justify="center" mt={{ md: 6, base: 3 }} mb={{ md: 4, base: 2 }}>
-        {!approveSuccess ? (
-          <Button
-            size="sm"
-            onClick={handleSubmit}
-            data-testid="stake-now"
-            isLoading={loading}
-          >
-            Approve
-          </Button>
+        {allowance.gte(amountBN) || approved ? (
+          <StakeButton amount={amount} setStakeStatus={setStakeStatus} />
         ) : (
-          <Button
-            size="sm"
-            onClick={callMinipool}
-            data-testid="stake-now"
-            isLoading={loading}
-          >
-            Stake now
-          </Button>
+          <ApproveButton setApproveStatus={setApproveStatus} />
         )}
       </Flex>
+      {/* I'm not sure we'll use this? Maybe? - Chandler
       <Text color="grey.500" size="xs" align="center">
         Currently staked:{" "}
         <Text as="span" size="xs" fontWeight={700} color="grey.1000">
           0 GGP
         </Text>
-      </Text>
+      </Text> */}
     </Flex>
   );
 };

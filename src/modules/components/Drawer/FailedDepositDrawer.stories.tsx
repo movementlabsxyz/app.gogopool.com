@@ -19,7 +19,7 @@ const Template: Story<FailedDepositDrawerProps> = () => {
   return (
     <>
       <Button onClick={onOpen}>Open Drawer</Button>
-      <DepositDrawer status="failed" isOpen={isOpen} onClose={onClose} />
+      <DepositDrawer status="error" isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

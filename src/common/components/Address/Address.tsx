@@ -1,4 +1,12 @@
-import { Box, Stack, Text, TextProps, useColorModeValue, useTheme } from "@chakra-ui/react";
+import {
+  Box,
+  Stack,
+  Text,
+  TextProps,
+  useColorModeValue,
+  useTheme,
+  useToast,
+} from "@chakra-ui/react";
 import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
 
 import { CopyIcon } from "@/common/components/CustomIcon/CopyIcon";
@@ -26,23 +34,32 @@ export const Address: FunctionComponent<PropsWithChildren<AddressProps>> = ({
   fontWeight = 400,
   ...props
 }): JSX.Element => {
+  const toast = useToast();
   const { colors } = useTheme();
   const startLetter = children.toString().slice(0, startLength);
   const lastLetter = children.toString().slice(lastLength);
   const textColor = useColorModeValue(colors.grey[1000], colors.grey[0]);
 
   const handleCopy = (): void => {
-    // TODO: Add tooltip when user copied the address
     if (copyable && (copyable as CopyableAddressProps).text) {
       navigator.clipboard.writeText((copyable as CopyableAddressProps).text);
     } else {
       navigator.clipboard.writeText(children.toString());
     }
+    toast({
+      title: "Copied to clipboard!",
+      status: "success",
+    });
   };
 
   return (
     <Stack direction="row" alignItems="center" gap="2px">
-      <Text fontSize={fontSize} fontWeight={fontWeight} color={textColor} {...props}>
+      <Text
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        color={textColor}
+        {...props}
+      >
         {truncate ? startLetter + ellipsis + lastLetter : children}
       </Text>
       {Boolean(copyable) && (

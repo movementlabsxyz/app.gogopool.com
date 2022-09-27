@@ -23,10 +23,13 @@ const Template: Story<SuccessfulDepositModalProps> = ({ amount, token }) => {
         status="success"
         isOpen={isOpen}
         onClose={onClose}
-        successProps={{
-          amount,
-          token,
-        }}
+        amount={amount}
+        token={token}
+        isLoading={false}
+        isSuccess={true}
+        transactionHash={
+          "0x4766ecd489b648199cbc083e124243b95091a2c136c8cebb3b16267f0c4f3b61"
+        }
       />
     </>
   );

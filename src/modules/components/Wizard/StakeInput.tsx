@@ -1,33 +1,38 @@
 import {
-    Divider,
-    Flex,
-    InputGroup,
-    InputLeftElement,
-    NumberInput,
-    NumberInputField,
-    Stack,
-    Text
+  Divider,
+  Flex,
+  InputGroup,
+  InputLeftElement,
+  NumberInput,
+  NumberInputField,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
+import { sanitizeNumbers } from "@/utils";
+
 const parse = (val) => (!val || val < 0 ? 0 : val);
 
-type HasIconInput = {
-    hasIcon: true;
-    icon: ReactNode;
-    minInputWidth: string;
-    inputWidth: string;
-} | {
-    hasIcon?: false;
-    icon?: undefined;
-    minInputWidth?: undefined;
-    inputWidth?: undefined;
-}
+type HasIconInput =
+  | {
+      hasIcon: true;
+      icon: ReactNode;
+      minInputWidth: string;
+      inputWidth: string;
+    }
+  | {
+      hasIcon?: false;
+      icon?: undefined;
+      minInputWidth?: undefined;
+      inputWidth?: undefined;
+    };
 
 type StakeInputProps = {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  exchangeRate: number;
+  exchangeRate?: number;
+  currencySymbol?: string;
   balance: number;
   token: string;
   title: string;
@@ -44,8 +49,8 @@ export const StakeInput = ({
   setAmount,
   exchangeRate,
   balance,
+  currencySymbol,
 }: StakeInputProps) => {
-
   return (
     <Stack bg="grey.100" rounded="2xl" px="4" py={3}>
       <Flex justifyContent="space-between" alignItems="center" mb={2} gap="2">
@@ -56,6 +61,7 @@ export const StakeInput = ({
           <NumberInput
             value={amount}
             onChange={(value) => {
+              value = sanitizeNumbers(value);
               setAmount(parse(value));
             }}
             min={0}
@@ -82,9 +88,13 @@ export const StakeInput = ({
         <Text size="xs" color="grey.600">
           {`BALANCE: ${balance} ${token}`}
         </Text>
-        <Text color="grey.600">
-          {`${token} Value: $${exchangeRate}`}
-        </Text>
+
+        {exchangeRate?.toString() && exchangeRate !== 0 ? (
+          <Text color="grey.600">
+            1 {token} = {currencySymbol}
+            {exchangeRate}
+          </Text>
+        ) : null}
       </Flex>
     </Stack>
   );

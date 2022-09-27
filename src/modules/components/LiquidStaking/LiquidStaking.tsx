@@ -7,26 +7,37 @@ import {
   Box,
   FormControl,
   Hide,
+  Link,
   Show,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { BigNumberish, utils } from "ethers";
+import ms from "ms";
+import { FunctionComponent, useEffect, useState } from "react";
 import {
-  FunctionComponent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+  useAccount,
+  useBalance,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
 
+import { Address } from "@/common/components/Address";
 import { Button } from "@/common/components/Button";
 import { Card, Content, Footer, Title } from "@/common/components/Card";
 import { InfoCircleIcon } from "@/common/components/CustomIcon";
+import { GGPToken } from "@/common/components/CustomIcon/GGPToken";
 import { SwapIcon } from "@/common/components/CustomIcon/SwapIcon";
 import { Tooltip } from "@/common/components/Tooltip";
-import useBalance from "@/hooks/balance";
+import useCoinPrice from "@/hooks/coinPrice";
+import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
 import useDeposit from "@/hooks/deposit";
-import useExchangeRate from "@/hooks/ggexchange";
-import useWallet from "@/hooks/wallet";
+import useLiquidStakingData from "@/hooks/liquidStakingData";
+import useRedeem from "@/hooks/redeem";
+import addToken from "@/utils/addToken";
+import { formatEtherFixed } from "@/utils/formatEtherFixed";
 import { roundedBigNumber } from "@/utils/numberFormatter";
 
 import { DepositDrawer } from "../Drawer";
@@ -35,149 +46,321 @@ import { RewardForm } from "./RewardForm";
 import { StakeForm } from "./StakeForm";
 import { Statistics } from "./Statistics";
 
-const statisticData = [
-  {
-    label: (
-      <>
-        Annual Percentage Rate
-        <Tooltip
-          placement="right"
-          content="Percentage reward you get per year on your staked AVAX."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "~7.20%",
-  },
-  {
-    label: (
-      <>
-        Exchange Rate
-        <Tooltip
-          placement="right"
-          content="Rate of exchange between AVAX and ggAVAX."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "1 AVAX = 0.0000 sAVAX",
-  },
-  {
-    label: <># of Stakers</>,
-    value: "0",
-  },
-  {
-    label: <>Total AVAX Staked</>,
-    value: "0 AVAX",
-  },
-  {
-    label: <>sAVAX Market Cap</>,
-    value: "$0",
-  },
-  {
-    label: (
-      <>
-        Unstaking Cooldown Period
-        <Tooltip
-          placement="right"
-          content="The waiting period before all funds become available."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "0 days",
-  },
-  {
-    label: (
-      <>
-        Redemption Period
-        <Tooltip
-          placement="right"
-          content="The time period where redemption is allowed."
-        >
-          <Box as="span">
-            <InfoCircleIcon fill="grey.600" className="ml-1" />
-          </Box>
-        </Tooltip>
-      </>
-    ),
-    value: "0 days",
-  },
-];
+const generateStatistics = (
+  apr: number | string,
+  exchangeRate: BigNumberish,
+  stakedAmount: BigNumberish,
+  stakers: BigNumberish | string,
+  marketCap: BigNumberish | string,
+  rewardPeriod?: number | null | undefined,
+  tokenAddress?: string | null | undefined
+) => {
+  if (!rewardPeriod) {
+    rewardPeriod = 84600000 * 14;
+  }
+
+  return [
+    {
+      label: (
+        <>
+          Token Address
+          <Tooltip placement="right" content="The address of the ggAVAX token">
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: tokenAddress ? (
+        <Address fontWeight="bold" copyable>
+          {tokenAddress}
+        </Address>
+      ) : (
+        "Loading..."
+      ),
+    },
+    {
+      label: (
+        <>
+          Annual Percentage Rate
+          <Tooltip
+            placement="right"
+            content="Percentage reward you get per year on your staked AVAX."
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: typeof apr === "string" ? apr : `~${apr.toFixed(2)}%`,
+    },
+    {
+      label: (
+        <>
+          Exchange Rate
+          <Tooltip
+            placement="right"
+            content="Rate of exchange between AVAX and ggAVAX."
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: `1 AVAX = ${formatEtherFixed(exchangeRate)} ggAVAX`,
+    },
+    {
+      label: <># of Stakers</>,
+      value:
+        typeof stakers === "string" ? stakers : formatEtherFixed(stakers, 0),
+    },
+    {
+      label: <>Total AVAX Staked</>,
+      value: `${formatEtherFixed(stakedAmount)} AVAX`,
+    },
+    {
+      label: <>ggAVAX Market Cap</>,
+      value:
+        typeof marketCap === "string"
+          ? marketCap
+          : `$${formatEtherFixed(marketCap, 0)}`,
+    },
+    {
+      label: (
+        <>
+          Reward Period
+          <Tooltip
+            placement="right"
+            content="The waiting period before rewards are gained"
+          >
+            <Box as="span">
+              <InfoCircleIcon fill="grey.600" className="ml-1" />
+            </Box>
+          </Tooltip>
+        </>
+      ),
+      value: ms(rewardPeriod, { long: true }),
+    },
+  ];
+};
 
 export const LiquidStaking: FunctionComponent = () => {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { account, activate, provider } = useWallet();
-  const balance = useBalance(); // AVAX balance
-  const { send, success, error, isLoading } = useDeposit(provider);
-  const exchangeRate = useExchangeRate(provider);
+  const { openConnectModal } = useConnectModal();
 
+  const { chain } = useNetwork();
+
+  const [swapDirection, setSwapDirection] = useState(false); // false for AVAX -> ggAVAX, true for ggAVAX -> AVAX
   const [amount, setAmount] = useState<number>(); // stake value
   const [reward, setReward] = useState<number>(0); // reward value
-  const [depositStatus, setDepositStatus] = useState<"success" | "failed">(
-    "failed"
+
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
+  const { isConnected, address: account } = useAccount();
+
+  const { address: ggAVAXAddress } = useTokenggAVAXContract();
+
+  const {
+    isLoading: isLoadingStats,
+    ggAvaxExchangeRate,
+    totalStakedAVAX,
+    apr,
+    rewardsCycleLength,
+  } = useLiquidStakingData();
+
+  // AVAX balance
+  const { data: balance, isLoading: isBalanceLoading } = useBalance({
+    addressOrName: account,
+  });
+
+  // ggAVAX balance
+  const { data: ggAVAXBalance } = useBalance({
+    addressOrName: account,
+    token: ggAVAXAddress,
+  });
+
+  // deposit the AVAX
+  const {
+    data: depositData,
+    write: deposit,
+    isLoading: isDepositLoading,
+    status: depositStatus,
+  } = useDeposit(utils.parseEther(amount?.toString() || "0"));
+
+  const {
+    isLoading: isLoadingDepositTransaction,
+    isSuccess: isSuccessDepositTransaction,
+  } = useWaitForTransaction({
+    hash: depositData?.hash,
+  });
+
+  // redeem ggAVAX
+  const {
+    write: redeem,
+    isLoading: isRedeemLoading,
+    status: redeemStatus,
+  } = useRedeem(utils.parseEther(amount?.toString() || "0"));
+
+  // Current market price for AVAX
+  const { price: exchangeRate } = useCoinPrice("avalanche-2");
+
+  const isLoading =
+    isBalanceLoading || isDepositLoading || isLoadingStats || isRedeemLoading;
+
+  const statisticData = generateStatistics(
+    apr,
+    ggAvaxExchangeRate || 0,
+    totalStakedAVAX || 0,
+    "Coming Soon",
+    "Coming Soon",
+    (rewardsCycleLength as unknown as number) * 1000,
+    ggAVAXAddress
   );
-
-  const handleDeposit = async () => {
-    await send(amount);
-  };
-
-  const handleConnect = () => {
-    activate();
-  };
 
   const handleSwap = () => {
     const temporaryAmount = amount;
     const temporaryReward = reward;
-
+    setSwapDirection(!swapDirection);
     setAmount(temporaryReward);
     setReward(temporaryAmount);
   };
 
-  const isMounted = useRef(true);
   useEffect(() => {
-    if (isMounted.current) {
-      isMounted.current = false;
+    if (depositStatus === "success") {
+      (() => onOpen())();
       return;
     }
-    if (success === true) {
-      setDepositStatus("success");
-      (() => onOpen())();
-    } else if (success === false) {
-      setDepositStatus("failed");
-      (() => onOpen())();
+    if (depositStatus === "error") {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+      });
+      return;
     }
-  }, [success, error]);
+  }, [depositStatus]);
+
+  useEffect(() => {
+    if (redeemStatus === "success") {
+      (() => onOpen())();
+      return;
+    }
+    if (redeemStatus === "error") {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+      });
+      return;
+    }
+  }, [redeemStatus]);
+
+  useEffect(() => {
+    if (swapDirection) {
+      const rate = Number(utils.formatEther(ggAvaxExchangeRate || 0));
+      const rewardAmount = amount / rate;
+      if (isNaN(rewardAmount)) {
+        setReward(0);
+      } else {
+        setReward(rewardAmount);
+      }
+    } else {
+      const rate = Number(utils.formatEther(ggAvaxExchangeRate || 0));
+      const rewardAmount = rate * amount;
+      if (isNaN(rewardAmount)) {
+        setReward(0);
+      } else {
+        setReward(rewardAmount);
+      }
+    }
+  }, [amount, ggAvaxExchangeRate, swapDirection]);
+
+  const displayButton = () => {
+    if (!isConnected) {
+      return (
+        <Button full onClick={openConnectModal}>
+          Connect Wallet
+        </Button>
+      );
+    }
+    if (chain.unsupported) {
+      return (
+        <Button full disabled variant="destructive-outline">
+          Wrong Network
+        </Button>
+      );
+    }
+    if (swapDirection) {
+      if (
+        ggAVAXBalance?.value.lt(utils.parseEther(amount?.toString() || "0"))
+      ) {
+        return (
+          <Button full disabled variant="destructive-outline">
+            Insufficient Funds
+          </Button>
+        );
+      }
+      if (redeemStatus === "error") {
+        return (
+          <Button full disabled variant="destructive-outline">
+            Redeem Unavailable
+          </Button>
+        );
+      }
+      return (
+        <Button full disabled={!amount || isLoading} onClick={redeem}>
+          {isLoading ? "Loading..." : "Redeem ggAVAX"}
+        </Button>
+      );
+    } else {
+      if (balance?.value.lt(utils.parseEther(amount?.toString() || "0"))) {
+        return (
+          <Button full disabled variant="destructive-outline">
+            Insufficient Funds
+          </Button>
+        );
+      }
+      if (depositStatus === "error") {
+        return (
+          <Button full disabled variant="destructive-outline">
+            Deposit Unavailable
+          </Button>
+        );
+      }
+      return (
+        <Button full disabled={!amount || isLoading} onClick={deposit}>
+          {isLoading ? "Loading..." : "Deposit AVAX"}
+        </Button>
+      );
+    }
+  };
 
   return (
     <>
       <Show above="sm">
         <DepositModal
-          status={depositStatus}
+          status={swapDirection ? redeemStatus : depositStatus}
           isOpen={isOpen}
           onClose={() => {
             onClose();
             setAmount(0);
           }}
-          successProps={{
-            amount: amount,
-            token: "AVAX",
-          }}
+          transactionHash={depositData?.hash}
+          isLoading={true}
+          isSuccess={isSuccessDepositTransaction}
+          amount={amount}
+          token={swapDirection ? "ggAVAX" : "AVAX"}
         />
       </Show>
       <Hide above="sm">
         <DepositDrawer
-          status={depositStatus}
+          status={swapDirection ? redeemStatus : depositStatus}
           isOpen={isOpen}
           onClose={() => {
             onClose();
@@ -185,7 +368,7 @@ export const LiquidStaking: FunctionComponent = () => {
           }}
           successProps={{
             amount: amount,
-            token: "AVAX",
+            token: swapDirection ? "ggAVAX" : "AVAX",
           }}
         />
       </Hide>
@@ -196,13 +379,25 @@ export const LiquidStaking: FunctionComponent = () => {
             <Box position="relative">
               <Card backgroundColor="grey.100" mb="2">
                 <Content>
-                  <StakeForm
-                    amount={amount}
-                    setAmount={setAmount}
-                    setReward={setReward}
-                    balance={roundedBigNumber(balance) || 0}
-                    exchangeRate={roundedBigNumber(exchangeRate) || 0}
-                  />
+                  {swapDirection ? (
+                    <StakeForm
+                      amount={amount}
+                      setAmount={setAmount}
+                      setReward={setReward}
+                      balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
+                      token="ggAVAX"
+                      header="REDEEM ggAVAX"
+                      icon={<GGPToken />}
+                    />
+                  ) : (
+                    <StakeForm
+                      amount={amount}
+                      setAmount={setAmount}
+                      setReward={setReward}
+                      balance={roundedBigNumber(balance?.value || 0)}
+                      exchangeRate={exchangeRate || 0}
+                    />
+                  )}
                 </Content>
               </Card>
               <Box
@@ -222,7 +417,19 @@ export const LiquidStaking: FunctionComponent = () => {
             </Box>
             <Card p="1rem 1.5rem" backgroundColor="grey.100" mb="4">
               <Content>
-                <RewardForm reward={reward} balance={0} />
+                {swapDirection ? (
+                  <RewardForm
+                    reward={reward}
+                    balance={roundedBigNumber(balance?.value || 0)}
+                    token="AVAX"
+                  />
+                ) : (
+                  <RewardForm
+                    reward={reward}
+                    balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
+                    icon={<GGPToken />}
+                  />
+                )}
               </Content>
             </Card>
             <Card rounded="12px" p="0" backgroundColor="grey.100" mb="2">
@@ -251,17 +458,24 @@ export const LiquidStaking: FunctionComponent = () => {
               </Content>
             </Card>
           </FormControl>
+          <Text pt={1} size={"sm"}>
+            Don't have ggAVAX added to your wallet?{" "}
+            <Link
+              onClick={() => {
+                addToken(ggAVAXAddress, "ggAVAX");
+              }}
+            >
+              Add it now!
+            </Link>
+          </Text>
         </Content>
         <Footer>
-          {account ? (
-            <Button full disabled={!amount} onClick={handleDeposit}>
-              {isLoading ? "Loading..." : "Deposit"}
-            </Button>
-          ) : (
-            <Button full onClick={handleConnect}>
-              Connect wallet
-            </Button>
+          {!amount && (
+            <Tooltip placement="top" content="No amount set">
+              <div>{displayButton()}</div>
+            </Tooltip>
           )}
+          {amount && displayButton()}
         </Footer>
       </Card>
     </>

@@ -1,142 +1,149 @@
-import { BigNumber, providers } from "ethers";
-import { useEffect, useState } from "react";
+import { BigNumber, utils } from "ethers";
+import { Contract } from "ethers";
+import ms from "ms";
+import { useState } from "react";
+import useAsyncEffect from "use-async-effect";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractRead, useSigner } from "wagmi";
 
-import { overrides } from "../utils";
+import type Minipool from "@/types/minipool";
+import { MinipoolStatus } from "@/types/minipool";
+import { nodeID } from "@/utils";
+
 import useMinipoolManagerContract from "./contracts/minipoolManager";
-import useTokenGGPContract from "./contracts/tokenGGP";
 
-export interface UseCreateMinipool {
-  createMinipool: (
-    nodeID: string,
-    duration: BigNumber,
-    delegationFee: BigNumber,
-    ggpBondAmt: BigNumber,
-    depositAmount: BigNumber
-  ) => Promise<void>;
-  approve: (address: string, ggpBondAmt: BigNumber) => Promise<void>;
-  error?: string | undefined;
-  response?: any;
-  approveResponse?: any;
-  success?: boolean;
+export interface UseCreateMinipoolParams {
+  nodeId: string; // node ID as input by the user
+  duration: number | string; // duration in ms
+  amount: BigNumber | number | string; // amount of tokens to be deposited
+  fee?: BigNumber; // the fee for the node. Default is 20000, or 2%
 }
 
-const useCreateMinipool = (
-  provider: providers.Web3Provider | undefined
-): UseCreateMinipool => {
-  const contract = useMinipoolManagerContract(provider);
-  const token = useTokenGGPContract(provider);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [response, setResponse] = useState<any>(undefined);
-  const [approveResponse, setApproveResponse] = useState<any>(undefined);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [approveSuccess, setApproveSuccess] = useState<boolean>(false);
+export const useCreateMinipool = ({
+  nodeId,
+  duration,
+  amount,
+  fee,
+}: UseCreateMinipoolParams) => {
+  if (!fee) {
+    fee = BigNumber.from(20000);
+  }
 
-  const approve = async (address: string, ggpBondAmt: BigNumber) => {
-    if (!token) return;
-    if (!provider) {
-      setError("Please install MetaMask");
-      return;
-    }
-    if (!address) {
-      setError("Please enter a valid address");
-      return;
-    }
+  if (typeof duration === "string") {
+    duration = ms(duration) / 1000;
+  }
 
-    try {
-      const tx = await token.approve(address, ggpBondAmt);
-      const resp = await tx.wait();
-      setApproveResponse(resp);
-    } catch (e) {
-      setError(e as string);
-    }
-  };
+  if (typeof amount === "number") {
+    amount = BigNumber.from(amount);
+  } else if (typeof amount === "string") {
+    amount = utils.parseEther(amount);
+  }
 
-  useEffect(() => {
-    if (approveResponse?.status === 1) {
-      setApproveSuccess(true);
-    }
-  }, [approveResponse]);
+  const formattedID = nodeID(nodeId);
 
-  const createMinipool = async (
-    nodeID: string,
-    duration: BigNumber,
-    delegationFee: BigNumber,
-    ggpBondAmt: BigNumber,
-    depositAmount: BigNumber
-  ) => {
-    if (!contract) return;
-    if (!provider) {
-      setError("Please install MetaMask");
-      return;
-    }
-    if (!nodeID) {
-      setError("Please enter a valid node ID");
-      return;
-    }
-    if (!duration) {
-      setError("Please enter a valid duration");
-      return;
-    }
-    if (!delegationFee) {
-      setError("Please enter a valid delegation fee");
-      return;
-    }
-    if (!ggpBondAmt) {
-      setError("Please enter a valid GGP bond amount");
-      return;
-    }
+  const { address, contractInterface } = useMinipoolManagerContract();
 
-    if (!approveSuccess) {
-      setError("Please approve GGP bond amount");
-      return;
-    }
+  const { config } = usePrepareContractWrite({
+    addressOrName: address,
+    contractInterface,
+    functionName: "createMinipool",
+    args: [formattedID, BigNumber.from(duration), fee, amount],
+    overrides: {
+      value: amount,
+    },
+  });
 
-    try {
-      // const testTx = await contract.callStatic.createMinipool(
-      //   nodeID,
-      //   duration,
-      //   delegationFee,
-      //   ggpBondAmt,
-      //   {
-      //     ...overrides,
-      //     value: depositAmount,
-      //   }
-      // );
-      // console.log("This is a test wait.");
-      // const testResp = await testTx.wait();
-      // console.log(testResp);
-
-      const tx = await contract.createMinipool(
-        nodeID,
-        duration,
-        delegationFee,
-        ggpBondAmt,
-        {
-          ...overrides,
-          value: depositAmount,
-        }
-      );
-      const resp = await tx.wait();
-      setResponse(resp);
-    } catch (e) {
-      setError(e as string);
-    }
-  };
-
-  useEffect(() => {
-    if (response?.status === 1) {
-      setSuccess(true);
-    }
-  }, [response]);
+  const resp = useContractWrite(config);
 
   return {
-    createMinipool,
-    approve,
-    approveResponse,
-    error,
-    response,
-    success,
+    ...resp,
+    ready: resp?.write !== undefined,
   };
 };
 
-export default useCreateMinipool;
+export interface UseMinipoolsByStatusParams {
+  status?: number;
+  offset?: number;
+  limit?: number;
+}
+
+export const useAllMinipools = () => {
+  const [minipools, setMinipools] = useState<Minipool[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const { data: signer, isLoading: signerLoading } = useSigner();
+
+  const { address, contractInterface } = useMinipoolManagerContract();
+
+  useAsyncEffect(async () => {
+    if (!signer) {
+      return;
+    }
+    try {
+      const c = new Contract(address, contractInterface, signer);
+      // statuses are 0 to 6 inclusive
+      const statuses = [0, 1, 2, 3, 4, 5, 6];
+      const promises = statuses.map((status) => c.getMinipools(status, 0, 0));
+      const results = await Promise.all(promises);
+      // flatten the array of arrays
+      const flattened = [].concat(...results);
+      setMinipools(flattened);
+      setLoading(false);
+    } catch (e) {
+      setError(e);
+      setLoading(false);
+    }
+  }, [address, signer]);
+
+  return {
+    minipools,
+    isLoading: signerLoading || loading,
+    isError: !!error,
+    error,
+  };
+};
+
+export const useMinipoolsByStatus = ({
+  status = 2, // default to staking minipools
+  offset = 0, // no offset
+  limit = 0, // get all matching ones, no pagination
+}: UseMinipoolsByStatusParams) => {
+  const { address, contractInterface } = useMinipoolManagerContract();
+
+  const resp = useContractRead({
+    addressOrName: address,
+    contractInterface,
+    functionName: "getMinipools",
+    args: [status, offset, limit],
+  });
+
+  return resp;
+};
+
+export const useMinipoolByID = (id: string) => {
+  id = nodeID(id);
+
+  const { minipools, isLoading, isError, error } = useAllMinipools();
+
+  return {
+    minipools: minipools.find((minipool) => minipool?.nodeID === id),
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+export const useMinipoolsByOwner = (address: string | undefined) => {
+  const { minipools, isError, isLoading, error } = useAllMinipools();
+
+  if (!address) {
+    return {};
+  }
+
+  return {
+    minipools: minipools.filter((minipool) => minipool?.owner === address),
+    isError,
+    isLoading,
+    error,
+  };
+};
