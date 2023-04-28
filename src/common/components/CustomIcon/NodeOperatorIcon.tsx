@@ -1,5 +1,5 @@
-import { CustomIcon } from "./CustomIcon";
-import { CustomIconProps } from "./types";
+import { CustomIcon } from './CustomIcon'
+import { CustomIconProps } from './types'
 
 export const NodeOperatorIcon = (props: CustomIconProps) => (
   <CustomIcon fill="none" {...props}>
@@ -12,4 +12,4 @@ export const NodeOperatorIcon = (props: CustomIconProps) => (
     />
     <circle cx="12" cy="20" r="3" strokeWidth="2" />
   </CustomIcon>
-);
+)

@@ -1,15 +1,19 @@
-import { utils } from "ethers";
+import { utils } from 'ethers'
 
-import MinipoolManager from "@/contracts/MinipoolManager.json";
+import { useGetAddress } from '../useStorage'
 
-import { useGetAddress } from "../useStorage";
+import MinipoolManager from '@/contracts/MinipoolManager.json'
 
 const useMinipoolManagerContract = () => {
-  const { data } = useGetAddress("MinipoolManager");
+  const { data } = useGetAddress('MinipoolManager')
 
-  const contractInterface = new utils.Interface(MinipoolManager.abi);
+  const contractInterface = new utils.Interface(MinipoolManager.abi)
 
-  return { address: data?.toString() || "", contractInterface };
-};
+  return {
+    address: data,
+    contractInterface,
+    abi: MinipoolManager.abi,
+  }
+}
 
-export default useMinipoolManagerContract;
+export default useMinipoolManagerContract

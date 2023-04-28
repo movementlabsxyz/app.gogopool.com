@@ -1,30 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { HYDRATE } from "next-redux-wrapper";
+import { createSlice } from '@reduxjs/toolkit'
+import { HYDRATE } from 'next-redux-wrapper'
 
-import { WalletState } from "@/types/wallet";
+import { WalletState } from '@/types/wallet'
 
 const initialState: WalletState = {
   account: undefined,
   chainId: undefined,
   chainName: undefined,
   error: undefined,
-};
+}
 
 const walletSlice = createSlice({
-  name: "wallet",
+  name: 'wallet',
   initialState,
   reducers: {
     setAccount: (state, action) => {
-      state.account = action.payload;
+      state.account = action.payload
     },
     setChainId: (state, action) => {
-      state.chainId = action.payload;
+      state.chainId = action.payload
     },
     setChainName: (state, action) => {
-      state.chainName = action.payload;
+      state.chainName = action.payload
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.payload
     },
   },
   extraReducers: {
@@ -32,11 +32,11 @@ const walletSlice = createSlice({
       return {
         ...state,
         ...action.payload.subject,
-      };
+      }
     },
   },
-});
+})
 
-export const { setAccount, setChainId, setChainName, setError } = walletSlice.actions;
+export const { setAccount, setChainId, setChainName, setError } = walletSlice.actions
 
-export default walletSlice.reducer;
+export default walletSlice.reducer

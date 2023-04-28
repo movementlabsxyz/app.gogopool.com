@@ -14,7 +14,7 @@ get-contracts gcpath="../gogopool-contracts":
   #!/bin/zsh
   gcpath={{gcpath}}/artifacts
   CURRENT=$PWD
-  CONTRACTS=("Oracle" "Storage" "MinipoolManager" "TokenGGP" "TokenggAVAX" "Staking" "OneInchMock" "RewardsPool" "NOPClaim")
+  CONTRACTS=("Oracle" "Storage" "MinipoolManager" "TokenGGP" "TokenggAVAX" "Staking" "OneInchMock" "RewardsPool" "ClaimNodeOp")
 
   cd {{gcpath}}
   if [[ ! -d "node_modules" ]]; then
@@ -28,5 +28,6 @@ get-contracts gcpath="../gogopool-contracts":
 
   for contract in "${CONTRACTS[@]}"; do
     CONTRACT_PATH=$(find "$gcpath" -name "$contract.json")
+    echo $CONTRACT_PATH
     cp $CONTRACT_PATH src/contracts
   done

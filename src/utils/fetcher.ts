@@ -1,9 +1,9 @@
 const fetcher = (url: string) =>
   fetch(url, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-  }).then((r) => r.json());
+  }).then((r) => r.json())
 
-export default fetcher;
+export default fetcher

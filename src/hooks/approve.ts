@@ -1,27 +1,39 @@
-import { BigNumber } from "ethers";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { BigNumber } from 'ethers'
 
-import useStakingContract from "./contracts/staking";
-import useTokenGGPContract from "./contracts/tokenGGP";
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
+import { formatEther } from 'ethers/lib/utils'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+
+import useStakingContract from './contracts/staking'
+import useTokenGGPContract from './contracts/tokenGGP'
 
 export const useApproveGGP = (amount: BigNumber) => {
-  const { address: ggpTokenAddress, contractInterface } = useTokenGGPContract();
+  const { abi, address: ggpTokenAddress } = useTokenGGPContract()
 
-  const { address: stakingAddr } = useStakingContract();
+  const { address: stakingAddr } = useStakingContract()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { config } = usePrepareContractWrite({
-    addressOrName: ggpTokenAddress,
-    contractInterface,
-    functionName: "approve",
+    address: ggpTokenAddress,
+    abi,
+    functionName: 'approve',
     args: [stakingAddr, amount],
-  });
+  })
 
-  const resp = useContractWrite(config);
+  const resp = useContractWrite({
+    ...config,
+    onSuccess(data) {
+      addRecentTransaction({
+        hash: data.hash,
+        description: `Approve ${formatEther(amount)} GGP`,
+      })
+    },
+  })
 
   return {
     ...resp,
     ready: resp?.write !== undefined,
-  };
-};
+  }
+}
 
-export default useApproveGGP;
+export default useApproveGGP

@@ -1,28 +1,28 @@
-import useSWR from "swr";
+import useSWR from 'swr'
 
-import fetcher from "../utils/fetcher";
+import fetcher from '../utils/fetcher'
 
 export type PriceHistoryEntry = {
-  price: number;
-  date: Date;
-};
+  price: number
+  date: Date
+}
 
-export type PriceHistory = PriceHistoryEntry[];
+export type PriceHistory = PriceHistoryEntry[]
 
 const useCoinPriceHistory = (
   currencyId: string,
-  fiatCurrency = "usd",
-  days = 7
+  fiatCurrency = 'usd',
+  days = 7,
 ): {
-  data: PriceHistory;
-  isLoading: boolean;
-  isError: boolean;
-  error: unknown;
+  data: PriceHistory
+  isLoading: boolean
+  isError: boolean
+  error: unknown
 } => {
   const { data, error } = useSWR(
     `https://api.coingecko.com/api/v3/coins/${currencyId}/market_chart?vs_currency=${fiatCurrency}&days=${days}`,
-    fetcher
-  );
+    fetcher,
+  )
 
   return {
     data:
@@ -33,7 +33,7 @@ const useCoinPriceHistory = (
     isLoading: !data && !error,
     isError: Boolean(error),
     error,
-  };
-};
+  }
+}
 
-export default useCoinPriceHistory;
+export default useCoinPriceHistory

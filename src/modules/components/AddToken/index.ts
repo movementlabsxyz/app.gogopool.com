@@ -1,4 +1,4 @@
-import AddggAVAX from "./AddggAVAX";
-import AddGGP from "./AddGGP";
+import AddGGP from './AddGGP'
+import AddggAVAX from './AddggAVAX'
 
-export { AddggAVAX, AddGGP };
+export { AddggAVAX, AddGGP }

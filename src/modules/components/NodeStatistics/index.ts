@@ -1,3 +1,3 @@
-import { Statistics as NodeStatistics } from "./NodeStatistics";
+import { Statistics as NodeStatistics } from './NodeStatistics'
 
-export default NodeStatistics;
+export default NodeStatistics

@@ -1,13 +1,17 @@
-import { utils } from "ethers";
+import { utils } from 'ethers'
 
-import RewardsPool from "@/contracts/RewardsPool.json";
+import { useGetAddress } from '../useStorage'
 
-import { useGetAddress } from "../useStorage";
+import RewardsPool from '@/contracts/RewardsPool.json'
 
 const useRewardsPoolContract = () => {
-  const { data } = useGetAddress("RewardsPool");
-  const contractInterface = new utils.Interface(RewardsPool.abi);
-  return { address: data?.toString() || "", contractInterface };
-};
+  const { data } = useGetAddress('RewardsPool')
+  const contractInterface = new utils.Interface(RewardsPool.abi)
+  return {
+    address: data,
+    contractInterface,
+    abi: RewardsPool.abi,
+  }
+}
 
-export default useRewardsPoolContract;
+export default useRewardsPoolContract

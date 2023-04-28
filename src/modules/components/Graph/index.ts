@@ -1,3 +1,3 @@
-import PriceGraph from "./PriceGraph";
+import PriceGraph from './PriceGraph'
 
-export default PriceGraph;
+export default PriceGraph

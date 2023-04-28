@@ -1,11 +1,11 @@
 export interface WizardData {
-  step: number;
-  header: string;
-  title: string;
-  description?: string;
-  image: string;
+  step: number
+  header: string
+  title: string
+  description?: string
+  image: string
   size: {
-    width: number;
-    height: number;
+    width: number
+    height: number
   }
 }

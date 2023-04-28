@@ -1,98 +1,100 @@
-import { Box, Skeleton, Stack, Text } from "@chakra-ui/react";
-import { BigNumber, utils } from "ethers";
-import ms from "ms";
-import { FunctionComponent, ReactElement } from "react";
-import { useAccount } from "wagmi";
+import { BigNumber, utils } from 'ethers'
+import { FunctionComponent, ReactElement } from 'react'
 
-import { Address } from "@/common/components/Address";
-import { useAllMinipools } from "@/hooks/minipool";
+import { Box, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
+import ms from 'ms'
+import { useAccount } from 'wagmi'
+
+import { Address } from '@/common/components/Address'
+import { Title } from '@/common/components/Card'
+import { useAllMinipools } from '@/hooks/minipool'
 // import useMinipoolByID from "@/hooks/useMinipoolByID";
 // import useMinipoolsByOwner from "@/hooks/useMinipoolsByOwner";
 // import useMinipoolsByStatus from "@/hooks/useMinipoolsByStatus";
-import Minipool, { displayName, MinipoolKeys } from "@/types/minipool";
+import Minipool, { MinipoolKeys, displayName } from '@/types/minipool'
 
 export interface StatsProps {
-  address?: string;
-  nodeID?: string;
+  address?: string
+  nodeID?: string
 }
 // TODO make the "status" field a string instead of an int
 const formatData = (
-  input: Minipool
+  input: Minipool,
 ): { label: string | ReactElement; value: string | ReactElement }[] => {
   if (!input) {
-    return [];
+    return []
   }
-  const keys = Object.keys(input);
+  const keys = Object.keys(input)
   return keys
     .filter((key) => {
-      if (key.toLowerCase().includes("time")) {
-        return false;
+      if (key.toLowerCase().includes('time')) {
+        return false
       }
-      return Number.isNaN(Number(key));
+      return Number.isNaN(Number(key))
     })
     .map((key) => {
-      const value = input[key];
+      const value = input[key]
       // if (key.toLowerCase().includes("time")) {
       //   return {
       //     label: key,
       //     value: new Date(value.toNumber() * 1000).toLocaleString(),
       //   };
       // }
-      if (key === "duration") {
+      if (key === 'duration') {
         return {
           label: displayName(key as MinipoolKeys),
           value: ms(value * 1000, { long: true }),
-        };
+        }
       }
-      if (key === "delegationFee") {
-        const fee = value as unknown as BigNumber;
+      if (key === 'delegationFee') {
+        const fee = value as unknown as BigNumber
         return {
           label: displayName(key as MinipoolKeys),
-          value: fee.div(10000).toString() + "%",
-        };
+          value: fee.div(10000).toString() + '%',
+        }
       }
 
-      if (key === "status") {
-        const status = value as unknown as BigNumber;
+      if (key === 'status') {
+        const status = value as unknown as BigNumber
         return {
           label: displayName(key as MinipoolKeys),
           value: status.toString(),
-        };
+        }
       }
 
       if (BigNumber.isBigNumber(value)) {
         return {
           label: displayName(key as MinipoolKeys),
           value: utils.formatEther(value),
-        };
+        }
       }
 
-      if (value?.toLowerCase().startsWith("0x")) {
+      if (value?.toLowerCase().startsWith('0x')) {
         return {
           label: displayName(key as MinipoolKeys),
           value: (
-            <Address fontWeight="bold" copyable={true} truncate={true}>
+            <Address copyable={true} fontWeight="bold" truncate={true}>
               {value}
             </Address>
           ),
-        };
+        }
       }
 
-      if (typeof value === "string") {
-        return { label: displayName(key as MinipoolKeys), value };
+      if (typeof value === 'string') {
+        return { label: displayName(key as MinipoolKeys), value }
       }
 
       return {
         label: displayName(key as MinipoolKeys),
         value: value.toString(),
-      };
-    });
-};
+      }
+    })
+}
 
-export const Statistics: FunctionComponent<StatsProps> = ({
-  address,
-  nodeID,
-}) => {
+export const Statistics: FunctionComponent<StatsProps> = ({ address, nodeID }) => {
+  const { openConnectModal } = useConnectModal()
+
   // const minipoolsByOwner = useMinipoolsByOwner(address || "");
   // const minipoolByID = useMinipoolByID(nodeID || "");
 
@@ -101,61 +103,61 @@ export const Statistics: FunctionComponent<StatsProps> = ({
   //   minipools.push(minipoolByID);
   // }
 
-  const { isConnected } = useAccount();
+  const { isConnected } = useAccount()
 
-  const { minipools, isLoading } = useAllMinipools();
+  const { isLoading, minipools } = useAllMinipools()
 
   const skeletons = Array.from({ length: 10 }, (_, i) => (
-    <Skeleton endColor="blue.200" width="500px" key={i} height="18px" />
-  ));
+    <Skeleton endColor="blue.200" height="18px" key={i} maxWidth="500px" width="100%" />
+  ))
 
-  if (!isConnected) {
-    return <Text>Please connect a wallet to see node statistics.</Text>;
+  if (openConnectModal) {
+    return (
+      <Text>
+        <button className="underline" onClick={openConnectModal} type="button">
+          Connect your wallet
+        </button>{' '}
+        to view details
+      </Text>
+    )
   }
 
   if (isLoading) {
     return (
-      <Box gap="0.25rem">
+      <Box gap="0.25rem" width="100%">
         <Stack gap={1}>{skeletons}</Stack>
       </Box>
-    );
+    )
   }
 
   if (minipools.length === 0) {
     return (
-      <Box gap="0.25rem">
-        <Text size="sm" color="grey.600" display="flex" flexDir="row">
+      <Box gap="0.25rem" width="500px">
+        <Text color="grey.600" display="flex" flexDir="row" size="sm">
           No minipools found.
         </Text>
       </Box>
-    );
+    )
   }
 
-  const data = formatData(minipools[0]);
+  const data = formatData(minipools[0])
 
   return (
-    <Box width="500px" gap="0.25rem">
-      {data.map(({ label, value }, index) => (
-        <Box
-          display="flex"
-          flexDir="row"
-          justifyContent="space-between"
-          key={index}
-        >
-          <Text
-            size="sm"
-            color="grey.600"
-            display="flex"
-            flexDir="row"
-            alignItems="center"
+    <div className="overflow-hidden">
+      <Title fontSize={20}>Node details</Title>
+      <dl>
+        {data.map(({ label, value }, index) => (
+          <div
+            className={`${
+              index % 2 ? 'bg-gray-50' : 'bg-white'
+            } px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6`}
+            key={index}
           >
-            {label}
-          </Text>
-          <Text size="sm" fontWeight="bold">
-            {value}
-          </Text>
-        </Box>
-      ))}
-    </Box>
-  );
-};
+            <dt className="text-sm font-medium text-gray-500">{label}</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}

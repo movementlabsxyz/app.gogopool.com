@@ -1,48 +1,52 @@
-import type { BigNumber } from "ethers";
+import type { BigNumber } from 'ethers'
 
-interface Minipool {
-  nodeID: string;
-  status: MinipoolStatus;
-  duration: number;
-  startTime: number;
-  endTime: number;
-  delegationFee: BigNumber;
-  ggpBondAmt: BigNumber;
-  ggpSlashAmt: BigNumber;
-  avaxNodeOpAmt: BigNumber;
-  avaxLiquidStakerAmt: BigNumber;
-  avaxTotalRewardAmt: BigNumber;
-  avaxNodeOpRewardAmt: BigNumber;
-  avaxUserRewardAmt: BigNumber;
-  owner: string;
-  multisigAddr: string;
-  txID: string;
+export default interface Minipool {
+  nodeID: string
+  status: BigNumber
+  duration: number
+  creationTime: BigNumber
+  startTime: BigNumber
+  endTime: BigNumber
+  delegationFee: BigNumber
+  ggpBondAmt: BigNumber
+  ggpSlashAmt: BigNumber
+  avaxNodeOpAmt: BigNumber
+  avaxLiquidStakerAmt: BigNumber
+  avaxTotalRewardAmt: BigNumber
+  avaxNodeOpRewardAmt: BigNumber
+  avaxUserRewardAmt: BigNumber
+  owner: `0x${string}`
+  multisigAddr: string
+  txID: string
+  errorCode: string
 }
 
-export type MinipoolKeys = keyof Minipool;
+export type MinipoolKeys = keyof Minipool
 
 const displayNameTable: Record<MinipoolKeys, string> = {
-  nodeID: "Node ID",
-  status: "Status",
-  duration: "Duration",
-  startTime: "Start Time",
-  endTime: "End Time",
-  delegationFee: "Delegation Fee",
-  ggpBondAmt: "GGP Bond Amount",
-  ggpSlashAmt: "GGP Slash Amount",
-  avaxLiquidStakerAmt: "User Deposit Amount",
-  avaxNodeOpAmt: "NodeOp Deposit Amount",
-  avaxNodeOpRewardAmt: "NodeOp Reward Amount",
-  avaxTotalRewardAmt: "Total Reward Amount",
-  avaxUserRewardAmt: "User Reward Amount",
-  txID: "Transaction ID",
-  multisigAddr: "Multisig Address",
-  owner: "Owner Address",
-};
+  nodeID: 'Node ID',
+  status: 'Status',
+  duration: 'Duration',
+  startTime: 'Start Time',
+  creationTime: 'Creation Time',
+  endTime: 'End Time',
+  delegationFee: 'Delegation Fee',
+  ggpBondAmt: 'GGP Bond Amount',
+  ggpSlashAmt: 'GGP Slash Amount',
+  avaxLiquidStakerAmt: 'User Deposit Amount',
+  avaxNodeOpAmt: 'NodeOp Deposit Amount',
+  avaxNodeOpRewardAmt: 'NodeOp Reward Amount',
+  avaxTotalRewardAmt: 'Total Reward Amount',
+  avaxUserRewardAmt: 'User Reward Amount',
+  txID: 'Transaction ID',
+  multisigAddr: 'Multisig Address',
+  owner: 'Owner Address',
+  errorCode: 'Error Code',
+}
 
 export const displayName = (key: MinipoolKeys): string => {
-  return displayNameTable?.[key] || key;
-};
+  return displayNameTable?.[key] || key
+}
 
 export enum MinipoolStatus {
   Prelaunch, // The minipool has NodeOp AVAX and is awaiting assignFunds/launch by Rialto
@@ -54,4 +58,10 @@ export enum MinipoolStatus {
   Error,
 }
 
-export default Minipool;
+export const MinipoolErrorCodes = {
+  '0x4531000000000000000000000000000000000000000000000000000000000000': 'Node already validating',
+  '0x4532000000000000000000000000000000000000000000000000000000000000':
+    'Error determining node status',
+  '0x4533000000000000000000000000000000000000000000000000000000000000': 'Error staking node',
+  '0x4543310000000000000000000000000000000000000000000000000000000000': 'Error cycling minipool',
+}

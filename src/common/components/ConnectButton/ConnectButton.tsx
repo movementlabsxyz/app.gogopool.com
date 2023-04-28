@@ -1,93 +1,76 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
-import { Button } from "@/common/components/Button";
+import { Button } from '@/common/components/Button'
+import { useAutoConnect } from '@/config/autoconnect'
 
 export const CB = () => {
+  useAutoConnect()
   return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openChainModal,
-        openConnectModal,
-        mounted,
-      }) => {
+      {({ account, chain, mounted, openAccountModal, openChainModal, openConnectModal }) => {
         return (
           <div
             {...(!mounted && {
-              "aria-hidden": true,
+              'aria-hidden': true,
               style: {
                 opacity: 0,
-                pointerEvents: "none",
-                userSelect: "none",
+                pointerEvents: 'none',
+                userSelect: 'none',
               },
             })}
           >
             {(() => {
               if (!mounted || !account || !chain) {
                 return (
-                  <Button variant="secondary-filled" onClick={openConnectModal}>
+                  <Button onClick={openConnectModal} variant="secondary-filled">
                     Connect Wallet
                   </Button>
-                );
+                )
               }
 
-              if (chain.unsupported) {
+              if (chain?.unsupported) {
                 return (
-                  <Button
-                    variant="destructive-outline"
-                    onClick={openChainModal}
-                  >
+                  <Button onClick={openChainModal} variant="destructive-outline">
                     Wrong network
                   </Button>
-                );
+                )
               }
 
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div style={{ display: 'flex', gap: 12 }}>
                   <Button
                     onClick={openChainModal}
-                    style={{ display: "flex", alignItems: "center" }}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    type="button"
+                    variant="secondary-outline"
                   >
                     {chain.hasIcon && (
                       <div
+                        className="flex w-6 justify-center rounded-full"
                         style={{
                           background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
+                          overflow: 'hidden',
                         }}
                       >
                         {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? "Chain icon"}
-                            src={chain.iconUrl}
-                            width={12}
-                            height={12}
-                          />
+                          <img alt={chain.name ?? 'Chain icon'} src={chain.iconUrl} width={20} />
                         )}
                       </div>
                     )}
                     {chain.name}
                   </Button>
-
-                  <Button onClick={openAccountModal}>
+                  <Button onClick={openAccountModal} variant="secondary-outline">
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
+                    {account.displayBalance ? ` (${account.displayBalance})` : ''}
                   </Button>
                 </div>
-              );
+              )
             })()}
           </div>
-        );
+        )
       }}
     </ConnectButton.Custom>
-  );
-};
+  )
+}
 
-export default CB;
+export default CB

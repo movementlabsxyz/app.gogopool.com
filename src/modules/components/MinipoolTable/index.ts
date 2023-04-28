@@ -1,3 +1,3 @@
-import MinipoolTable from "./MinipoolTable";
+import MinipoolTable from './MinipoolTable'
 
-export default MinipoolTable;
+export default MinipoolTable

@@ -1,26 +1,40 @@
-import { BigNumber } from "ethers";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { BigNumber } from 'ethers'
 
-import useTokenContract from "./contracts/tokenggAVAX";
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
+import { formatEther } from 'ethers/lib/utils'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+
+import useTokenContract from './contracts/tokenggAVAX'
 
 const useDeposit = (amount: BigNumber) => {
-  const { address, contractInterface } = useTokenContract();
+  const { abi, address } = useTokenContract()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { config } = usePrepareContractWrite({
-    addressOrName: address,
-    contractInterface,
-    functionName: "depositAVAX",
+    address,
+    abi,
+    functionName: 'depositAVAX',
+    enabled: !amount.eq(BigNumber.from(0)),
+    args: [],
     overrides: {
       value: amount,
     },
-  });
+  })
 
-  const resp = useContractWrite(config);
+  const resp = useContractWrite({
+    ...config,
+    onSuccess(data) {
+      addRecentTransaction({
+        hash: data.hash,
+        description: `Deposit ${formatEther(amount)} AVAX`,
+      })
+    },
+  })
 
   return {
     ...resp,
     ready: resp?.write !== undefined,
-  };
-};
+  }
+}
 
-export default useDeposit;
+export default useDeposit

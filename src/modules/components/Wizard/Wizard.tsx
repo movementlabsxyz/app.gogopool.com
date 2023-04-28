@@ -1,146 +1,262 @@
-import { Box, useToast } from "@chakra-ui/react";
 import {
   ChangeEvent,
   Dispatch,
   FunctionComponent,
   SetStateAction,
+  useCallback,
   useEffect,
   useRef,
   useState,
-} from "react";
-import { useAccount } from "wagmi";
+} from 'react'
 
-// I hate this ordering but this is how ESLint wants it
-// - Chandler.
-import { WizardStepFour } from "./steps/WizardStepFour";
-import { WizardStepOne } from "./steps/WizardStepOne";
-import { WizardStepThree } from "./steps/WizardStepThree";
-import { WizardStepTwo } from "./steps/WizardStepTwo";
-import { WizardContent } from "./WizardContent";
-import { WizardHeader } from "./WizardHeader";
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { Box, Flex, useToast } from '@chakra-ui/react'
+import { useAccount, useNetwork } from 'wagmi'
+
+import { WizardContent } from './WizardContent'
+import { WizardHeader } from './WizardHeader'
+import { WizardCreateMinipool } from './steps/WizardCreateMinipool'
+import { WizardNodeID } from './steps/WizardNodeID'
+import { WizardStakeGGP } from './steps/WizardStakeGGP'
+import { WizardSuccess } from './steps/WizardSuccess'
+
+import { Button } from '@/common/components/Button'
+import { DEFAULT_AVAX, DEFAULT_DURATION } from '@/constants/chainDefaults'
 
 export interface WizardProps {
-  currentStep: number;
-  setCurrentStep: Dispatch<SetStateAction<number>>;
+  currentStep: number
+  setCurrentStep: Dispatch<SetStateAction<number>>
 }
 
 export const Wizard: FunctionComponent<WizardProps> = ({
   currentStep,
   setCurrentStep,
 }): JSX.Element => {
-  const [nodeId, setNodeId] = useState("");
-  const [ggpAmount, setGGPAmount] = useState(200);
-  const [avaxAmount, setAvaxAmount] = useState(1000);
-  const [txid, setTxid] = useState("");
-  const [approveStatus, setApproveStatus] = useState<
-    "error" | "loading" | "success" | "idle"
-  >("idle");
+  const { chain } = useNetwork()
+
+  const [nodeId, setNodeId] = useState('')
+
+  const defaultTimeRange = DEFAULT_DURATION[chain?.id] ? DEFAULT_DURATION[chain?.id][0] : '0'
+  const [timeRange, setTimeRange] = useState(defaultTimeRange)
+  const [timeRangeSeconds, setTimeRangeSeconds] = useState(0)
+
+  const defaultAVAXAmount = DEFAULT_AVAX[chain?.id] || 0
+  const [avaxAmount, setAvaxAmount] = useState(defaultAVAXAmount)
+  useEffect(() => {
+    setAvaxAmount(defaultAVAXAmount)
+  }, [defaultAVAXAmount])
+
+  const [txid, setTxid] = useState('')
+  const [stakeStatus, setStakeStatus] = useState<'error' | 'loading' | 'success' | 'idle'>('idle')
   const [createMinipoolStatus, setCreateMinipoolStatus] = useState<
-    "error" | "loading" | "success" | "idle"
-  >("idle");
+    'error' | 'loading' | 'success' | 'idle'
+  >('idle')
+  const [lockStep, setLockStep] = useState(1)
 
-  const { address: account } = useAccount();
+  const { address: account } = useAccount()
 
-  const toast = useToast();
-  const headerRef = useRef<HTMLDivElement>(null);
+  const toast = useToast()
+  const headerRef = useRef<HTMLDivElement>(null)
 
   const handleChangeNodeId = (e: ChangeEvent<HTMLInputElement>) => {
-    setNodeId(e.target.value);
-  };
+    const value = e.target.value.replace(/[^a-zA-Z0-9-]/gi, '')
+    setNodeId(value)
+    localStorage.setItem('nodeId', value)
+  }
 
-  const nextStep = () => {
+  const durationToSeconds = useCallback((duration: string) => {
+    const regex = /^(\d+) (week|month)s?$/
+    const match = duration.match(regex)
+    if (!match) {
+      return durationToSeconds('2 weeks')
+    }
+    const amount = parseInt(match[1])
+    const unit = match[2]
+    const secondsPerUnit = {
+      week: 7 * 24 * 60 * 60,
+      month: 4 * 7 * 24 * 60 * 60, // we can only increment by 7 days, so 1 month is 4 weeks
+    }
+    return amount * secondsPerUnit[unit]
+  }, [])
+  useEffect(() => {
+    setTimeRange(defaultTimeRange)
+    setTimeRangeSeconds(durationToSeconds(defaultTimeRange))
+  }, [defaultTimeRange, durationToSeconds])
+
+  const handleChangeTimeRange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setTimeRange(e.target.value || '')
+    setTimeRangeSeconds(durationToSeconds(e.target.value || ''))
+  }
+
+  useEffect(() => {
+    // load from local storage
+    const localStep = localStorage.getItem('step')
+    if (localStep) {
+      setCurrentStep(Number(localStep))
+    } else {
+      setCurrentStep(1)
+    }
+
+    const nodeId = localStorage.getItem('nodeId')
+    if (nodeId) {
+      setNodeId(nodeId)
+    } else {
+      setNodeId('')
+    }
+  }, [setCurrentStep])
+
+  const nextStep = useCallback(() => {
     setCurrentStep((s) => {
-      // what?
-      if (s === 1) {
-        headerRef.current.scrollLeft = 100; // scroll right in Mobile view
+      const next = s + 1
+
+      if (next >= 3) {
+        // clear local storage
+        localStorage.removeItem('step')
+        localStorage.removeItem('nodeId')
+      } else {
+        localStorage.setItem('step', next.toString())
       }
-      return s + 1;
-    });
-  };
+
+      return next
+    })
+  }, [setCurrentStep])
+
+  const prevStep = () => {
+    setCurrentStep((s) => {
+      if (s > 1) {
+        const prev = s - 1
+        localStorage.setItem('step', prev.toString())
+        return prev
+      }
+    })
+  }
+
+  const incrementLockStep = () => {
+    setLockStep((s) => s + 1)
+  }
+
+  const lockCurrentStep = () => {
+    setLockStep(currentStep)
+  }
 
   useEffect(() => {
-    if (approveStatus === "error") {
+    if (stakeStatus === 'error') {
       toast({
-        description: "Error when making trans",
-        status: "error",
-      });
-      return;
+        position: 'top',
+        description: 'Error when making transaction',
+        status: 'error',
+      })
+      setLockStep(currentStep)
+      return
     }
-
-    if (approveStatus === "success") {
-      toast({ description: "Approve successful", status: "success" });
-      nextStep();
-      return;
-    }
-  }, [approveStatus]);
+  }, [currentStep, nextStep, stakeStatus, toast])
 
   useEffect(() => {
-    if (createMinipoolStatus === "error") {
+    if (createMinipoolStatus === 'error') {
       toast({
-        description: "Error when sending the create minipool transaction",
-        status: "error",
-      });
-      return;
+        position: 'top',
+        description: 'Error when sending the create minipool transaction',
+        status: 'error',
+      })
+      return
     }
 
-    if (createMinipoolStatus === "success" && txid !== "") {
-      toast({ description: "Create minipool successful", status: "success" });
-      nextStep();
-      return;
+    if (createMinipoolStatus === 'success' && txid !== '') {
+      toast({
+        position: 'top',
+        description: 'Create minipool successful',
+        status: 'success',
+      })
+      nextStep()
+      return
     }
-  }, [createMinipoolStatus, txid]);
+  }, [createMinipoolStatus, nextStep, toast, txid])
 
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
       case 1:
         return (
-          <WizardStepOne
-            isConnected={!!account}
-            nodeId={nodeId}
+          <WizardNodeID
+            currentStep={currentStep}
             handleChangeNodeId={handleChangeNodeId}
+            handleChangeTimeRange={handleChangeTimeRange}
+            incrementLockStep={incrementLockStep}
+            isConnected={!!account}
+            lockCurrentStep={lockCurrentStep}
+            lockStep={lockStep}
             nextStep={nextStep}
+            nodeId={nodeId}
+            timeRange={timeRange}
           />
-        );
+        )
       case 2:
         return (
-          <WizardStepTwo
-            amount={ggpAmount}
-            setStakeStatus={setApproveStatus}
-            setAmount={setGGPAmount}
+          <WizardStakeGGP
+            currentStep={currentStep}
+            incrementLockStep={incrementLockStep}
+            lockCurrentStep={lockCurrentStep}
+            lockStep={lockStep}
+            nextStep={nextStep}
+            nodeId={nodeId}
+            setStakeStatus={setStakeStatus}
           />
-        );
+        )
       case 3:
         return (
-          <WizardStepThree
+          <WizardCreateMinipool
             amount={avaxAmount}
-            setAmount={setAvaxAmount}
             nodeId={nodeId}
+            setAmount={setAvaxAmount}
             setCreateMinipoolStatus={setCreateMinipoolStatus}
             setTxID={setTxid}
+            timeRangeSeconds={timeRangeSeconds}
           />
-        );
+        )
       case 4:
-        return <WizardStepFour hash={txid} />;
+        return <WizardSuccess hash={txid} />
       default:
-        throw Error("Invalid step");
+        // this should never happen!
+        throw Error(`Invalid step ${currentStep}`)
     }
-  };
+  }
 
   return (
     <Box
       bg="#ffffff"
-      padding="32px"
       borderRadius="24px"
       color="#000000"
-      maxW={780}
+      h="full"
       marginX="auto"
-      h="775px"
+      maxW={780}
+      padding="32px"
     >
-      <WizardHeader step={currentStep} headerRef={headerRef} />
-      <Box mx="auto" maxWidth="528px">
-        <WizardContent step={currentStep} />
-        {renderStepAction()}
-      </Box>
+      <Flex direction="column" gap={3}>
+        <WizardHeader headerRef={headerRef} step={currentStep} />
+        <Box className="w-full" maxWidth="528px" mx="auto">
+          <WizardContent step={currentStep} />
+          {renderStepAction()}
+        </Box>
+        {currentStep !== 4 && (
+          <Flex justify="space-between">
+            {currentStep > 1 && (
+              <Button onClick={prevStep} variant="secondary-outline">
+                Back <ArrowBackIcon />
+              </Button>
+            )}
+            {/* We couldn't figure out the CSS. This is scuffed but works. */}
+            {currentStep == 1 && <div />}
+            {currentStep < 3 && (
+              <Button
+                disabled={lockStep <= currentStep}
+                onClick={nextStep}
+                variant="secondary-outline"
+              >
+                Next <ArrowForwardIcon />
+              </Button>
+            )}
+          </Flex>
+        )}
+      </Flex>
     </Box>
-  );
-};
+  )
+}

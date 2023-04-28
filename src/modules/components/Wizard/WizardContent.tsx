@@ -1,31 +1,35 @@
-import { Box, Heading, Stack, Text } from "@chakra-ui/react";
-import Image from "next/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent } from 'react'
 
-import { wizardSteps } from "./data";
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import Image from 'next/image'
+import { useNetwork } from 'wagmi'
+
+import { wizardSteps } from './data'
+
+import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 
 export interface WizardContentProps {
-  step: number;
+  step: number
 }
 
-export const WizardContent: FunctionComponent<WizardContentProps> = ({
-  step,
-}): JSX.Element => {
-  const wizard = wizardSteps.find((wizard) => wizard.step === step);
+export const WizardContent: FunctionComponent<WizardContentProps> = ({ step }): JSX.Element => {
+  const { chain } = useNetwork()
+  const defaultAvax = DEFAULT_AVAX[chain?.id] || 0
+  const wizard = wizardSteps({ defaultAvax }).find((wizard) => wizard.step === step)
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" gap="32px" mt="40px" mb="24px">
-      <Image src={wizard.image} alt={`wizard-step-${step}`} {...wizard.size} />
-      <Stack direction="column" alignItems="center" gap="8px">
+    <Box alignItems="center" display="flex" flexDirection="column" gap="32px" mb="24px" mt="40px">
+      <Image alt={`wizard-step-${step}`} src={wizard.image} {...wizard.size} />
+      <Stack alignItems="center" direction="column" gap="3px">
         <Heading as="h5" textAlign="center">
           {wizard.title}
         </Heading>
         {wizard.description && (
-          <Text size={{ md: "md", base: "sm" }} color="grey.800" align="center">
+          <Text align="center" color="grey.800" size={{ md: 'md', base: 'sm' }}>
             {wizard.description}
           </Text>
         )}
       </Stack>
     </Box>
-  );
-};
+  )
+}

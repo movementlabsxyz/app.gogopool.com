@@ -1,71 +1,77 @@
-import { Box, Divider, Stack, Text, useBreakpointValue, useTheme } from "@chakra-ui/react";
-import { FunctionComponent, MutableRefObject } from "react";
+import { FunctionComponent, MutableRefObject } from 'react'
 
-import { WizardIcon } from "@/common/components/CustomIcon/WizardIcon";
+import { Box, Divider, Stack, Text, useBreakpointValue, useTheme } from '@chakra-ui/react'
+import { useNetwork } from 'wagmi'
 
-import { wizardSteps } from "./data";
+import { wizardSteps } from './data'
+
+import { WizardIcon } from '@/common/components/CustomIcon/WizardIcon'
+import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 
 export interface WizardHeaderProps {
-  step: number;
+  step: number
   headerRef: MutableRefObject<HTMLDivElement>
 }
 
 export const WizardHeader: FunctionComponent<WizardHeaderProps> = ({
+  headerRef,
   step,
-  headerRef
 }): JSX.Element => {
-  const { colors } = useTheme();
-  const size = useBreakpointValue({ base: 16, md: 21 });
+  const { colors } = useTheme()
+  const size = useBreakpointValue({ base: 16, md: 21 })
+  const { chain } = useNetwork()
+  const defaultAvax = DEFAULT_AVAX[chain?.id] || 0
 
   return (
     <Box
-      overflow="hidden"
-      w="full"
       border={`1px solid ${colors.grey[200]}`}
       borderRadius="16px"
+      overflow="hidden"
       ref={headerRef}
+      w="full"
     >
       <Stack
+        direction="row"
+        justify="space-between"
+        minWidth={{ md: '696px', base: '420px' }}
+        position="relative"
         px="16px"
         py="12px"
-        direction="row"
-        position="relative"
-        justify="space-between"
-        minWidth={{ md: "696px", base: "420px"}}
         width="100%"
       >
-        {wizardSteps.map((wizard) => (
+        {wizardSteps({ defaultAvax }).map((wizard) => (
           <Stack
-            key={wizard.title}
-            direction="row"
             bg="#ffffff"
-            zIndex={10}
-            px={2}
-            pr={wizard.step !== 4 ? 2 : 0}
+            className="flex items-center"
+            direction="row"
+            key={wizard.title}
             pl={wizard.step !== 1 ? 2 : 0}
+            pr={wizard.step !== 4 ? 2 : 0}
+            px={2}
+            zIndex={2}
           >
             <WizardIcon
-              width={size}
-              height={size}
-              step={wizard.step}
               active={wizard.step === step}
               complete={wizard.step < step}
+              height={size}
+              step={wizard.step}
+              width={size}
             />
-            <Text fontWeight={wizard.step === step ? 700 : 400} size={{ md: "sm", base: "xxs" }}>
+            <Text fontWeight={wizard.step === step ? 700 : 400} size={{ md: 'sm', base: 'xxs' }}>
               {wizard.header}
             </Text>
           </Stack>
         ))}
         <Divider
-          position="absolute"
-          zIndex={1}
-          orientation="horizontal"
-          top="50%"
-          width="600px"
-          variant="dashed"
           borderColor={colors.grey[300]}
+          orientation="horizontal"
+          position="absolute"
+          top="50%"
+          variant="dashed"
+          width="600px"
+          zIndex={1}
         />
       </Stack>
     </Box>
-  );
-};
+  )
+}

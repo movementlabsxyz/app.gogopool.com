@@ -1,1 +1,1 @@
-export * from "./CustomFont";
+export * from './CustomFont'

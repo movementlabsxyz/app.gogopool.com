@@ -1,4 +1,5 @@
-import { ColorModeScript } from "@chakra-ui/react";
+import { ColorModeScript } from '@chakra-ui/react'
+import { MantineProvider } from '@mantine/core'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -6,43 +7,49 @@ import Document, {
   Html,
   Main,
   NextScript,
-} from "next/document";
+} from 'next/document'
 
-import { CustomFonts } from "@/common/components/CustomFont";
-import { Favicon } from "@/common/components/FavIcon";
-import theme from "@/theme";
-import { renderStatic } from "@/utils/renderer";
+import { CustomFonts } from '@/common/components/CustomFont'
+import { Favicon } from '@/common/components/FavIcon'
+import theme from '@/theme'
+import { renderStatic } from '@/utils/renderer'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-    const page = await ctx.renderPage();
-    const { css, ids } = await renderStatic(page.html);
-    const initialProps = await Document.getInitialProps(ctx);
+    const page = await ctx.renderPage()
+    const { css, ids } = await renderStatic(page.html)
+    const initialProps = await Document.getInitialProps(ctx)
 
     return {
       ...initialProps,
       styles: [
         initialProps.styles,
-        <style dangerouslySetInnerHTML={{ __html: css }} data-emotion={`css ${ids.join(" ")}`} />,
+        <style
+          dangerouslySetInnerHTML={{ __html: css }}
+          data-emotion={`css ${ids.join(' ')}`}
+          key="emotion-style"
+        />,
       ],
-    };
+    }
   }
 
   render() {
     return (
-      <Html lang="en">
+      <Html className="h-full " lang="en">
         <Head>
           <CustomFonts key="custom-font" />
-          <Favicon key="favicon"/>
+          <Favicon key="favicon" />
         </Head>
-        <body>
+        <body className="h-full">
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <Main />
+          <MantineProvider withGlobalStyles withNormalizeCSS>
+            <Main />
+          </MantineProvider>
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
 
-export default MyDocument;
+export default MyDocument

@@ -124,5 +124,4 @@ module.exports = {
       std: "1536px",
     },
   },
-  plugins: [],
 };

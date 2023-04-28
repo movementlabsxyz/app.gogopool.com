@@ -1,35 +1,37 @@
-import { ethers } from "ethers";
-import { useContractRead } from "wagmi";
+import { ethers } from 'ethers'
 
-import Storage from "@/contracts/Storage.json";
+import { useContractRead, useNetwork } from 'wagmi'
 
-import { storageAddress } from "../constants/anr";
-// import { storageAddress } from "../constants/local";
-// import { storageAddress } from "../constants/newanr";
+import { storageAddresses } from '../constants/storageAddresses'
+
+import Storage from '@/contracts/Storage.json'
+
+export type HexString = `0x${string}`
 
 export const useGetUint = (args) => {
+  const { chain } = useNetwork()
+  const addr = storageAddresses[chain?.id]
+
   return useContractRead({
-    addressOrName: storageAddress,
-    contractInterface: Storage.abi,
-    functionName: "getUint",
-    args,
-  });
-};
+    address: addr,
+    abi: Storage.abi,
+    functionName: 'getUint',
+    args: [args],
+  })
+}
 
 export const useGetAddress = (key: string, storageAddr?: string) => {
-  const addr = storageAddr || storageAddress;
+  const { chain } = useNetwork()
+  const addr: HexString = storageAddr || storageAddresses[chain?.id]
 
-  const args = ethers.utils.solidityKeccak256(
-    ["string", "string"],
-    ["contract.address", key]
-  );
+  const args = ethers.utils.solidityKeccak256(['string', 'string'], ['contract.address', key])
 
-  const resp = useContractRead({
-    addressOrName: addr,
-    contractInterface: Storage.abi,
-    functionName: "getAddress",
-    args,
-  });
+  const resp = useContractRead<typeof Storage.abi, string, HexString>({
+    address: addr,
+    abi: Storage.abi,
+    functionName: 'getAddress',
+    args: [args],
+  })
 
-  return resp;
-};
+  return resp
+}

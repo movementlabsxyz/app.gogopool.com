@@ -1,17 +1,17 @@
-import { ComponentStyleConfig } from "@chakra-ui/react";
+import { ComponentStyleConfig } from '@chakra-ui/react'
 
 export const Modal: ComponentStyleConfig = {
-  parts: ["overlay", "dialog"],
+  parts: ['overlay', 'dialog'],
   baseStyle: {
     dialog: {
-      bgColor: "grey.0",
-      p: "32px 48px",
-      borderWidth: "1px",
-      borderColor: "grey.200",
-      borderRadius: "16px",
+      bgColor: 'grey.0',
+      p: '32px 48px',
+      borderWidth: '1px',
+      borderColor: 'grey.200',
+      borderRadius: '16px',
     },
     overlay: {
-      bgColor: "blackAlpha.600",
+      bgColor: 'blackAlpha.600',
     },
   },
-};
+}

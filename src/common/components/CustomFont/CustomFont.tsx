@@ -1,4 +1,4 @@
-import { Global } from "@emotion/react";
+import { Global } from '@emotion/react'
 
 /**
  * Custom Fonts for tailwindcss.config
@@ -7,36 +7,36 @@ export const CustomFonts = (): JSX.Element => {
   return (
     <>
       <link
-        rel="preload"
+        as="font"
+        crossOrigin="anonymous"
         href="/assets/fonts/Jost/Jost-Italic-VariableFont_wght.ttf"
-        as="font"
+        rel="preload"
         type="font/ttf"
-        crossOrigin="anonymous"
       ></link>
       <link
-        rel="preload"
+        as="font"
+        crossOrigin="anonymous"
         href="/assets/fonts/Jost/Jost-VariableFont_wght.ttf"
-        as="font"
+        rel="preload"
         type="font/ttf"
-        crossOrigin="anonymous"
       ></link>
       <link
-        rel="preload"
+        as="font"
+        crossOrigin="anonymous"
         href="/assets/fonts/Domaine/domaine-display-extrabold.woff2"
-        as="font"
+        rel="preload"
         type="font/woff2"
-        crossOrigin="anonymous"
       ></link>
       <link
-        rel="preload"
-        href="/assets/fonts/Domaine/domaine-display-medium.woff2"
         as="font"
-        type="font/woff2"
         crossOrigin="anonymous"
+        href="/assets/fonts/Domaine/domaine-display-medium.woff2"
+        rel="preload"
+        type="font/woff2"
       ></link>
     </>
-  );
-};
+  )
+}
 
 export const ChakraFonts = () => (
   <Global
@@ -86,4 +86,4 @@ export const ChakraFonts = () => (
     }
       `}
   />
-);
+)

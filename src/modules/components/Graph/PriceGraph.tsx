@@ -1,57 +1,46 @@
-import { Box, useToken } from "@chakra-ui/react";
-import { ClimbingBoxLoader } from "react-spinners";
-import {
-  LineSegment,
-  VictoryAxis,
-  VictoryChart,
-  VictoryLabel,
-  VictoryLine,
-  VictoryTheme,
-  VictoryVoronoiContainer,
-} from "victory";
+import { Box, useToken } from '@chakra-ui/react'
+import { ClimbingBoxLoader } from 'react-spinners'
+import { VictoryChart, VictoryLine } from 'victory'
 
-import useCoinPriceHistory from "@/hooks/useCoinPriceHistory";
-import formatLabel from "@/utils/currency";
+import useCoinPriceHistory from '@/hooks/useCoinPriceHistory'
 
 export interface PriceGraphProps {
-  currencyID?: string;
-  vsCurrency?: string;
-  tooltip?: boolean;
-  title?: string;
+  currencyID?: string
+  vsCurrency?: string
+  title?: string
 }
 
 const PriceGraph = ({
-  currencyID = "avalanche-2",
-  vsCurrency = "usd",
-  tooltip = false,
-  themeColor = "blue.400",
+  currencyID = 'avalanche-2',
+  themeColor = 'blue.400',
+  vsCurrency = 'usd',
 }) => {
   // TODO vsCurrency no worko
-  const { data, isLoading } = useCoinPriceHistory(currencyID, vsCurrency);
+  const { data, isLoading } = useCoinPriceHistory(currencyID, vsCurrency)
 
-  const color = useToken("colors", themeColor);
+  const color = useToken('colors', themeColor)
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center">
+      <Box alignItems="center" display="flex" justifyContent="center">
         <ClimbingBoxLoader color={color} />
       </Box>
-    );
+    )
   }
 
   return (
     <VictoryChart height={200} width={700}>
       <VictoryLine
         data={data}
-        x="date"
-        y="price"
         style={{
-          data: { stroke: "blue" },
+          data: { stroke: 'blue' },
           labels: { fontSize: 12 },
         }}
+        x="date"
+        y="price"
       />
     </VictoryChart>
-  );
-};
+  )
+}
 
-export default PriceGraph;
+export default PriceGraph

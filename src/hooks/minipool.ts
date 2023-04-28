@@ -1,143 +1,175 @@
-import { BigNumber, utils } from "ethers";
-import { Contract } from "ethers";
-import ms from "ms";
-import { useState } from "react";
-import useAsyncEffect from "use-async-effect";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { useContractRead, useSigner } from "wagmi";
+import { BigNumber, Contract, utils } from 'ethers'
+import { useState } from 'react'
 
-import type Minipool from "@/types/minipool";
-import { MinipoolStatus } from "@/types/minipool";
-import { nodeID } from "@/utils";
+import { useInterval, useToast } from '@chakra-ui/react'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
+import { formatEther } from 'ethers/lib/utils'
+import ms from 'ms'
+import { useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
-import useMinipoolManagerContract from "./contracts/minipoolManager";
+import useMinipoolManagerContract from './contracts/minipoolManager'
+
+import type Minipool from '@/types/minipool'
+import { nodeID } from '@/utils'
+import { DECODED_ERRORS } from '@/utils/consts'
 
 export interface UseCreateMinipoolParams {
-  nodeId: string; // node ID as input by the user
-  duration: number | string; // duration in ms
-  amount: BigNumber | number | string; // amount of tokens to be deposited
-  fee?: BigNumber; // the fee for the node. Default is 20000, or 2%
+  nodeId: string // node ID as input by the user
+  duration: number | string // duration in ms
+  amount: BigNumber | number | string // amount of tokens to be deposited
+  fee?: BigNumber // the fee for the node. Default is 20000, or 2%
 }
 
-export const useCreateMinipool = ({
-  nodeId,
-  duration,
-  amount,
-  fee,
-}: UseCreateMinipoolParams) => {
+export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMinipoolParams) => {
+  const toast = useToast()
+
   if (!fee) {
-    fee = BigNumber.from(20000);
+    fee = BigNumber.from(20000)
   }
 
-  if (typeof duration === "string") {
-    duration = ms(duration) / 1000;
+  if (typeof duration === 'string') {
+    duration = ms(duration) / 1000
   }
 
-  if (typeof amount === "number") {
-    amount = BigNumber.from(amount);
-  } else if (typeof amount === "string") {
-    amount = utils.parseEther(amount);
+  if (typeof amount === 'number') {
+    amount = BigNumber.from(amount)
+  } else if (typeof amount === 'string') {
+    amount = utils.parseEther(amount)
   }
 
-  const formattedID = nodeID(nodeId);
+  const formattedID = nodeID(nodeId)
 
-  const { address, contractInterface } = useMinipoolManagerContract();
+  const addRecentTransaction = useAddRecentTransaction()
+  const { abi, address } = useMinipoolManagerContract()
 
-  const { config } = usePrepareContractWrite({
-    addressOrName: address,
-    contractInterface,
-    functionName: "createMinipool",
+  const { config, error } = usePrepareContractWrite({
+    address,
+    abi,
+    onError(error) {
+      Object.keys(DECODED_ERRORS).forEach((key) => {
+        if (error?.message.includes(key)) {
+          toast({
+            position: 'top',
+            title: 'Error during minipool creation',
+            description: DECODED_ERRORS[key],
+            status: 'error',
+            duration: 20000,
+            isClosable: true,
+          })
+        }
+      })
+    },
+    functionName: 'createMinipool',
     args: [formattedID, BigNumber.from(duration), fee, amount],
     overrides: {
       value: amount,
     },
-  });
+  })
 
-  const resp = useContractWrite(config);
+  const resp = useContractWrite({
+    ...config,
+
+    onSuccess(data) {
+      addRecentTransaction({
+        hash: data.hash,
+        description: `Create minipool with ${formatEther(amount)}`,
+      })
+    },
+  })
 
   return {
     ...resp,
+    error,
     ready: resp?.write !== undefined,
-  };
-};
-
-export interface UseMinipoolsByStatusParams {
-  status?: number;
-  offset?: number;
-  limit?: number;
+  }
 }
 
-export const useAllMinipools = () => {
-  const [minipools, setMinipools] = useState<Minipool[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const { data: signer, isLoading: signerLoading } = useSigner();
+export interface UseMinipoolsByStatusParams {
+  status?: number
+  offset?: number
+  limit?: number
+}
 
-  const { address, contractInterface } = useMinipoolManagerContract();
+export const useAllMinipools = (interval = 3000) => {
+  const [minipools, setMinipools] = useState<Minipool[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
+  const { data: signer, isLoading: signerLoading } = useSigner()
 
-  useAsyncEffect(async () => {
-    if (!signer) {
-      return;
+  const { address, contractInterface } = useMinipoolManagerContract()
+
+  useInterval(async () => {
+    if (!signer || !address) {
+      return
     }
     try {
-      const c = new Contract(address, contractInterface, signer);
+      const c = new Contract(address, contractInterface, signer)
       // statuses are 0 to 6 inclusive
-      const statuses = [0, 1, 2, 3, 4, 5, 6];
-      const promises = statuses.map((status) => c.getMinipools(status, 0, 0));
-      const results = await Promise.all(promises);
+      const statuses = [0, 1, 2, 3, 4, 5, 6]
+      const promises = statuses.map((status) => c.getMinipools(status, 0, 0))
+      const results = await Promise.all(promises)
       // flatten the array of arrays
-      const flattened = [].concat(...results);
-      setMinipools(flattened);
-      setLoading(false);
+      const flattened = [].concat(...results)
+      setMinipools(flattened)
+      setLoading(false)
     } catch (e) {
-      setError(e);
-      setLoading(false);
+      setError(e)
+      setLoading(false)
     }
-  }, [address, signer]);
+  }, interval)
 
   return {
     minipools,
     isLoading: signerLoading || loading,
     isError: !!error,
     error,
-  };
-};
+  }
+}
 
 export const useMinipoolsByStatus = ({
-  status = 2, // default to staking minipools
+  limit = 0, // default to staking minipools
   offset = 0, // no offset
-  limit = 0, // get all matching ones, no pagination
+  status = 2, // get all matching ones, no pagination
 }: UseMinipoolsByStatusParams) => {
-  const { address, contractInterface } = useMinipoolManagerContract();
+  const { abi, address } = useMinipoolManagerContract()
 
   const resp = useContractRead({
-    addressOrName: address,
-    contractInterface,
-    functionName: "getMinipools",
+    address,
+    abi,
+    functionName: 'getMinipools',
     args: [status, offset, limit],
-  });
+  })
 
-  return resp;
-};
+  return resp
+}
 
-export const useMinipoolByID = (id: string) => {
-  id = nodeID(id);
+export const useMinipoolByID = (ID: string | undefined) => {
+  const { error, isError, isLoading, minipools } = useAllMinipools()
 
-  const { minipools, isLoading, isError, error } = useAllMinipools();
+  if (!ID) {
+    return {
+      minipool: undefined,
+      isError,
+      isLoading,
+      error,
+    }
+  }
+
+  const convertedID = nodeID(ID)
 
   return {
-    minipools: minipools.find((minipool) => minipool?.nodeID === id),
+    minipool: minipools.find((m) => m.nodeID === convertedID),
     isLoading,
     isError,
     error,
-  };
-};
+  }
+}
 
 export const useMinipoolsByOwner = (address: string | undefined) => {
-  const { minipools, isError, isLoading, error } = useAllMinipools();
+  const { error, isError, isLoading, minipools } = useAllMinipools()
 
   if (!address) {
-    return {};
+    return {}
   }
 
   return {
@@ -145,5 +177,59 @@ export const useMinipoolsByOwner = (address: string | undefined) => {
     isError,
     isLoading,
     error,
-  };
-};
+  }
+}
+
+export const useCancelMinipool = (nodeId: string) => {
+  const { abi, address } = useMinipoolManagerContract()
+  const addRecentTransaction = useAddRecentTransaction()
+
+  const { config, isError: prepareError } = usePrepareContractWrite({
+    address,
+    abi,
+    functionName: 'cancelMinipool',
+    args: [nodeId],
+    onError(error) {
+      console.log('error perparing cancelMinipool', error)
+    },
+  })
+
+  const write = useContractWrite({
+    ...config,
+    onSuccess(data) {
+      addRecentTransaction({
+        hash: data.hash,
+        description: 'Cancel minipool',
+      })
+    },
+  })
+
+  return { prepareError, ...write }
+}
+
+export const useWithdrawMinipoolFunds = (nodeId: string) => {
+  const { abi, address } = useMinipoolManagerContract()
+  const addRecentTransaction = useAddRecentTransaction()
+
+  const { config, isError: prepareError } = usePrepareContractWrite({
+    address,
+    abi,
+    functionName: 'withdrawMinipoolFunds',
+    args: [nodeId],
+    onError(error) {
+      console.log('error perparing withdrawMinipoolFunds', error)
+    },
+  })
+
+  const write = useContractWrite({
+    ...config,
+    onSuccess(data) {
+      addRecentTransaction({
+        hash: data.hash,
+        description: 'Withdraw minipool funds',
+      })
+    },
+  })
+
+  return { prepareError, ...write }
+}

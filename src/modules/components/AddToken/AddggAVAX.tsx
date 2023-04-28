@@ -1,41 +1,42 @@
-import { useToast } from "@chakra-ui/react";
+import { useToast } from '@chakra-ui/react'
 
-import { Button, ButtonProps } from "@/common/components/Button";
-import useTokenggAVAXContract from "@/hooks/contracts/tokenggAVAX";
-import addToken from "@/utils/addToken";
+import { Button, ButtonProps } from '@/common/components/Button'
+import useTokenggAVAXContract from '@/hooks/contracts/tokenggAVAX'
+import addToken from '@/utils/addToken'
 
 const AddggAVAX = (props: ButtonProps) => {
-  const toast = useToast();
-  const { address } = useTokenggAVAXContract();
+  const toast = useToast()
+  const { address } = useTokenggAVAXContract()
 
   const handleAddToken = () => {
-    if (address) {
-      const success = addToken(address, "ggAVAX");
-      if (!success) {
+    addToken(address, 'ggAVAX')
+      .then((r) => {
         toast({
-          title: "Error",
-          description: "Could not add token to wallet.",
-          status: "error",
+          position: 'top',
+          title: 'Success',
+          description: 'Token added to wallet.',
+          status: 'success',
           duration: 3000,
           isClosable: true,
-        });
-      }
-    } else {
-      toast({
-        title: "Error",
-        description: "Could not add token to wallet.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
+        })
+      })
+      .catch((e) => {
+        toast({
+          position: 'top',
+          title: 'Error',
+          description: 'Could not add token to wallet.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+      })
+  }
 
   return (
     <Button {...props} onClick={handleAddToken}>
       Add ggAVAX
     </Button>
-  );
-};
+  )
+}
 
-export default AddggAVAX;
+export default AddggAVAX

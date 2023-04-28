@@ -2,27 +2,27 @@
 
 const addToken = async (address, symbol, decimals = 18): Promise<boolean> => {
   if (window.ethereum === undefined) {
-    return false;
+    return false
   }
 
   try {
     await window?.ethereum?.request({
-      method: "wallet_watchAsset",
+      method: 'wallet_watchAsset',
       params: {
-        type: "ERC20",
+        type: 'ERC20',
         options: {
-          address: address,
+          address,
           symbol: symbol,
           decimals: decimals,
         },
       },
-    });
+    })
   } catch (e: unknown) {
-    console.error(e);
-    return false;
+    console.error(e)
+    return false
   }
 
-  return true;
-};
+  return true
+}
 
-export default addToken;
+export default addToken

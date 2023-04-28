@@ -1,6 +1,5 @@
-import ClaimRewards from "./Cards/ClaimRewards";
-import TokenPrices from "./Cards/TokenPrices";
-import TotalMinipoolValue from "./Cards/TotalMinipoolValue";
-import TotalRewards from "./Cards/TotalRewards";
+import ClaimRewards from './Cards/Rewards'
+import TotalMinipoolValue from './Cards/TotalMinipoolValue'
+import TotalRewards from './Cards/TotalRewards'
 
-export { ClaimRewards, TokenPrices, TotalMinipoolValue, TotalRewards };
+export { ClaimRewards, TotalMinipoolValue, TotalRewards }

@@ -1,3 +1,3 @@
-import ANRNodeID from "./ANRNodeID";
+import ANRNodeID from './ANRNodeID'
 
-export default ANRNodeID;
+export default ANRNodeID

@@ -1,7 +1,7 @@
-import { ComponentStyleConfig } from "@chakra-ui/react";
+import { ComponentStyleConfig } from '@chakra-ui/react'
 
 export const Card: ComponentStyleConfig = {
   baseStyle: {
-    color: "#000000",
+    color: '#000000',
   },
-};
+}

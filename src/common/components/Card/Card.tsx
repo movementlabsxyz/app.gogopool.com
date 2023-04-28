@@ -1,73 +1,71 @@
-import { Box, BoxProps, Heading, TextProps } from "@chakra-ui/react";
-import { forwardRef } from "react";
+import { forwardRef } from 'react'
+
+import { Box, BoxProps, Heading, TextProps } from '@chakra-ui/react'
 
 export interface BoxPropsWithStyles extends BoxProps {
-  outer?: boolean;
-  customStyles?: React.CSSProperties;
+  outer?: boolean
+  customStyles?: React.CSSProperties
 }
 
 interface TextPropsWithStyles extends TextProps {
-  customStyles?: React.CSSProperties;
+  customStyles?: React.CSSProperties
 }
 
 export const Card = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   (
     {
+      backgroundColor = 'white',
+      borderRadius = '1.25rem',
+      boxShadow = 'default',
       children,
-      backgroundColor = "white",
-      maxWidth = "588px",
-      minWidth = "334px",
-      width = "auto",
-      maxHeight = "auto",
-      height = "auto",
-      p = "1.5rem", // 24px
-      boxShadow = "default",
-      borderRadius = "1.25rem", // 8px
-      outer = false,
       customStyles,
+      height = 'auto',
+      maxHeight = 'auto',
+      maxWidth = '588px', // 24px
+      minWidth = '334px',
+      outer = false, // 8px
+      p = '1.5rem',
+      width = 'auto',
       ...rest
     },
-    ref
+    ref,
   ) => {
     return (
       <Box
-        ref={ref}
-        width={outer ? "full" : width}
-        p={p}
+        bg={backgroundColor}
+        borderColor="grey.200"
+        borderRadius={borderRadius}
+        borderWidth={outer && '1px'}
+        boxShadow={boxShadow}
         height={height}
+        maxHeight={maxHeight}
         maxWidth={outer && maxWidth}
         minWidth={outer && minWidth}
-        maxHeight={maxHeight}
-        borderRadius={borderRadius}
-        bg={backgroundColor}
-        boxShadow={boxShadow}
-        borderWidth={outer && "1px"}
-        borderColor="grey.200"
+        p={p}
+        ref={ref}
         sx={customStyles}
+        width={outer ? 'full' : width}
         {...rest}
       >
         {children}
       </Box>
-    );
-  }
-);
+    )
+  },
+)
+
+Card.displayName = 'Card'
 
 export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Heading
-        ref={ref}
-        size="h5"
-        fontWeight="bold"
-        mb="8"
-        sx={customStyles}
-        {...rest}
-      >
+      <Heading fontWeight="bold" mb="8" ref={ref} size="h5" sx={customStyles} {...rest}>
         {children}
       </Heading>
-    );
-  }
-);
+    )
+  },
+)
+
+Title.displayName = 'Title'
 
 export const Content = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
@@ -75,20 +73,24 @@ export const Content = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
       <Box ref={ref} {...rest} sx={customStyles}>
         {children}
       </Box>
-    );
-  }
-);
+    )
+  },
+)
+
+Content.displayName = 'Content'
 
 export const Footer = forwardRef<HTMLDivElement, BoxPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Box ref={ref} mt="8" {...rest} sx={customStyles}>
+      <Box mt="8" ref={ref} {...rest} sx={customStyles}>
         {children}
       </Box>
-    );
-  }
-);
+    )
+  },
+)
 
-const _default = Object.assign(Card, { Title, Content, Footer });
+Footer.displayName = 'Footer'
 
-export default _default;
+const _default = Object.assign(Card, { Title, Content, Footer })
+
+export default _default

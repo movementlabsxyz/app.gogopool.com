@@ -1,45 +1,76 @@
-import { Flex, Input as ChakraInput, InputProps, Text } from "@chakra-ui/react";
+import {
+  Input as ChakraInput,
+  Flex,
+  InputGroup,
+  InputLeftElement,
+  InputProps,
+  InputRightElement,
+  Text,
+} from '@chakra-ui/react'
 
-import { InfoCircleIcon } from "../CustomIcon";
-
-const DEFAULT_HEIGHT = 42;
+const DEFAULT_HEIGHT = 42
 
 type ErrorInputProps =
   | {
-      errorText: string;
-      isInvalid: boolean;
+      errorText: string
+      isInvalid: boolean
     }
-  | { errorText?: string; isInvalid?: boolean };
+  | { errorText?: string; isInvalid?: boolean }
 
-export type CustomInputProps = InputProps & ErrorInputProps;
+interface CInputProps extends InputProps {
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+  isMonospaced?: boolean
+}
 
-export const Input = ({ errorText, ...props }: CustomInputProps) => {
+export type CustomInputProps = CInputProps & ErrorInputProps
+
+export const Input = ({
+  errorText,
+  isMonospaced,
+  leftIcon,
+  rightIcon,
+  ...props
+}: CustomInputProps) => {
   return (
     <>
-      <ChakraInput
-        style={{ boxShadow: "none" }}
-        fontFamily="Jost"
-        outline={0}
-        _placeholder={{ color: "grey.500" }}
-        _hover={{ borderColor: "grey.300" }}
-        errorBorderColor="error.500"
-        borderRadius="full"
-        height={DEFAULT_HEIGHT}
-        {...props}
-      />
+      {leftIcon || rightIcon ? (
+        <InputGroup>
+          {leftIcon && <InputLeftElement pointerEvents={'none'}>{leftIcon}</InputLeftElement>}
+          <ChakraInput
+            _hover={{ borderColor: 'grey.300' }}
+            _placeholder={{ color: 'grey.500' }}
+            borderRadius="full"
+            errorBorderColor="error.500"
+            fontFamily={isMonospaced ? 'monospace' : 'Jost'}
+            height={DEFAULT_HEIGHT}
+            outline={0}
+            style={{ boxShadow: 'none' }}
+            {...props}
+          />
+          {rightIcon && <InputRightElement pointerEvents={'none'}>{rightIcon}</InputRightElement>}
+        </InputGroup>
+      ) : (
+        <ChakraInput
+          _hover={{ borderColor: 'grey.300' }}
+          _placeholder={{ color: 'grey.500' }}
+          borderRadius="full"
+          errorBorderColor="error.500"
+          fontFamily="Jost"
+          height={DEFAULT_HEIGHT}
+          outline={0}
+          style={{ boxShadow: 'none' }}
+          {...props}
+        />
+      )}
+
       {props.isInvalid ? (
-        <Flex justifyContent="flex-start" alignItems="center" marginTop={1}>
-          <InfoCircleIcon fill="#FF2A29" />
-          <Text
-            marginLeft={1}
-            fontSize="xs"
-            lineHeight="18px"
-            color="error.500"
-          >
+        <Flex alignItems="center" justifyContent="flex-start" marginTop={1}>
+          <Text color="error.500" fontSize="xs" lineHeight="18px" marginLeft={1}>
             {errorText}
           </Text>
         </Flex>
       ) : null}
     </>
-  );
-};
+  )
+}

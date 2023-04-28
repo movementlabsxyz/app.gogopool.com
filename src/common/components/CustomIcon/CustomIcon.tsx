@@ -1,14 +1,14 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from 'react'
 
-import { CustomIconProps } from "./types";
+import { CustomIconProps } from './types'
 
 export const CustomIcon = ({
   children,
-  width = 24,
   height = 24,
-  size,
-  viewBox = "0 0 24 24",
   name,
+  size,
+  viewBox = '0 0 24 24',
+  width = 24,
   ...props
 }: PropsWithChildren<CustomIconProps>): JSX.Element => {
   return (
@@ -23,5 +23,5 @@ export const CustomIcon = ({
     >
       {children}
     </svg>
-  );
-};
+  )
+}

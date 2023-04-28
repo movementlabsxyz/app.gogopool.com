@@ -1,13 +1,13 @@
-import { CustomIcon } from "./CustomIcon";
-import { CustomIconProps } from "./types";
+import { CustomIcon } from './CustomIcon'
+import { CustomIconProps } from './types'
 
 export const GGPToken = (props: CustomIconProps): JSX.Element => {
   return (
     <CustomIcon
       fill="#000000"
       height={24}
-      width={24}
       viewBox="0 0 217 211"
+      width={24}
       {...props}
       name="ggp-token"
     >
@@ -24,5 +24,5 @@ export const GGPToken = (props: CustomIconProps): JSX.Element => {
         fill="white"
       />
     </CustomIcon>
-  );
-};
+  )
+}
