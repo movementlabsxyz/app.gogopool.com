@@ -164,6 +164,7 @@ export const LiquidStaking: FunctionComponent = () => {
   // deposit the AVAX
   const {
     data: depositData,
+    isError: isDepositError,
     isLoading: isDepositLoading,
     write: deposit,
   } = useDeposit(utils.parseEther(amount?.toString() || '0'))
@@ -171,6 +172,7 @@ export const LiquidStaking: FunctionComponent = () => {
   // redeem ggAVAX
   const {
     data: redeemData,
+    isError: isRedeemError,
     isLoading: isRedeemLoading,
     write: redeem,
   } = useRedeem(utils.parseEther(amount?.toString() || '0'))
@@ -298,10 +300,15 @@ export const LiquidStaking: FunctionComponent = () => {
       >
         <Button
           disabled={
-            !amount || isLoading || depositStatus === 'loading' || redeemStatus === 'loading'
+            (swapDirection && isRedeemError) ||
+            (!swapDirection && isDepositError) ||
+            !amount ||
+            isLoading ||
+            depositStatus === 'loading' ||
+            redeemStatus === 'loading'
           }
           full
-          onClick={redeem}
+          onClick={swapDirection ? redeem : deposit}
         >
           {isLoading || depositStatus === 'loading' || redeemStatus === 'loading'
             ? 'Loading...'

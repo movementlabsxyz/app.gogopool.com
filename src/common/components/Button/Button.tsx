@@ -15,6 +15,7 @@ export interface ButtonProps extends ChakraButtonProps {
 
 export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   children,
+  disabled,
   full,
   iconLeft,
   iconOnly,
@@ -24,10 +25,17 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   variant = 'primary',
   ...props
 }) => {
+  const motionProps = !disabled
+    ? {
+        whileHover: { scale: 1.1 },
+        whileTap: { scale: 0.9 },
+      }
+    : {}
   return (
-    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+    <motion.button disabled={disabled} {...motionProps}>
       <ChakraButton
         className="font-jost hover:bg-indigo-50 focus:bg-indigo-200"
+        disabled={disabled}
         height="full"
         onClick={onClick}
         size={iconOnly ? `iconOnly-${size}` : size}
