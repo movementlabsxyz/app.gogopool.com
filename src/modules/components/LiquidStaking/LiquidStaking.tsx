@@ -381,6 +381,7 @@ export const LiquidStaking: FunctionComponent = () => {
             <Card
               backgroundColor="white.100"
               className="border border-gray-300"
+              hidden={!isConnected}
               mb="2"
               p="0"
               rounded="12px"
