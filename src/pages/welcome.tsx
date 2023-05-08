@@ -15,7 +15,7 @@ import WelcomeImage from '@/modules/components/WelcomeImage'
 const Welcome = () => {
   return (
     <Box className="bg-[#F7F9FF] py-24" minH="full">
-      <PageHead append={false} description="Welcome to the Alpha!" name="Welcome to the Alpha!" />
+      <PageHead append={false} description="Welcome to GoGoPool!" name="Welcome to GoGoPool!" />
       <Container className="space-y-10">
         <div
           className="relative flex items-center justify-between"
