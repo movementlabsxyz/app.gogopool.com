@@ -42,7 +42,8 @@ const TotalStaked = () => {
       name: 'GGP collateral ratio',
       stat: `${avaxStake ? (straightRatio || 0).toLocaleString() : 0}%`,
     },
-    { name: 'Staking', stat: `${ggpStakeInAVAX.toLocaleString()} AVAX` },
+    { name: 'Total GGP staked', stat: `${ggpStake.toLocaleString()} GGP` },
+    { name: 'Total GGP staked converted to AVAX', stat: `${ggpStakeInAVAX.toLocaleString()} AVAX` },
     { name: 'Borrowing', stat: `${avaxBorrowed.toLocaleString()} AVAX` },
   ]
 
