@@ -406,15 +406,17 @@ export const LiquidStaking: FunctionComponent = () => {
         <Footer>
           {displayButton()}
 
-          <div className="mt-4 text-xs">
-            <Link
-              onClick={() => {
-                addToken(ggAVAXAddress, 'ggAVAX')
-              }}
-            >
-              Add ggAVAX token to wallet
-            </Link>
-          </div>
+          {isConnected && (
+            <div className="mt-4 text-xs">
+              <Link
+                onClick={() => {
+                  addToken(ggAVAXAddress, 'ggAVAX')
+                }}
+              >
+                Add ggAVAX token to wallet
+              </Link>
+            </div>
+          )}
         </Footer>
       </Card>
     </>
