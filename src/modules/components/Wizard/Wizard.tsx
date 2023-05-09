@@ -68,7 +68,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     const regex = /^(\d+) (week|month)s?$/
     const match = duration.match(regex)
     if (!match) {
-      return durationToSeconds('2 weeks')
+      return durationToSeconds('15 days')
     }
     const amount = parseInt(match[1])
     const unit = match[2]
