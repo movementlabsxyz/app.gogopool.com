@@ -5,6 +5,8 @@ import { formatEther } from 'ethers/lib/utils'
 import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import useClaimNodeOpContract from './contracts/claimNodeOp'
+import { DECODED_ERRORS } from '@/utils/consts'
+import { useToast } from '@chakra-ui/react'
 
 export const usePreviewCalculateAndDistributeRewards = (
   ownerAddress: string,
@@ -50,6 +52,7 @@ export const usePreviewClaimAmount = (owner: `0x${string}`) => {
 export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber) => {
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useClaimNodeOpContract()
+  const toast = useToast()
 
   console.log('claimamount passed int', claimAmount)
   const { config } = usePrepareContractWrite({
@@ -59,7 +62,18 @@ export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber)
     args: [claimAmount],
     enabled: !claimAmount.eq(BigNumber.from(0)),
     onError(error) {
-      console.log('error preparing claimAndRestake', error)
+      Object.keys(DECODED_ERRORS).forEach((key) => {
+        if (error?.message.includes(key)) {
+          toast({
+            position: 'top',
+            title: 'Error during claim and restake',
+            description: DECODED_ERRORS[key],
+            status: 'error',
+            duration: 20000,
+            isClosable: true,
+          })
+        }
+      })
     },
   })
 
