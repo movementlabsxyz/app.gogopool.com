@@ -10,7 +10,7 @@ import { ErrorMessage } from '../../Wizard/components/ErrorMessage'
 import { MAX_RATIO } from '../../Wizard/components/StakeButton'
 
 import { Button } from '@/common/components/Button'
-import { useCalculateTotalValue } from '@/hooks/calculateTotalValue'
+import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
 export interface ClaimAndRestakeModalProps {
   withdraw: any
@@ -29,12 +29,10 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
   withdraw,
   withdrawAmount,
 }) => {
-  const { ratio } = useCalculateTotalValue(withdrawAmount || 0)
+  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
 
-  console.log('ggp stake', ggpStake)
-  console.log('withdraw', withdraw)
   return (
     <Flex direction="column" gap={2}>
       <div className="mb-2 border-b border-gray-200 pb-5">
