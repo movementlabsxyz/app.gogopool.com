@@ -1,12 +1,13 @@
 import { BigNumber, BigNumberish } from 'ethers'
 
+import { useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { formatEther } from 'ethers/lib/utils'
 import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import useClaimNodeOpContract from './contracts/claimNodeOp'
+
 import { DECODED_ERRORS } from '@/utils/consts'
-import { useToast } from '@chakra-ui/react'
 
 export const usePreviewCalculateAndDistributeRewards = (
   ownerAddress: string,
