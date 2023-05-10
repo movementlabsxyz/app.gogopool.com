@@ -65,7 +65,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   }
 
   const durationToSeconds = useCallback((duration: string) => {
-    const regex = /^(\d+) (week|month)s?$/
+    const regex = /^(\d+) (week|month|day)s?$/
     const match = duration.match(regex)
     if (!match) {
       return durationToSeconds('15 days')
@@ -73,6 +73,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     const amount = parseInt(match[1])
     const unit = match[2]
     const secondsPerUnit = {
+      day: 24 * 60 * 60,
       week: 7 * 24 * 60 * 60,
       month: 4 * 7 * 24 * 60 * 60, // we can only increment by 7 days, so 1 month is 4 weeks
     }
