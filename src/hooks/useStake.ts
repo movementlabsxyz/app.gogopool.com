@@ -1,22 +1,41 @@
 import { BigNumber, constants } from 'ethers'
 import { useMemo } from 'react'
 
+import { useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import useStakingContract, { useOracleContract } from './contracts/staking'
 
+import { DECODED_ERRORS } from '@/utils/consts'
+
 // approve has to be called first
 export const useStakeGGP = (amount: BigNumber) => {
   const { abi, address: stakingAddress } = useStakingContract()
   const addRecentTransaction = useAddRecentTransaction()
+  const toast = useToast()
 
   const { config, refetch } = usePrepareContractWrite({
     address: stakingAddress,
     abi,
+    enabled: !amount.eq(BigNumber.from(0)),
     functionName: 'stakeGGP',
     args: [amount],
+    onError(error) {
+      Object.keys(DECODED_ERRORS).forEach((key) => {
+        if (error?.message.includes(key)) {
+          toast({
+            position: 'top',
+            title: 'Error during stake of GGP',
+            description: DECODED_ERRORS[key],
+            status: 'error',
+            duration: 20000,
+            isClosable: true,
+          })
+        }
+      })
+    },
   })
 
   return {
@@ -36,6 +55,7 @@ export const useStakeGGP = (amount: BigNumber) => {
 export const useWithdrawGGP = (amount: BigNumber) => {
   const { abi, address: stakingAddress } = useStakingContract()
   const addRecentTransaction = useAddRecentTransaction()
+  const toast = useToast()
 
   const { config, refetch } = usePrepareContractWrite({
     address: stakingAddress,
@@ -44,7 +64,18 @@ export const useWithdrawGGP = (amount: BigNumber) => {
     args: [amount],
     enabled: !amount.eq(BigNumber.from(0)),
     onError(error) {
-      console.log('error preparing useWithdrawGGP', error)
+      Object.keys(DECODED_ERRORS).forEach((key) => {
+        if (error?.message.includes(key)) {
+          toast({
+            position: 'top',
+            title: 'Error during withdraw GGP',
+            description: DECODED_ERRORS[key],
+            status: 'error',
+            duration: 20000,
+            isClosable: true,
+          })
+        }
+      })
     },
   })
 
@@ -68,6 +99,7 @@ export const useSomethingFails = (amount: BigNumber) => {
 
   const { config, error } = usePrepareContractWrite({
     address: stakingAddress,
+    enabled: !amount.eq(BigNumber.from(0)),
     abi,
     functionName: 'somethingFails',
     args: [amount],
