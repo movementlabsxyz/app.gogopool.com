@@ -183,6 +183,7 @@ export const useMinipoolsByOwner = (address: string | undefined) => {
 export const useCancelMinipool = (nodeId: string) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
+  const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
@@ -190,7 +191,18 @@ export const useCancelMinipool = (nodeId: string) => {
     functionName: 'cancelMinipool',
     args: [nodeId],
     onError(error) {
-      console.log('error perparing cancelMinipool', error)
+      // Object.keys(DECODED_ERRORS).forEach((key) => {
+      //   if (error?.message.includes(key)) {
+      //     toast({
+      //       position: 'top',
+      //       title: 'Error during minipool cancel',
+      //       description: DECODED_ERRORS[key],
+      //       status: 'error',
+      //       duration: 20000,
+      //       isClosable: true,
+      //     })
+      //   }
+      // })
     },
   })
 
@@ -210,14 +222,29 @@ export const useCancelMinipool = (nodeId: string) => {
 export const useWithdrawMinipoolFunds = (nodeId: string) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
+  const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
     abi,
     functionName: 'withdrawMinipoolFunds',
     args: [nodeId],
+    // We dont wanna show the toast during onError because
+    // they show on the dashboard, we use the error state
+    // to know whether or not to allow the button to be clicked
     onError(error) {
-      console.log('error perparing withdrawMinipoolFunds', error)
+      // Object.keys(DECODED_ERRORS).forEach((key) => {
+      //   if (error?.message.includes(key)) {
+      //     toast({
+      //       position: 'top',
+      //       title: 'Error during withdraw minipool funds',
+      //       description: DECODED_ERRORS[key],
+      //       status: 'error',
+      //       duration: 20000,
+      //       isClosable: true,
+      //     })
+      //   }
+      // })
     },
   })
 

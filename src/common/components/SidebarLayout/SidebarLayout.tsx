@@ -191,7 +191,7 @@ export function SidebarLayout({ children }) {
       <RouteGuard />
 
       <Transition.Root as={Fragment} show={sidebarOpen}>
-        <Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
+        <Dialog as="div" className="relative z-40 sm:hidden" onClose={setSidebarOpen}>
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -331,7 +331,7 @@ export function SidebarLayout({ children }) {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="relative hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
+      <div className="relative hidden sm:fixed sm:inset-y-0 sm:flex sm:w-64 sm:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col overflow-y-auto bg-indigo-700 pt-5">
           <div className="flex shrink-0 items-center px-4">
@@ -418,10 +418,10 @@ export function SidebarLayout({ children }) {
           </div>
         </div>
       </div>
-      <div className="flex h-full flex-1 flex-col md:pl-64">
+      <div className="flex h-full flex-1 flex-col sm:pl-64">
         <div className="sticky top-0 z-10 flex h-16 shrink-0 bg-white shadow">
           <button
-            className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:hidden"
             onClick={() => setSidebarOpen(true)}
             type="button"
           >
@@ -432,7 +432,7 @@ export function SidebarLayout({ children }) {
             <div className="flex flex-1">
               <NavigationBar />
             </div>
-            <div className="ml-4 flex items-center md:ml-6">
+            <div className="ml-4 flex items-center sm:ml-6">
               <ConnectButton />
             </div>
           </div>
