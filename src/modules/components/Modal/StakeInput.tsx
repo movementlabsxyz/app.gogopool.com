@@ -8,7 +8,7 @@ import { useAccount, useBalance } from 'wagmi'
 
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 import ApproveButton from '../Wizard/components/ApproveButton'
-import { MAX_RATIO } from '../Wizard/components/StakeButton'
+import { MIN_RATIO } from '../Wizard/components/StakeButton'
 
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
@@ -89,7 +89,7 @@ export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
         </Button>
         <div
           className={`text-right text-xs font-bold ${
-            ratio < MAX_RATIO ? 'text-red-500' : 'text-green-700'
+            ratio < MIN_RATIO ? 'text-red-500' : 'text-green-700'
           }`}
         >
           Collateralization ratio: {(ratio || 0).toLocaleString()}%
