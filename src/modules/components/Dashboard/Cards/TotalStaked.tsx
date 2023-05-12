@@ -7,7 +7,6 @@ import { UnstakeModal } from '../../Modal/UnstakeModal'
 
 import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
-import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 import {
   useGetAVAXAssigned,
   useGetAVAXStake,
@@ -23,9 +22,6 @@ const TotalStaked = () => {
   const { data: avaxStake } = useGetAVAXStake(address)
   const { data: ggpStake } = useGetGGPStake(address)
   const { data: straightRatio } = useGetCollateralizationRatio(address)
-  const modifiedRatio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
-  console.log('straight ratio', straightRatio)
-  console.log('modified ratio', modifiedRatio)
 
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { isOpen: isOpenUnstake, onClose: onCloseUnstake, onOpen: onOpenUnstake } = useDisclosure()

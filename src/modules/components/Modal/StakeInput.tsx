@@ -13,8 +13,8 @@ import { MAX_RATIO } from '../Wizard/components/StakeButton'
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
 import useGGPAllowance from '@/hooks/allowance'
-import { useCalculateTotalValue } from '@/hooks/calculateTotalValue'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
+import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
 export interface ClaimAndRestakeModalProps {
   stake: any
@@ -37,7 +37,7 @@ export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
   stake,
   stakeAmount,
 }) => {
-  const { ratio } = useCalculateTotalValue((stakeAmount || 0) * -1)
+  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: stakeAmount }) // something to get the future ratio here
   const { address: account } = useAccount()
   const { address: ggpAddress } = useTokenGGPContract()
   const [approveStatus, setApproveStatus] = useState<'error' | 'loading' | 'success' | 'idle'>(

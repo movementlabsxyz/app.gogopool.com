@@ -29,9 +29,10 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
   withdraw,
   withdrawAmount,
 }) => {
-  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
+
+  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: -withdrawAmount })
 
   return (
     <Flex direction="column" gap={2}>
