@@ -4,7 +4,7 @@ import { parseEther } from 'ethers/lib/utils'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
-import { PendingClaim } from './ClaimAndRestake/PendingClaim'
+import { PendingStake } from './ClaimAndRestake/PendingStake'
 import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
 import { StakeInput } from './StakeInput'
 
@@ -51,11 +51,7 @@ export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
         />
       )}
       {isLoading && stakeData?.hash && (
-        <PendingClaim
-          claimAmount={stakeAmount}
-          rewardsToClaim={rewardsToClaim}
-          transactionHash={stakeData?.hash}
-        />
+        <PendingStake stakeAmount={stakeAmount} transactionHash={stakeData?.hash} />
       )}
       {isSuccess && !isLoading && stakeData?.hash && (
         <SuccessfulClaim onClose={handleClose} transactionHash={stakeData?.hash} />
