@@ -51,7 +51,7 @@ export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
         />
       )}
       {isLoading && stakeData?.hash && (
-        <PendingStake stakeAmount={stakeAmount} transactionHash={stakeData?.hash} />
+        <PendingStake amount={stakeAmount} message={'Staking:'} transactionHash={stakeData?.hash} />
       )}
       {isSuccess && !isLoading && stakeData?.hash && (
         <SuccessfulClaim onClose={handleClose} transactionHash={stakeData?.hash} />

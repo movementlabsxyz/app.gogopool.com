@@ -5,12 +5,14 @@ import { Flex, Text } from '@chakra-ui/react'
 import { TransactionHash } from '../TransactionHash'
 
 export interface PendingStakeProps {
-  stakeAmount: any
+  amount: any
   transactionHash: any
+  message: any
 }
 
 export const PendingStake: FunctionComponent<PendingStakeProps> = ({
-  stakeAmount,
+  amount,
+  message,
   transactionHash,
 }) => {
   return (
@@ -156,8 +158,8 @@ export const PendingStake: FunctionComponent<PendingStakeProps> = ({
       </Text>
 
       <div className="mb-6 flex w-full justify-between border-b border-dashed border-gray-400 pb-2">
-        <span>Staking:</span>
-        {stakeAmount.toLocaleString(undefined, {
+        <span>{`${message}`}</span>
+        {amount.toLocaleString(undefined, {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2,
         })}

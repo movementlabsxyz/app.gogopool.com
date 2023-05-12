@@ -5,7 +5,7 @@ import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
-import { PendingClaim } from './ClaimAndRestake/PendingClaim'
+import { PendingStake } from './ClaimAndRestake/PendingStake'
 import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
 import { UnstakeInput } from './UnstakeInput/UnstakeInput'
 
@@ -51,9 +51,9 @@ export const UnstakeModal = ({ isOpen, onClose, ...modalProps }) => {
         />
       )}
       {isLoading && claimData?.hash && (
-        <PendingClaim
-          claimAmount={withdrawAmount}
-          rewardsToClaim={rewardsToClaim}
+        <PendingStake
+          amount={withdrawAmount}
+          message={'Unstaking:'}
           transactionHash={claimData?.hash}
         />
       )}
