@@ -130,10 +130,7 @@ const Welcome = () => {
               <Text className="!mt-1" fontSize={18}>
                 Learn how to liquid stake and what you need to get started today!
               </Text>
-              <Link
-                href="https://docs.gogopool.com/readme/staking-with-gogopool/liquid-staking"
-                target="_blank"
-              >
+              <Link href="https://docs.gogopool.com/readme-1/staking-with-gogopool" target="_blank">
                 <Button size="xs" variant="secondary-outline">
                   Liquid staking
                 </Button>
@@ -150,10 +147,7 @@ const Welcome = () => {
                 Want to pilot your own balloon? Become a node operator! We&rsquo;ve got the tools to
                 make it easy.
               </Text>
-              <Link
-                href="https://docs.gogopool.com/readme/staking-with-gogopool/running-a-gogopool-node/registering-a-gogopool-node"
-                target="_blank"
-              >
+              <Link href="https://docs.gogopool.com/readme-1/as-a-node-operator" target="_blank">
                 <Button size="xs" variant="secondary-outline">
                   Node Operator Guide
                 </Button>
