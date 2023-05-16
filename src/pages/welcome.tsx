@@ -97,7 +97,7 @@ const Welcome = () => {
             </Text>
           </div>
 
-          <Link href="https://forms.gle/iP334kmTuqBKThDL8" target="_blank">
+          <Link href="https://forms.gle/ZC7hoaLcDQC2T2ex8" target="_blank">
             <Button size="xs" variant="secondary-outline">
               Fill out our contact form...
             </Button>
@@ -168,7 +168,7 @@ const Welcome = () => {
               </Text>
             </div>
 
-            <Link href="https://twitter.com/GoGoPool_" target="_blank">
+            <Link href="https://calendly.com/gogopool/meet-subnets" target="_blank">
               <Button size="xs" variant="secondary-outline">
                 <IconMail />
                 Book time with us
