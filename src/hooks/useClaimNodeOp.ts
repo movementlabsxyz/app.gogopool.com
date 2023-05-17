@@ -36,20 +36,6 @@ export const useIsEligible = (owner: string) => {
   })
 }
 
-export const usePreviewClaimAmount = (owner: `0x${string}`) => {
-  const { abi, address } = useClaimNodeOpContract()
-
-  return useContractRead({
-    address,
-    abi,
-    functionName: 'previewClaimAmount',
-    overrides: { from: owner },
-    onError(error) {
-      console.log('error preparing previewClaimAmount', error)
-    },
-  })
-}
-
 export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber) => {
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useClaimNodeOpContract()
