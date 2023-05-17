@@ -55,7 +55,6 @@ export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber)
   const { abi, address } = useClaimNodeOpContract()
   const toast = useToast()
 
-  console.log('claimamount passed int', claimAmount)
   const { config } = usePrepareContractWrite({
     address,
     abi,

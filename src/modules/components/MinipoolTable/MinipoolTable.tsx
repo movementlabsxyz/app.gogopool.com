@@ -9,7 +9,7 @@ import WithdrawButton from './WithdrawButton'
 import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
 import { useMinipoolsByOwner } from '@/hooks/minipool'
-import { MinipoolErrorCodes, MinipoolStatus } from '@/types/minipool'
+import { MinipoolStatus } from '@/types/minipool'
 import { nodeHexToID } from '@/utils'
 
 const statuses = {
@@ -67,9 +67,6 @@ const copyTransaction = (nodeId) => {
 
 const MinipoolCard = ({ minipool }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
-  console.log('error', MinipoolErrorCodes[minipool.errorCode])
-  console.log('starttime', minipool.startTime)
-  console.log('createdTime', minipool.createdTime)
 
   return (
     <WithdrawButton isFinished={isFinished} nodeId={minipool.nodeID}>
@@ -154,8 +151,6 @@ const MinipoolList = ({ minipools }) => {
 const MinipoolView = ({ ownerAddress }) => {
   const { isLoading, minipools } = useMinipoolsByOwner(ownerAddress)
   const router = useRouter()
-
-  console.log('minipools ', minipools)
 
   return (
     <>
