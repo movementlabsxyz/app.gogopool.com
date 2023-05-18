@@ -55,14 +55,9 @@ const formatTime = (t) => {
   )
 }
 const copyTransaction = (nodeId) => {
-  navigator.clipboard
-    .writeText(`https://explorer.avax.network/tx/${nodeId}`)
-    .then(() => {
-      console.log('Transaction hash copied to clipboard')
-    })
-    .catch((err) => {
-      console.error('Failed to copy transaction hash: ', err)
-    })
+  navigator.clipboard.writeText(`https://explorer.avax.network/tx/${nodeId}`).catch((err) => {
+    console.error('Failed to copy transaction hash: ', err)
+  })
 }
 
 const MinipoolCard = ({ minipool }) => {

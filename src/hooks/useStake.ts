@@ -122,9 +122,6 @@ export const useGetGGPStake = (stakerAddr: string, watch = true) => {
     functionName: 'getGGPStake',
     args: [stakerAddr],
     watch,
-    onError(error) {
-      console.log('error in useGetGGPStake', error)
-    },
   })
 
   return {
