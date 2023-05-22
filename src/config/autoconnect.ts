@@ -8,9 +8,7 @@ function useAutoConnect() {
   const { connect, connectors } = useConnect()
 
   useEffect(() => {
-    console.log('running autoconnect')
     AUTOCONNECTED_CONNECTOR_IDS.forEach((connector) => {
-      console.log('inside for each', connector)
       const connectorInstance = connectors.find((c) => c.id === connector && c.ready)
 
       if (connectorInstance) {
