@@ -34,9 +34,6 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, status, ..
     write: claim,
   } = useClaimAndRestake(ownerAddress, parseEther(claimAmount?.toString() || '0'))
 
-  console.log('write claimmehtod', claim)
-  console.log('main modal claimAmoutn', claimAmount)
-
   const { data, isError, isLoading, isSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
   })
@@ -49,7 +46,6 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, status, ..
 
   const handleClaimAll = () => {
     setClaimAmount(rewardsToClaim)
-    console.log('handle claim all amouint', claimAmount)
     claim()
   }
 

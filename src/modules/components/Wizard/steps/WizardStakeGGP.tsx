@@ -83,12 +83,9 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
     if (currentRatio === Infinity) return
 
     if (currentRatio >= MIN_RATIO && lockStep < 3 && currentStep === 2) {
-      console.log(1, { lockStep, currentStep, currentRatio, MIN_RATIO })
-
       // Set next allowed step to 3, deposit avax
       incrementLockStep?.()
     } else if (balance?.value.isZero() && currentStep !== lockStep) {
-      console.log(2, { balance, currentStep, lockStep })
       lockCurrentStep()
     }
   }, [currentStep, currentRatio, incrementLockStep, lockStep, balance, lockCurrentStep])
