@@ -166,23 +166,25 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
           </Text>
         )}
 
-        {!balance?.value.isZero() || currentRatio >= MIN_RATIO ? (
-          <Flex gap="6" justifySelf="flex-end" mb={{ md: 4, base: 2 }} mt={{ md: 4, base: 3 }}>
-            <button className="font-medium text-grey-600 underline" onClick={prevStep}>
-              Back
-            </button>
-            {ggpAmount > 0 && (allowance.gte(amountBN) || approved) ? (
-              <StakeButton
-                avaxAmount={defaultAVAXAmount}
-                ggpAmount={ggpAmount}
-                nextStep={nextStep}
-                setStakeStatus={setStakeStatus}
-              />
-            ) : (
-              <ApproveButton amount={ggpAmount} setApproveStatus={setApproveStatus} />
-            )}
-          </Flex>
-        ) : null}
+        <Flex gap="6" justifySelf="flex-end" mb={{ md: 4, base: 2 }} mt={{ md: 4, base: 3 }}>
+          <button className="font-medium text-grey-600 underline" onClick={prevStep}>
+            Back
+          </button>
+          {!balance?.value.isZero() || currentRatio >= MIN_RATIO ? (
+            <div>
+              {ggpAmount > 0 && (allowance.gte(amountBN) || approved) ? (
+                <StakeButton
+                  avaxAmount={defaultAVAXAmount}
+                  ggpAmount={ggpAmount}
+                  nextStep={nextStep}
+                  setStakeStatus={setStakeStatus}
+                />
+              ) : (
+                <ApproveButton amount={ggpAmount} setApproveStatus={setApproveStatus} />
+              )}
+            </div>
+          ) : null}
+        </Flex>
       </Flex>
     </Flex>
   )
