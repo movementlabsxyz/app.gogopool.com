@@ -128,7 +128,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
           note="Currently we only support borrowing 1 AVAX."
           title="Amount to borrow"
           token="AVAX"
-          tooltip="Borrowed AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node. To borrow more AVAX and run a bigger node, you'll have to stake more GGP at a ratio of 10% of the AVAX borrowed."
+          tooltip="Borrowed AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."
         />
         <StakeInput
           amount={ggpAmount}
