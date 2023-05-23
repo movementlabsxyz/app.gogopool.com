@@ -99,8 +99,6 @@ export const Tooltip = ({
     setDisplayAlready.on()
   }
 
-  console.log('is diabled', isDisabled)
-
   useEffect(() => {
     if (isPersistent && defaultIsOpen && !displayAlready) {
       setVisible.on()

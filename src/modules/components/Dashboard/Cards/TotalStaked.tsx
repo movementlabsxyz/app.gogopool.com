@@ -31,7 +31,6 @@ const TotalStaked = () => {
   const ggpPrice = useGetGGPPrice()
   const ggpStakeInAVAX = ggpPrice.data ? ggpStake * ggpPrice.data : 0
   const { data: effectiveGGPStaked } = useGetEffectiveGGPStaked(address)
-  console.log('effective', effectiveGGPStaked)
 
   const stats = [
     {

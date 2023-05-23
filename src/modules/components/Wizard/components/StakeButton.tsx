@@ -2,7 +2,6 @@ import { utils } from 'ethers'
 import { Dispatch, SetStateAction, useState } from 'react'
 
 import { useToast } from '@chakra-ui/react'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
@@ -22,7 +21,6 @@ const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeB
   const toast = useToast()
 
   const { isConnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
   const [loadingStake, setLoadingStake] = useState(false)
 
   const {
@@ -57,10 +55,9 @@ const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeB
         setLoadingStake(false)
         setStakeStatus('error')
       }
-    } catch (e) {
+    } catch (error) {
       setLoadingStake(false)
       setStakeStatus('error')
-      console.log(e)
     }
   }
 
