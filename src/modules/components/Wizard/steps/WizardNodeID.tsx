@@ -8,6 +8,7 @@ import { Input } from '@/common/components/Input'
 import { DEFAULT_DURATION } from '@/constants/chainDefaults'
 import { useMinipoolByID } from '@/hooks/minipool'
 import useDebounce from '@/hooks/useDebounce'
+import nodeIdErrorMessage from '@/utils/nodeIdErrorMessage'
 
 export interface WizardNodeIDProps {
   nodeId: string
@@ -30,24 +31,16 @@ export const WizardNodeID: FunctionComponent<WizardNodeIDProps> = ({
   isConnected,
   lockCurrentStep,
   lockStep,
-  nextStep,
   nodeId,
   timeRange,
 }): JSX.Element => {
   const { chain } = useNetwork()
+
   const debouncedNodeId = useDebounce(nodeId, 500)
-  const [validNodeId, setValidNodeId] = useState(false)
   const { isError, isLoading, minipool } = useMinipoolByID(debouncedNodeId)
 
+  const errorMessage = nodeIdErrorMessage(minipool, debouncedNodeId)
   const [isSSR, setIsSSR] = useState(true)
-
-  const nodeIdInUse =
-    minipool && !(minipool.status.toNumber() == 4 || minipool.status.toNumber() == 5)
-      ? 'Node ID is already in use'
-      : null
-  const invalidNodeId = !debouncedNodeId.startsWith('NodeID-')
-    ? "Node ID must start with 'NodeID-'"
-    : null
 
   useEffect(() => {
     setIsSSR(false)
@@ -55,29 +48,19 @@ export const WizardNodeID: FunctionComponent<WizardNodeIDProps> = ({
 
   useEffect(() => {
     if (isSSR) return
-    if (invalidNodeId) {
-      setValidNodeId(false)
-      lockCurrentStep()
-      return
-    }
-
-    // unless the minipool is in state 4 or 5, consider this to be an error
-    if (nodeIdInUse) {
-      setValidNodeId(false)
+    if (errorMessage) {
       lockCurrentStep()
       return
     }
     if (!debouncedNodeId) {
-      setValidNodeId(false)
+      lockCurrentStep()
       return
     }
     if (currentStep === 1 && lockStep === 1) {
-      setValidNodeId(true)
       incrementLockStep?.()
     }
   }, [
-    nodeIdInUse,
-    invalidNodeId,
+    errorMessage,
     debouncedNodeId,
     currentStep,
     lockStep,
@@ -87,25 +70,18 @@ export const WizardNodeID: FunctionComponent<WizardNodeIDProps> = ({
   ])
 
   const resolveInputIcon = () => {
-    if (!isConnected) {
-      return null
-    }
     if (isLoading && nodeId) {
       return <Spinner />
-    }
-    if (!nodeId || !debouncedNodeId) {
-      return null
     }
     if (isError) {
       return <WarningIcon color="error.500" />
     }
-    if (validNodeId) {
-      return <CheckCircleIcon color="success.500" />
-    }
-    if (!validNodeId) {
+    if (errorMessage != '') {
       return <WarningIcon color="error.500" />
     }
-
+    if (errorMessage == '' && debouncedNodeId) {
+      return <CheckCircleIcon color="success.500" />
+    }
     return null
   }
 
@@ -140,9 +116,9 @@ export const WizardNodeID: FunctionComponent<WizardNodeIDProps> = ({
       <div className="flex flex-col justify-between space-y-4">
         <Input
           className="!pl-10"
-          errorText={invalidNodeId || nodeIdInUse}
+          errorText={errorMessage}
           isDisabled={!isConnected}
-          isInvalid={!!(invalidNodeId || nodeIdInUse)}
+          isInvalid={!!errorMessage}
           isMonospaced={true}
           leftIcon={leftIcon}
           onChange={handleChangeNodeId}

@@ -7,7 +7,7 @@ import ms from 'ms'
 const bintools = BinTools.getInstance()
 
 // Take 0xF29Bce5F34a74301eB0dE716d5194E4a4aEA5d7A and return NodeID-P7oB2McjBGgW2NXXWVYjV8JEDFoW9xDE5
-const nodeIDToHex = (pk: string) => {
+export const nodeIDToHex = (pk: string) => {
   if (!pk.startsWith('NodeID-')) {
     throw new Error("Error: nodeID must start with 'NodeID-'")
   }
