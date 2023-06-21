@@ -5,8 +5,6 @@ import { Center } from '@mantine/core'
 import { Button } from '@/common/components/Button'
 
 export const ClaimAllRewards = ({ claim, claimAmount, handleClaimAll, onCloseClaimAll }) => {
-  console.log('claim', claim)
-  console.log('claimAmount in claimall', claimAmount)
   return (
     <Center className="flex flex-col items-center justify-center gap-4 pt-8">
       <div className="text-[22px]">

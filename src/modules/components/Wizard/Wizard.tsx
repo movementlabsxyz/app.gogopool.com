@@ -199,6 +199,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
             lockStep={lockStep}
             nextStep={nextStep}
             nodeId={nodeId}
+            prevStep={prevStep}
             setStakeStatus={setStakeStatus}
           />
         )
@@ -233,11 +234,11 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     >
       <Flex direction="column" gap={3}>
         <WizardHeader headerRef={headerRef} step={currentStep} />
-        <Box className="w-full" maxWidth="528px" mx="auto">
+        <Box className="w-full" maxWidth="662px" mx="auto">
           <WizardContent step={currentStep} />
           {renderStepAction()}
         </Box>
-        {currentStep !== 4 && (
+        {![2, 4].includes(currentStep) && (
           <Flex justify="space-between">
             {currentStep > 1 && (
               <Button onClick={prevStep} variant="secondary-outline">

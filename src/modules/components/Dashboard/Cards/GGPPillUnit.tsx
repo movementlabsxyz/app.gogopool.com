@@ -1,15 +1,16 @@
 export function GGPPillUnit({ title = 'GGP', value = null, ...props }) {
   return (
     <span
-      className="pointer-events-none flex h-fit min-w-fit flex-row items-center justify-start space-x-2 rounded-full bg-indigo-700 p-1 px-2 text-xs text-white"
+      className="pointer-events-none flex h-fit min-w-fit flex-row items-center justify-start space-x-2 rounded-full bg-indigo-700 p-1.5 pl-2 pr-4 text-xs text-white"
       {...props}
     >
       <svg
-        className="h-full w-full max-w-[20px] bg-indigo-700 pt-1"
+        // className="h-full w-full max-w-[20px] bg-indigo-700 pt-1"
+        className="rounded-full bg-blue-400"
         fill="white"
-        height="19"
-        viewBox="0 0 10 19"
-        width="19"
+        height="27"
+        viewBox="0 -5 9 24"
+        width="27"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -21,7 +22,7 @@ export function GGPPillUnit({ title = 'GGP', value = null, ...props }) {
           fill="white"
         />
       </svg>
-      <div>{title}</div>
+      <div className="font-bold tracking-widest">{title}</div>
       {value ? <div>{(Math.round(value * 100) / 100).toFixed(2).replace(/\.?0+$/, '')}</div> : null}
     </span>
   )

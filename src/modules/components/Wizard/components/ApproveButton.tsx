@@ -53,7 +53,7 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
       isLoading={isApproveLoading || isLoading}
       onClick={approve}
     >
-      Approve
+      Approve...
     </Button>
   ) : (
     <Button data-testid="connect" onClick={openConnectModal} size="sm">

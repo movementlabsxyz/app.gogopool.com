@@ -26,9 +26,7 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
   const { data: totalGGPStake } = useGetTotalGGPStake()
 
   const { data: claimAmountMaybe } = useGetGGPRewards(address)
-  console.log('claimamountmaybe', claimAmountMaybe)
   const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
-  console.log('claimamoutn', claimAmount)
 
   const { data: ggpStake } = useGetGGPStake(address)
   const ratio = (ggpStake / Number(formatEther((totalGGPStake as BigNumberish) || 1))).toFixed(2)

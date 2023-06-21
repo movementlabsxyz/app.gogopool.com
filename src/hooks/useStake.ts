@@ -93,31 +93,6 @@ export const useWithdrawGGP = (amount: BigNumber) => {
   }
 }
 
-export const useSomethingFails = (amount: BigNumber) => {
-  const { abi, address: stakingAddress } = useStakingContract()
-  const addRecentTransaction = useAddRecentTransaction()
-
-  const { config, error } = usePrepareContractWrite({
-    address: stakingAddress,
-    enabled: !amount.eq(BigNumber.from(0)),
-    abi,
-    functionName: 'somethingFails',
-    args: [amount],
-  })
-
-  console.log('prepare error', error?.message)
-
-  return useContractWrite({
-    ...config,
-    onSuccess(data) {
-      addRecentTransaction({
-        hash: data.hash,
-        description: `Something fails with ${formatEther(amount)} tokens`,
-      })
-    },
-  })
-}
-
 // getAVAXStake
 export const useGetAVAXStake = (stakerAddr: string) => {
   const { abi, address: stakingAddress } = useStakingContract()
@@ -147,9 +122,6 @@ export const useGetGGPStake = (stakerAddr: string, watch = true) => {
     functionName: 'getGGPStake',
     args: [stakerAddr],
     watch,
-    onError(error) {
-      console.log('error in useGetGGPSTake', error)
-    },
   })
 
   return {
