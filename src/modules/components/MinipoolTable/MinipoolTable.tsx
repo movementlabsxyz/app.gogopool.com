@@ -3,6 +3,8 @@ import clsx from 'clsx'
 import { formatUnits } from 'ethers/lib/utils'
 import { useRouter } from 'next/router'
 
+import CancelButton from './CancelButton'
+import DefaultButton from './DefaultButton'
 import { EmptyState } from './EmptyState'
 import WithdrawButton from './WithdrawButton'
 
@@ -62,75 +64,89 @@ const copyTransaction = (nodeId) => {
 
 const MinipoolCard = ({ minipool }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
+  const isWithdrawable = minipool.status.toNumber() === MinipoolStatus.Withdrawable
+  const isPrelaunch = minipool.status.toNumber() === MinipoolStatus.Prelaunch
 
-  return (
-    <WithdrawButton isFinished={isFinished} nodeId={minipool.nodeID}>
-      <li className="relative flex w-full items-center space-x-4 py-4" key={minipool.id}>
-        <div className="min-w-0 flex-auto">
-          <div className="flex items-center gap-x-3">
-            <div
-              className={clsx(statuses[minipool.status.toNumber()], 'flex-none rounded-full p-1')}
+  const cardInternals = (
+    <li className="relative flex w-full items-center space-x-4 py-4" key={minipool.id}>
+      <div className="min-w-0 flex-auto">
+        <div className="flex items-center gap-x-3">
+          <div className={clsx(statuses[minipool.status.toNumber()], 'flex-none rounded-full p-1')}>
+            <div className="h-2 w-2 rounded-full bg-current" />
+          </div>
+          <h2 className="min-w-0 text-sm font-semibold leading-6">
+            <a
+              className="flex gap-x-2"
+              onClick={() => copyTransaction(nodeHexToID(minipool.nodeID))}
             >
-              <div className="h-2 w-2 rounded-full bg-current" />
-            </div>
-            <h2 className="min-w-0 text-sm font-semibold leading-6">
-              <a
-                className="flex gap-x-2"
-                onClick={() => copyTransaction(nodeHexToID(minipool.nodeID))}
-              >
-                <span className="truncate">{nodeHexToID(minipool.nodeID)}</span>
-                <span className="text-gray-400">/</span>
-                <span className="whitespace-nowrap">
-                  {formatUnits(minipool.avaxNodeOpAmt.add(minipool.avaxLiquidStakerAmt))} staked
-                </span>
-                <span className="absolute inset-0" />
-              </a>
-            </h2>
-          </div>
-          <div className="mt-3 flex items-center gap-x-2.5 text-sm leading-5 text-gray-800">
-            <Tooltip content="Staked by node operator">
-              {formatUnits(minipool.avaxNodeOpAmt)} staked
-            </Tooltip>
-            <svg className="h-0.5 w-0.5 flex-none fill-gray-300" viewBox="0 0 2 2">
-              <circle cx={1} cy={1} r={1} />
-            </svg>
-            <Tooltip content="AVAX rewards for node operator">
-              {formatUnits(minipool.avaxNodeOpRewardAmt)} rewards
-            </Tooltip>
-            <p className="whitespace-nowrap"></p>
-          </div>
-          <div className="mt-3 flex flex-col gap-1 text-sm leading-5 text-gray-800">
-            <Tooltip content="Created time" wrap={false}>
-              <time className="flex gap-4" dateTime={minipool.creationTime}>
-                <span>Created:</span>
-                <span>{formatTime(minipool.creationTime)}</span>
-              </time>
-            </Tooltip>
-            <Tooltip content="Start time" wrap={false}>
-              <time className="flex gap-9" dateTime={minipool.startTime}>
-                <span>Start:</span>
-                <span>{formatTime(minipool.startTime)}</span>
-              </time>
-            </Tooltip>
-            <Tooltip content="End time" wrap={false}>
-              <time className="flex gap-10" dateTime={minipool.endTIme}>
-                <span>End:</span>
-                <span>{formatTime(minipool.endTime)}</span>
-              </time>
-            </Tooltip>
-          </div>
+              <span className="truncate">{nodeHexToID(minipool.nodeID)}</span>
+              <span className="text-gray-400">/</span>
+              <span className="whitespace-nowrap">
+                {formatUnits(minipool.avaxNodeOpAmt.add(minipool.avaxLiquidStakerAmt))} staked
+              </span>
+              <span className="absolute inset-0" />
+            </a>
+          </h2>
         </div>
-        <div
-          className={clsx(
-            environments[minipool.status.toNumber()],
-            'flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset',
-          )}
-        >
-          {MinipoolStatus[minipool.status.toNumber()]}
+        <div className="mt-3 flex items-center gap-x-2.5 text-sm leading-5 text-gray-800">
+          <Tooltip content="Staked by node operator">
+            {formatUnits(minipool.avaxNodeOpAmt)} staked
+          </Tooltip>
+          <svg className="h-0.5 w-0.5 flex-none fill-gray-300" viewBox="0 0 2 2">
+            <circle cx={1} cy={1} r={1} />
+          </svg>
+          <Tooltip content="AVAX rewards for node operator">
+            {formatUnits(minipool.avaxNodeOpRewardAmt)} rewards
+          </Tooltip>
+          <p className="whitespace-nowrap"></p>
         </div>
-      </li>
-    </WithdrawButton>
+        <div className="mt-3 flex flex-col gap-1 text-sm leading-5 text-gray-800">
+          <Tooltip content="Created time" wrap={false}>
+            <time className="flex gap-4" dateTime={minipool.creationTime}>
+              <span>Created:</span>
+              <span>{formatTime(minipool.creationTime)}</span>
+            </time>
+          </Tooltip>
+          <Tooltip content="Start time" wrap={false}>
+            <time className="flex gap-9" dateTime={minipool.startTime}>
+              <span>Start:</span>
+              <span>{formatTime(minipool.startTime)}</span>
+            </time>
+          </Tooltip>
+          <Tooltip content="End time" wrap={false}>
+            <time className="flex gap-10" dateTime={minipool.endTIme}>
+              <span>End:</span>
+              <span>{formatTime(minipool.endTime)}</span>
+            </time>
+          </Tooltip>
+        </div>
+      </div>
+      <div
+        className={clsx(
+          environments[minipool.status.toNumber()],
+          'flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset',
+        )}
+      >
+        {MinipoolStatus[minipool.status.toNumber()]}
+      </div>
+    </li>
   )
+
+  if (isPrelaunch) {
+    return (
+      <CancelButton isFinished={isFinished} nodeId={minipool.nodeID}>
+        {cardInternals}
+      </CancelButton>
+    )
+  } else if (isWithdrawable) {
+    return (
+      <WithdrawButton isFinished={isFinished} nodeId={minipool.nodeID}>
+        {cardInternals}
+      </WithdrawButton>
+    )
+  } else {
+    return <DefaultButton status={minipool.status.toNumber()}>{cardInternals}</DefaultButton>
+  }
 }
 
 const MinipoolList = ({ minipools }) => {

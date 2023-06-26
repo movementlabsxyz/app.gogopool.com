@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers'
 
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
+import * as Sentry from '@sentry/nextjs'
 import { formatEther } from 'ethers/lib/utils'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
@@ -13,11 +14,14 @@ export const useApproveGGP = (amount: BigNumber) => {
   const { address: stakingAddr } = useStakingContract()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { config } = usePrepareContractWrite({
+  const { config, error: prepareError } = usePrepareContractWrite({
     address: ggpTokenAddress,
     abi,
     functionName: 'approve',
     args: [stakingAddr, amount],
+    onError(error) {
+      Sentry.captureException(error)
+    },
   })
 
   const resp = useContractWrite({
@@ -28,10 +32,14 @@ export const useApproveGGP = (amount: BigNumber) => {
         description: `Approve ${formatEther(amount)} GGP`,
       })
     },
+    onError(error) {
+      Sentry.captureException(error)
+    },
   })
 
   return {
     ...resp,
+    prepareError,
     ready: resp?.write !== undefined,
   }
 }

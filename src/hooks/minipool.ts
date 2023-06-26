@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { useInterval, useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
+import * as Sentry from '@sentry/nextjs'
 import { formatEther } from 'ethers/lib/utils'
 import ms from 'ms'
 import { useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
@@ -183,7 +184,6 @@ export const useMinipoolsByOwner = (address: string | undefined) => {
 export const useCancelMinipool = (nodeId: string) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
-  const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
@@ -191,6 +191,8 @@ export const useCancelMinipool = (nodeId: string) => {
     functionName: 'cancelMinipool',
     args: [nodeId],
     onError(error) {
+      Sentry.captureException(error)
+
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({

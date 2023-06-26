@@ -2,19 +2,18 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import clsx from 'clsx'
 
 import { Tooltip } from '@/common/components/Tooltip'
-import { useWithdrawMinipoolFunds } from '@/hooks/minipool'
+import { useCancelMinipool } from '@/hooks/minipool'
 
-const WithdrawButton = ({ children, isFinished, nodeId }) => {
-  const {
-    data: withdrawData,
-    prepareError: isPrepareErrorWithdraw,
-    write: withdrawFunds,
-  } = useWithdrawMinipoolFunds(nodeId)
+const CancelButton = ({ children, isFinished, nodeId }) => {
+  const { prepareError: isPrepareErrorCancel, write: cancelMinipool } = useCancelMinipool(nodeId)
 
-  let tooltipLabel = 'Withdraw funds'
-  if (isFinished) tooltipLabel = 'Already withdrawn, no actions can be taken.'
+  const canCancel = !isPrepareErrorCancel
+  let tooltipLabel = ''
+  if (canCancel) {
+    tooltipLabel = 'Cancel Minipool'
+  }
 
-  const enabled = !isFinished && !isPrepareErrorWithdraw
+  const enabled = canCancel || !isFinished
 
   return (
     <Tooltip content={tooltipLabel} wrapperClassName="w-full">
@@ -28,7 +27,7 @@ const WithdrawButton = ({ children, isFinished, nodeId }) => {
         )}
         onClick={
           enabled
-            ? withdrawFunds
+            ? cancelMinipool
             : () => {
                 // empty
               }
@@ -43,4 +42,4 @@ const WithdrawButton = ({ children, isFinished, nodeId }) => {
   )
 }
 
-export default WithdrawButton
+export default CancelButton
