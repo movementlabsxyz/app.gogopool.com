@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
+import { Dispatch, ReactNode, SetStateAction } from 'react'
 
 import { Flex, Stack, Text, useTheme } from '@chakra-ui/react'
 import { NumericFormat } from 'react-number-format'
@@ -8,8 +8,6 @@ import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
 import { InfoCircleIcon } from '@/common/components/CustomIcon'
 import { Tooltip } from '@/common/components/Tooltip'
-
-const parse = (val) => (!val || val < 0 ? 0 : Number(val))
 
 type StakeInputProps = {
   amount: number
@@ -35,10 +33,7 @@ export const StakeInput = ({
   amount,
   balance,
   canUseAll,
-  currencySymbol,
   disabled,
-  exchangeRate,
-  icon,
   lowerText,
   lowerTextTooltip,
   lowerTextValue,
@@ -54,10 +49,7 @@ export const StakeInput = ({
   max = max || Infinity
   min = min || 0
 
-  const [inputValue, setInputValue] = useState(amount)
-
   function useAllToken() {
-    setInputValue(balance as number)
     setAmount && setAmount(balance as number)
   }
 
@@ -106,12 +98,12 @@ export const StakeInput = ({
           id="stake-avax-form"
           max={max}
           min={min}
-          onValueChange={({ floatValue }) => {
-            setAmount && setAmount(floatValue)
+          onValueChange={(ggpAmount) => {
+            setAmount && setAmount(ggpAmount.floatValue)
           }}
           placeholder="0.0"
           thousandSeparator
-          value={inputValue}
+          value={amount}
         />
         {token === 'AVAX' ? <AVAXPillUnit /> : <GGPPillUnit />}
       </Flex>

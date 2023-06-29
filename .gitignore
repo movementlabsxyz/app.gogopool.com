@@ -39,3 +39,6 @@ yarn-error.log*
 tailwind.storybook.css
 
 .idea
+
+# Sentry Auth Token
+.sentryclirc
