@@ -57,5 +57,3 @@ export const DECODED_ERRORS = {
   '0x32d971dc': 'ZeroAssets()',
   '0x9811e0c7': 'ZeroShares()',
 }
-
-export const NODE_ID_LEN = 40
