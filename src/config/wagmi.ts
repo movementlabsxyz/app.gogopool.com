@@ -1,5 +1,6 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 import { SafeConnector } from '@wagmi/connectors/safe'
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
@@ -23,6 +24,13 @@ export const configWagmiClient = () => {
         options: {
           allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
           debug: false,
+        },
+      }),
+      // see here for more info: https://wagmi.sh/core/connectors/walletConnect
+      new WalletConnectConnector({
+        chains,
+        options: {
+          projectId: '14ced539274121ccca8d831af2c0a924',
         },
       }),
     ],
