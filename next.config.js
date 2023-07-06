@@ -2,14 +2,15 @@
 module.exports = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
+  trailingSlash: true,
   images: {
     domains: ['avatars.githubusercontent.com', 'i.imgur.com', 's2.coinmarketcap.com'],
   },
   redirects: async () => {
     return [
       {
-        source: '/',
-        destination: '/dashboard',
+        source: '/dashboard',
+        destination: '/',
         permanent: true,
       },
     ]

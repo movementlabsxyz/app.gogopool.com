@@ -43,7 +43,7 @@ const navigation = [
   },
   {
     name: 'Dashboard',
-    href: '/dashboard',
+    href: '/',
     icon: (
       <svg
         className="mr-3"
