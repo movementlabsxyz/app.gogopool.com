@@ -15,6 +15,7 @@ type StakeInputProps = {
   exchangeRate?: number
   currencySymbol?: string
   balance?: string | number
+  balanceLabel?: string
   tooltip?: string
   token: string
   title: string
@@ -32,6 +33,7 @@ type StakeInputProps = {
 export const StakeInput = ({
   amount,
   balance,
+  balanceLabel,
   canUseAll,
   disabled,
   lowerText,
@@ -50,7 +52,7 @@ export const StakeInput = ({
   min = min || 0
 
   function useAllToken() {
-    setAmount && setAmount(balance as number)
+    setAmount && setAmount(max)
   }
 
   return (
@@ -64,7 +66,8 @@ export const StakeInput = ({
                 <InfoCircleIcon className="ml-1 inline h-5 w-5" fill="blue.300" />
               </span>
             )}
-            {canUseAll && balance && (
+
+            {canUseAll && (
               <button className="ml-2 font-medium text-blue-300 underline" onClick={useAllToken}>
                 Use all {token}
               </button>
@@ -96,10 +99,12 @@ export const StakeInput = ({
           className="w-full bg-transparent p-2 text-2xl font-medium outline-0 disabled:cursor-not-allowed"
           disabled={disabled}
           id="stake-avax-form"
-          max={max}
-          min={min}
+          isAllowed={(values) => {
+            const { floatValue, formattedValue } = values
+            return formattedValue === '' || (floatValue >= min && floatValue <= max)
+          }}
           onValueChange={(ggpAmount) => {
-            setAmount && setAmount(ggpAmount.floatValue)
+            setAmount && setAmount(ggpAmount.floatValue || 0)
           }}
           placeholder="0.0"
           thousandSeparator
@@ -107,7 +112,7 @@ export const StakeInput = ({
         />
         {token === 'AVAX' ? <AVAXPillUnit /> : <GGPPillUnit />}
       </Flex>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-8">
         {lowerText && (
           <Tooltip content={lowerTextTooltip} placement="right">
             <Flex fontSize="sm" fontWeight="bold">
@@ -122,14 +127,12 @@ export const StakeInput = ({
           </Tooltip>
         )}
 
-        {balance && (
-          <Flex fontSize="sm" fontWeight="bold" gap="2">
-            Balance:
-            <Text color="green.700">
-              {balance} {token}
-            </Text>
-          </Flex>
-        )}
+        <Flex fontSize="sm" fontWeight="bold" gap="2">
+          {balanceLabel ? balanceLabel : 'Balance'}
+          <Text color="green.700">
+            {balance} {token}
+          </Text>
+        </Flex>
       </div>
     </Stack>
   )

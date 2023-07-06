@@ -16,7 +16,7 @@ import useGGPAllowance from '@/hooks/allowance'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
-export interface ClaimAndRestakeModalProps {
+export interface StakeInputModalProps {
   stake: any
   rewardsToClaim: any
   stakeAmount: any
@@ -27,7 +27,7 @@ export interface ClaimAndRestakeModalProps {
   refetch?: any
 }
 
-export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
+export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
   isError,
   isLoading,
   onClose,
@@ -55,11 +55,9 @@ export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
 
   return (
     <Flex direction="column" gap={2}>
-      <div className="mb-4 border-b border-gray-200 pb-2">
-        <Title className="!mb-0 !pb-0" fontSize={26}>
-          Stake
-        </Title>
-        <p className="mt-2 max-w-4xl text-sm text-gray-500">Amount to add to protocol</p>
+      <div className="border-b border-gray-200 pb-4">
+        <Title>Stake</Title>
+        <p className="max-w-4xl text-sm text-gray-500">Amount to add to protocol</p>
       </div>
 
       <div className="flex items-center justify-between">
@@ -150,6 +148,7 @@ export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
               disabled={stakeAmount <= 0 || !stake || isLoading}
               isLoading={isLoading}
               onClick={stake}
+              size="sm"
               variant="primary"
             >
               Stake
@@ -165,8 +164,6 @@ export const StakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
           )}
         </>
       </div>
-
-      {/* {ratio > MAX_RATIO && <ErrorMessage message={`Ratio must be above ${MAX_RATIO}% to stake`} />} */}
     </Flex>
   )
 }

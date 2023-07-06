@@ -321,7 +321,7 @@ export const LiquidStaking: FunctionComponent = () => {
   return (
     <>
       <Card outer>
-        <Title>Liquid Staking</Title>
+        <Title className="pb-4">Liquid Staking</Title>
         <Content>
           <FormControl>
             <Box position="relative">

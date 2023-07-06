@@ -6,10 +6,10 @@ import { useAccount, useWaitForTransaction } from 'wagmi'
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
 import { PendingStake } from './ClaimAndRestake/PendingStake'
 import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
-import { StakeInput } from './StakeInput'
 
 import { Modal } from '@/common/components/Modal'
 import { useGetGGPStake, useStakeGGP } from '@/hooks/useStake'
+import { StakeInput } from '@/modules/components/Modal/StakeInput'
 
 export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
   const [stakeAmount, setStakeAmount] = useState(0)
@@ -26,7 +26,7 @@ export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
     write: stake,
   } = useStakeGGP(parseEther(stakeAmount?.toString() || '0'))
 
-  const { data, isError, isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading, isSuccess } = useWaitForTransaction({
     hash: stakeData?.hash,
   })
 

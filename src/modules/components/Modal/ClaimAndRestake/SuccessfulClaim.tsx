@@ -13,10 +13,14 @@ import { useGetGGPStake } from '@/hooks/useStake'
 export interface SuccessfulClaimProps {
   transactionHash: any
   onClose: any
+  staked?: number
+  collateralization?: number
 }
 
 export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
+  collateralization,
   onClose,
+  staked,
   transactionHash,
 }) => {
   const { address } = useAccount()
@@ -29,7 +33,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
   })
   const ggpBalance = Number(formatEther(ggpBalanceMaybe?.value || 0))
 
-  const { data: ggpStake, error, isError, isLoading } = useGetGGPStake(address)
+  const { data: ggpStake } = useGetGGPStake(address)
 
   return (
     <Flex align="center" direction="column" gap={2}>
@@ -49,22 +53,49 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
           <span>GGP Balance</span>
           <span className="text-black">{Math.round(ggpBalance).toLocaleString()}</span>
         </Text>
-        <Text
-          casing="uppercase"
-          className="flex justify-between border-b border-dashed border-gray-400 pb-2"
-          color="#5D5D64"
-          fontSize={16}
-          fontWeight={700}
-          textAlign="center"
-        >
-          <span>Stake Amount</span>
-          <span className="text-black">
-            {Math.round(ggpStake).toLocaleString(undefined, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            })}
-          </span>
-        </Text>
+        {staked ? (
+          <Text
+            casing="uppercase"
+            className="flex justify-between border-b border-dashed border-gray-400 pb-2"
+            color="#5D5D64"
+            fontSize={16}
+            fontWeight={700}
+            textAlign="center"
+          >
+            <span>Staked Amount</span>
+            <span className="text-black">{staked.toLocaleString()}</span>
+          </Text>
+        ) : (
+          <Text
+            casing="uppercase"
+            className="flex justify-between border-b border-dashed border-gray-400 pb-2"
+            color="#5D5D64"
+            fontSize={16}
+            fontWeight={700}
+            textAlign="center"
+          >
+            <span>Stake Amount</span>
+            <span className="text-black">
+              {Math.round(ggpStake).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2,
+              })}
+            </span>
+          </Text>
+        )}
+        {collateralization && (
+          <Text
+            casing="uppercase"
+            className="flex justify-between border-b border-dashed border-gray-400 pb-2"
+            color="#5D5D64"
+            fontSize={16}
+            fontWeight={700}
+            textAlign="center"
+          >
+            <span>Collateralization Ratio</span>
+            <span className="text-black">{collateralization.toLocaleString() + '%'}</span>
+          </Text>
+        )}
       </div>
       <div className="pt-6">
         <TransactionHash transactionHash={transactionHash} />

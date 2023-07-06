@@ -58,7 +58,7 @@ Card.displayName = 'Card'
 export const Title = forwardRef<HTMLDivElement, TextPropsWithStyles>(
   ({ children, customStyles, ...rest }, ref) => {
     return (
-      <Heading fontWeight="bold" mb="8" ref={ref} size="h5" sx={customStyles} {...rest}>
+      <Heading fontWeight="bold" ref={ref} size="h5" sx={customStyles} {...rest}>
         {children}
       </Heading>
     )

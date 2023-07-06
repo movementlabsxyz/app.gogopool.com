@@ -1,7 +1,6 @@
 import { FunctionComponent, PropsWithChildren, ReactElement } from 'react'
 
 import { Box, Button as ChakraButton, ButtonProps as ChakraButtonProps } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
 
 export interface ButtonProps extends ChakraButtonProps {
   size?: 'xs' | 'sm' | 'md' | 'lg'
@@ -25,40 +24,26 @@ export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   variant = 'primary',
   ...props
 }) => {
-  const motionProps = !disabled
-    ? {
-        whileHover: { scale: 1.1 },
-        whileTap: { scale: 0.9 },
-      }
-    : {}
   return (
-    <motion.button disabled={disabled} {...motionProps}>
-      <ChakraButton
-        className="font-jost hover:bg-indigo-50 focus:bg-indigo-200"
-        disabled={disabled}
-        height="full"
-        onClick={onClick}
-        size={iconOnly ? `iconOnly-${size}` : size}
-        variant={variant}
-        width={full && '100%'}
-        {...props}
-      >
-        {iconOnly ? (
-          iconOnly
-        ) : (
-          <Box
-            alignItems="center"
-            columnGap="2"
-            display="flex"
-            flexDir="row"
-            justifyContent="center"
-          >
-            {iconLeft}
-            {children}
-            {iconRight}
-          </Box>
-        )}
-      </ChakraButton>
-    </motion.button>
+    <ChakraButton
+      className="font-jost transition hover:scale-105 hover:bg-indigo-50"
+      disabled={disabled}
+      height="full"
+      onClick={onClick}
+      size={iconOnly ? `iconOnly-${size}` : size}
+      variant={variant}
+      width={full && '100%'}
+      {...props}
+    >
+      {iconOnly ? (
+        iconOnly
+      ) : (
+        <Box alignItems="center" columnGap="2" display="flex" flexDir="row" justifyContent="center">
+          {iconLeft}
+          {children}
+          {iconRight}
+        </Box>
+      )}
+    </ChakraButton>
   )
 }

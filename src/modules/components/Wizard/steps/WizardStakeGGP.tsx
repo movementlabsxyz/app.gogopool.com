@@ -5,7 +5,6 @@ import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
 import { formatEther, parseEther } from 'ethers/lib/utils.js'
 import { useAccount, useBalance, useNetwork } from 'wagmi'
 
-import { StakeInput } from '../StakeInput'
 import ApproveButton from '../components/ApproveButton'
 import { ErrorMessage } from '../components/ErrorMessage'
 import StakeButton, { MAX_RATIO, MIN_RATIO } from '../components/StakeButton'
@@ -14,7 +13,8 @@ import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 import useGGPAllowance from '@/hooks/allowance'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
-import { useGetCollateralizationRatio, useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
+import { useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
+import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 
 export interface WizardStepTwoProps {
   setStakeStatus: Dispatch<SetStateAction<'error' | 'loading' | 'success' | 'idle'>>
@@ -22,7 +22,7 @@ export interface WizardStepTwoProps {
   currentStep: number
   lockStep: number
   nextStep: () => void
-  lockCurrentStep?: () => void
+  lockCurrentStep: () => void
   incrementLockStep?: () => void
   prevStep: () => void
 }
@@ -59,7 +59,8 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
 
   // For calculating ratio
   const futureRatio = useGetCollateralRatio({ ggpAmount, avaxAmount: defaultAVAXAmount })
-  const { data: currentRatio } = useGetCollateralizationRatio(account)
+  const currentRatio = useGetCollateralRatio({})
+  const currentRatioWithIncomingAVAX = useGetCollateralRatio({ avaxAmount: defaultAVAXAmount })
 
   const { data: ggpStake } = useGetGGPStake(account)
 
@@ -77,16 +78,16 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
     }
   }, [approved, approveStatus, setApproved])
 
-  // calculate which if the user can skip ggp step
+  // determine if the user can skip ggp step
   useEffect(() => {
-    if (currentRatio === Infinity) {
+    if (currentRatioWithIncomingAVAX === 0) {
       return
     }
 
-    if (currentRatio >= MIN_RATIO && lockStep < 3 && currentStep === 2) {
-      incrementLockStep?.()
+    if (currentRatioWithIncomingAVAX >= MIN_RATIO && lockStep < 3 && currentStep === 2) {
+      incrementLockStep()
     }
-  }, [currentRatio, currentStep, incrementLockStep, lockStep])
+  }, [currentStep, currentRatioWithIncomingAVAX, incrementLockStep, lockStep])
 
   return (
     <Flex direction="column">
@@ -132,6 +133,8 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
           lowerText="Future Collateralization:"
           lowerTextTooltip="The new collateralization ratio after the proposed GGP is staked"
           lowerTextValue={(futureRatio || 0).toLocaleString() + '%'}
+          max={ggpBalance.value ? parseInt(formatEther(ggpBalance.value)) : undefined}
+          min={0.0}
           setAmount={setGgpAmount}
           title="Amount to deposit"
           token="GGP"

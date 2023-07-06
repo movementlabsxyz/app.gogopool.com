@@ -201,7 +201,7 @@ export function SidebarLayout({ children }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <div className="fixed inset-0 bg-gray-600/75" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-40 flex">
@@ -285,7 +285,7 @@ export function SidebarLayout({ children }) {
                 </div>
                 <div className="z-10" style={{ padding: '1rem' }}>
                   <NextLink
-                    className="ring-white-500 mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
+                    className="mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
                     href="https://www.gogopool.com"
                     style={{
                       color: 'white',
@@ -298,7 +298,7 @@ export function SidebarLayout({ children }) {
                     Back to site
                   </NextLink>
                   <NextLink
-                    className="ring-white-500 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
+                    className="flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
                     href="https://docs.gogopool.com"
                     style={{
                       color: 'white',
@@ -372,7 +372,7 @@ export function SidebarLayout({ children }) {
               whileTap={{ scale: 0.9 }}
             >
               <NextLink
-                className="ring-white-500 mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
+                className="mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
                 href="https://www.gogopool.com"
                 style={{
                   color: 'white',
@@ -392,7 +392,7 @@ export function SidebarLayout({ children }) {
               whileTap={{ scale: 0.9 }}
             >
               <NextLink
-                className="ring-white-500 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
+                className="flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
                 href="https://docs.gogopool.com"
                 style={{
                   color: 'white',

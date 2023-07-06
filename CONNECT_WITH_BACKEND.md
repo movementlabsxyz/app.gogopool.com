@@ -8,33 +8,17 @@ We used `next-redux-wrapper` to support SSR of the Redux and `@reduxjs/toolkit` 
 
 - [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper)
 - [@reduxjs/toolkit](https://redux-toolkit.js.org/)
-
-### Motivation
-
-We need to store the authentication session on the global state to use it in every logic if it's need the authentication. But you can add more global state if you want, it depends on your needs.
-
-### Pattern
-
-```.
-└── store
-   ├── index.ts
-   ├── reducers.ts
-   └── slices
-       ├── wallet.ts
-       └── // your new slice
-```
-
-Please import `useDispatch` and `useSelector` from `hooks/redux.ts` instead of import it from `@reduxjs/tookit` because the type of the dispatch and state is different.
-
-You can see the example of this in `hooks/wallet.ts`.
+- NOTE: Currently not used, this needs to be set up later, if needed.
 
 ## Backend hooks
 
-This hook gives access to the local browser wallet (for now only MetaMask is supported). There are seven returned objects that can be accessed like so:
+This hook gives access to the local browser wallet (for now only MetaMask is supported). There are 
+seven returned objects that can be accessed like so:
 
 ### useWallet
 
-This hook gives access to the local browser wallet (for now only MetaMask is supported). There are seven returned objects that can be accessed like so:
+This hook gives access to the local browser wallet (for now only MetaMask is supported). There are 
+seven returned objects that can be accessed like so:
 
 ```javascript
 // calling at the start of a component or page
@@ -42,16 +26,20 @@ const { account, activate, deactivate, provider, chainId, chainName, error } = u
 ```
 
 - `account` - string of the user's address.
-- `activate` - async void function with no parameters that attempts to activate the browser wallet. Check `error` for errors on activation.
-- `deactivate` - async void function with no parameters that deactivates the browser wallet if active. Otherwise does nothing.
+- `activate` - async void function with no parameters that attempts to activate the browser wallet. 
+Check `error` for errors on activation.
+- `deactivate` - async void function with no parameters that deactivates the browser wallet if active. 
+Otherwise does nothing.
 - `provider` - if `activate` is successful, the EthersJS provider.
-- `chainId` - chain ID of the currently selected network. Should be `43113` for Avalanche fuji testnet and `43114` for Avalanche mainnet.
+- `chainId` - chain ID of the currently selected network. Should be `43113` for Avalanche fuji testnet 
+and `43114` for Avalanche mainnet.
 - `chainName` - chain name of the currently selected network. Does not work on Avalanche network.
 - `error` - the returned error as a string.
 
 ### useDeposit(provider)
 
-Allows access to the `send` function, used for depositing AVAX to the GGP network for liquid staking, as well as its returned response, error, and if it was a successful deposit or not.
+Allows access to the `send` function, used for depositing AVAX to the GGP network for liquid staking, 
+as well as its returned response, error, and if it was a successful deposit or not.
 
 [ `useWallet` ](#useWallet) should be called before this, and the returned provider should be passed into `useDeposit` .
 
@@ -73,9 +61,12 @@ const {
 
 ### useCreateMinipool(provider)
 
-This hook gives access to the `approve` and `createMinipool` functions. The `approve` function approves the GGP Bond token for withdrawal from the user's account when calling `createMinipool` . The `createMinipool` function begins minipool creation process on the backend for node operators.
+This hook gives access to the `approve` and `createMinipool` functions. The `approve` function approves 
+the GGP Bond token for withdrawal from the user's account when calling `createMinipool` . The `createMinipool` 
+function begins minipool creation process on the backend for node operators.
 
-[ `useWallet` ](#useWallet) should be called before this, and the returned provider should be passed into `useCreateMinipool` .
+[ `useWallet` ](#useWallet) should be called before this, and the returned provider should be passed 
+into `useCreateMinipool` .
 
 ```javascript
 // calling at the start of a component or page

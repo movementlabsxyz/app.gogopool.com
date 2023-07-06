@@ -172,7 +172,7 @@ export const WizardNodeID: FunctionComponent<WizardNodeIDProps> = ({
             onChange={handleChangeTimeRange}
             value={timeRange}
           >
-            <option disabled hidden selected value="">
+            <option disabled hidden value="">
               Validation period
             </option>
             {DEFAULT_DURATION[chain?.id] && (

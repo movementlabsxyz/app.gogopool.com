@@ -26,7 +26,7 @@ export const RewardForm: FunctionComponent<Props> = ({
       <div className="flex items-center justify-between">
         <NumericFormat
           autoFocus
-          className="rounded-xl bg-gray-50 p-2 text-3xl disabled:bg-gray-200 w-full mr-2"
+          className="mr-2 w-full rounded-xl bg-gray-50 p-2 text-3xl disabled:bg-gray-200"
           disabled
           min={0}
           placeholder="0.0"

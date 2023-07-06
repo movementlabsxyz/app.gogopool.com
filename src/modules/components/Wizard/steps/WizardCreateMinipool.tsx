@@ -5,13 +5,12 @@ import { Flex, Text } from '@chakra-ui/react'
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { useAccount, useBalance, useNetwork, useWaitForTransaction } from 'wagmi'
 
-import { StakeInput } from '../StakeInput'
-
 import { Button } from '@/common/components/Button'
 import ConnectButton from '@/common/components/ConnectButton'
 import { AvalancheIcon } from '@/common/components/CustomIcon/AvalancheIcon'
 import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 import { useCreateMinipool } from '@/hooks/minipool'
+import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 import { nodeID } from '@/utils'
 import { roundedBigNumber } from '@/utils/numberFormatter'
 

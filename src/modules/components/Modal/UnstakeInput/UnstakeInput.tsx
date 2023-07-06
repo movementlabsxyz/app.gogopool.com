@@ -10,6 +10,7 @@ import { ErrorMessage } from '../../Wizard/components/ErrorMessage'
 import { MAX_RATIO } from '../../Wizard/components/StakeButton'
 
 import { Button } from '@/common/components/Button'
+import { Title } from '@/common/components/Card'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
 export interface ClaimAndRestakeModalProps {
@@ -36,11 +37,9 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
 
   return (
     <Flex direction="column" gap={2}>
-      <div className="mb-2 border-b border-gray-200 pb-5">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          <span>Unstake</span>
-        </h3>
-        <p className="mt-2 max-w-4xl text-sm text-gray-500">Remove an amount from the protocol</p>
+      <div className="border-b border-gray-200 pb-4">
+        <Title>Unstake</Title>
+        <p className="max-w-4xl text-sm text-gray-500">Remove an amount from the protocol</p>
       </div>
 
       <div className="flex items-center justify-between">
@@ -88,7 +87,12 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
           </Button>
         )}
         {!chain?.unsupported && (
-          <Button disabled={!withdraw || ratio < MAX_RATIO} onClick={withdraw} variant="primary">
+          <Button
+            disabled={!withdraw || ratio < MAX_RATIO}
+            onClick={withdraw}
+            size="sm"
+            variant="primary"
+          >
             Unstake
           </Button>
         )}

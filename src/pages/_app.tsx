@@ -14,7 +14,6 @@ import { WagmiConfig } from 'wagmi'
 import { ChakraFonts } from '@/common/components/CustomFont'
 import { PageHead } from '@/common/components/PageHead'
 import configWagmiClient from '@/config/wagmi'
-import { wrapper } from '@/store'
 import theme from '@/theme'
 
 const { chains, wagmiClient } = configWagmiClient()
@@ -64,4 +63,4 @@ export const App = ({ Component, pageProps }) => {
   )
 }
 
-export default wrapper.withRedux(App)
+export default App

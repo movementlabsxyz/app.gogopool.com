@@ -1,6 +1,5 @@
 import { Box, Link, Text } from '@chakra-ui/react'
 import { Center, Divider } from '@mantine/core'
-import { IconMail } from '@tabler/icons'
 
 import { Button } from '@/common/components/Button'
 import { Card } from '@/common/components/Card'
@@ -155,27 +154,6 @@ const Welcome = () => {
             </Center>
           </Card>
         </div>
-
-        <Card className="!px-8">
-          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-            <div>
-              <Text className="font-domaine" fontSize={20} fontWeight="bold">
-                Need Help?
-              </Text>
-              <Text className="max-w-xl">
-                Don&rsquo;t get lost in the clouds! Our team members are happy to help! Book a time
-                with us to get started.
-              </Text>
-            </div>
-
-            <Link href="https://calendly.com/gogopool/meet-subnets" target="_blank">
-              <Button size="xs" variant="secondary-outline">
-                <IconMail />
-                Book time with us
-              </Button>
-            </Link>
-          </div>
-        </Card>
       </Container>
     </Box>
   )

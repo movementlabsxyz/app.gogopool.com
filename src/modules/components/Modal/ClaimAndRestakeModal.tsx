@@ -1,32 +1,43 @@
 import { BigNumberish } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { useDisclosure } from '@chakra-ui/react'
 import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useWaitForTransaction } from 'wagmi'
 
-import { ClaimAllRewards } from './ClaimAllRewards'
-import { ClaimAndRestakeInput } from './ClaimAndRestake/ClaimAndRestakeInput'
+import ClaimRestakeStepOne from './ClaimAndRestake/ClaimRestakeStepOne'
+import ClaimRestakeStepTwo from './ClaimAndRestake/ClaimRestakeStepTwo'
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
-import { PendingClaim } from './ClaimAndRestake/PendingClaim'
 import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
-import { ClaimAndRestakeTwo } from './ClaimAndRestakeTwo'
 
 import { Modal } from '@/common/components/Modal'
 import { useClaimAndRestake } from '@/hooks/useClaimNodeOp'
+import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 import { useGetGGPRewards } from '@/hooks/useStake'
 
-export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, status, ...modalProps }) => {
-  const [claimAmount, setClaimAmount] = useState(0)
-  const { isOpen: isOpenClaim, onClose: onCloseClaim, onOpen: onOpenClaim } = useDisclosure()
-  const {
-    isOpen: isOpenClaimAll,
-    onClose: onCloseClaimAll,
-    onOpen: onOpenClaimAll,
-  } = useDisclosure()
+export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalProps }) => {
+  const [currentStep, setCurrentStep] = useState(1)
 
   const { data: rewardsToClaimMaybe } = useGetGGPRewards(ownerAddress)
   const rewardsToClaim = Number(formatEther((rewardsToClaimMaybe as BigNumberish) || 0))
+
+  const [claimAmount, setClaimAmount] = useState(rewardsToClaim)
+  const [restakeAmount, setRestakeAmount] = useState(0)
+
+  const setRestakeAndClaim = (val: number) => {
+    setRestakeAmount(val || 0)
+
+    const claimAmount = Number(
+      formatEther(parseEther(rewardsToClaim.toString()).sub(parseEther(val.toString())).toString()),
+    )
+    setClaimAmount(claimAmount)
+  }
+
+  const currentRatio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
+
+  const futureRatio = useGetCollateralRatio({
+    ggpAmount: restakeAmount,
+    avaxAmount: 0,
+  })
 
   const {
     data: claimData,
@@ -34,84 +45,54 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, status, ..
     write: claim,
   } = useClaimAndRestake(ownerAddress, parseEther(claimAmount?.toString() || '0'))
 
-  const { data, isError, isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading: transactionLoading, isSuccess: transactionSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
   })
 
-  useEffect(() => {
-    if (isOpenClaimAll && !isOpenClaim) {
-      setClaimAmount(rewardsToClaim)
-    }
-  }, [isOpenClaimAll, isOpenClaim, rewardsToClaim])
-
-  const handleClaimAll = () => {
-    setClaimAmount(rewardsToClaim)
-    claim()
-  }
-
   const handleClose = () => {
     onClose()
-    onCloseClaim()
-    onCloseClaimAll()
     reset()
-    setClaimAmount(0)
+    setClaimAmount(rewardsToClaim)
+    setRestakeAmount(0)
+    setCurrentStep(1)
   }
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={handleClose} {...modalProps}>
-        <div>
-          <div className="mb-8 border-b-2 border-gray-400 pb-6">
-            <div className="mb-2 font-domaine text-[26px] font-bold">Claim and restake</div>
-            <div className="text-[16px] font-bold text-[#3E33BB]">
-              Rewards Amount: {rewardsToClaim.toLocaleString()} GGP
-            </div>
-          </div>
-
-          {isOpenClaimAll && !isOpenClaim && (
-            <ClaimAllRewards
-              claim={claim}
-              claimAmount={claimAmount}
-              handleClaimAll={handleClaimAll}
-              onCloseClaimAll={() => {
-                setClaimAmount(0)
-                onCloseClaimAll()
-              }}
-            />
-          )}
-
-          {!isOpenClaim && !isOpenClaimAll && (
-            <ClaimAndRestakeTwo onOpenClaim={onOpenClaim} onOpenClaimAll={onOpenClaimAll} />
-          )}
-
-          {isOpenClaim && !isOpenClaimAll && (
-            <div>
-              {!claimData?.hash && (
-                <ClaimAndRestakeInput
-                  claim={claim}
-                  claimAmount={claimAmount}
-                  onClose={onCloseClaim}
-                  rewardsToClaim={rewardsToClaim}
-                  setClaimAmount={setClaimAmount}
-                />
-              )}
-              {isLoading && claimData?.hash && (
-                <PendingClaim
-                  claimAmount={claimAmount}
-                  rewardsToClaim={rewardsToClaim}
-                  transactionHash={claimData?.hash}
-                />
-              )}
-              {isSuccess && !isLoading && claimData?.hash && (
-                <SuccessfulClaim onClose={handleClose} transactionHash={claimData?.hash} />
-              )}
-              {!isSuccess && !isLoading && claimData?.hash && (
-                <FailedClaim transactionHash={claimData?.hash} />
-              )}
-            </div>
-          )}
-        </div>
-      </Modal>
-    </>
+    <Modal isOpen={isOpen} onClose={handleClose} {...modalProps}>
+      {currentStep === 1 && (
+        <ClaimRestakeStepOne
+          claimAmount={claimAmount}
+          currentRatio={currentRatio}
+          futureRatio={futureRatio}
+          handleClose={handleClose}
+          restakeAmount={restakeAmount}
+          rewardsToClaim={rewardsToClaim}
+          setCurrentStep={setCurrentStep}
+          setRestakeAndClaim={setRestakeAndClaim}
+        />
+      )}
+      {currentStep === 2 && !(transactionSuccess && !transactionLoading && claimData?.hash) && (
+        <ClaimRestakeStepTwo
+          claim={claim}
+          claimAmount={claimAmount}
+          claimData={claimData}
+          futureRatio={futureRatio}
+          restakeAmount={restakeAmount}
+          setCurrentStep={setCurrentStep}
+          transactionLoading={transactionLoading}
+        />
+      )}
+      {transactionSuccess && !transactionLoading && claimData?.hash && (
+        <SuccessfulClaim
+          collateralization={currentRatio}
+          onClose={handleClose}
+          staked={restakeAmount}
+          transactionHash={claimData?.hash}
+        />
+      )}
+      {!transactionSuccess && !transactionLoading && claimData?.hash && (
+        <FailedClaim transactionHash={claimData?.hash} />
+      )}
+    </Modal>
   )
 }

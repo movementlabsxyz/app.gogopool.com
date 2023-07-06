@@ -2,7 +2,7 @@ export const EmptyState = ({ description = '', icon = null, onClick = null, titl
   <button
     className={`${
       onClick ? 'hover:border-gray-400' : ''
-    } mt-4 relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+    } relative mt-4 block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
     disabled={!onClick}
     onClick={onClick}
     type="button"

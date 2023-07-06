@@ -25,7 +25,6 @@ const Dashboard = () => {
       <Box className="space-y-6 bg-[#F7F9FF] p-12" minH="full">
         <TotalStaked />
         <Rewards address={address} openClaimModal={onOpen} />
-
         <MinipoolTable ownerAddress={address} />
       </Box>
     </>

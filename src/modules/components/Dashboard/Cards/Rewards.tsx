@@ -7,13 +7,7 @@ import { EmptyState } from '../../MinipoolTable/EmptyState'
 import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
 import { useRewardCycleStartTime } from '@/hooks/useRewards'
-import {
-  useGetEffectiveGGPStaked,
-  useGetEffectiveRewardsRatio,
-  useGetGGPRewards,
-  useGetGGPStake,
-  useGetTotalGGPStake,
-} from '@/hooks/useStake'
+import { useGetGGPRewards, useGetGGPStake } from '@/hooks/useStake'
 
 export interface RewardsProps {
   address: string
@@ -23,21 +17,15 @@ export interface RewardsProps {
 const Rewards = ({ address, openClaimModal }: RewardsProps) => {
   // const eligibiltyString = isEligible ? "true" : "false";
 
-  const { data: totalGGPStake } = useGetTotalGGPStake()
-
   const { data: claimAmountMaybe } = useGetGGPRewards(address)
   const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
 
   const { data: ggpStake } = useGetGGPStake(address)
-  const ratio = (ggpStake / Number(formatEther((totalGGPStake as BigNumberish) || 1))).toFixed(2)
-
-  const { data: effectiveGGPStaked } = useGetEffectiveGGPStaked(address)
-  const { data: effectiveRewardsRatio } = useGetEffectiveRewardsRatio(address)
 
   const { data: rewardCycleStartTime } = useRewardCycleStartTime()
   const cycleStartDate = new Date((rewardCycleStartTime as BigNumber)?.toNumber() * 1000)
 
-  const dateToLocaleString = (date) => {
+  const dateToLocaleString = (date: Date) => {
     return date.toLocaleString('en-us', {
       year: 'numeric',
       month: 'short',

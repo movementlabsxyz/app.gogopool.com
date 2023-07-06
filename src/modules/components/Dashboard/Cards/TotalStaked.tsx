@@ -11,7 +11,6 @@ import {
   useGetAVAXAssigned,
   useGetAVAXStake,
   useGetCollateralizationRatio,
-  useGetEffectiveGGPStaked,
   useGetGGPPrice,
   useGetGGPStake,
 } from '@/hooks/useStake'
@@ -30,7 +29,6 @@ const TotalStaked = () => {
 
   const ggpPrice = useGetGGPPrice()
   const ggpStakeInAVAX = ggpPrice.data ? ggpStake * ggpPrice.data : 0
-  const { data: effectiveGGPStaked } = useGetEffectiveGGPStaked(address)
 
   const stats = [
     {
