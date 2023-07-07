@@ -212,7 +212,7 @@ export const useGetCollateralizationRatio = (stakerAddr: string, watch = true) =
   }
 }
 
-export const useGetEffectiveRewardsRatio = (stakerAddr: string, watch = true) => {
+export const useGetEffectiveRewardsRatio = () => {
   const { abi, address } = useStakingContract()
   const { data, error, isError, isLoading } = useContractRead({
     address,
@@ -235,7 +235,7 @@ export const useGetEffectiveRewardsRatio = (stakerAddr: string, watch = true) =>
   }
 }
 
-export const useGetEffectiveGGPStaked = (stakerAddr: string, watch = true) => {
+export const useGetEffectiveGGPStaked = () => {
   const { abi, address } = useStakingContract()
   const { data, error, isError, isLoading } = useContractRead({
     address,

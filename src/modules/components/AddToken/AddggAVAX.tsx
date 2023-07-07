@@ -10,7 +10,7 @@ const AddggAVAX = (props: ButtonProps) => {
 
   const handleAddToken = () => {
     addToken(address, 'ggAVAX')
-      .then((r) => {
+      .then(() => {
         toast({
           position: 'top',
           title: 'Success',
@@ -20,7 +20,7 @@ const AddggAVAX = (props: ButtonProps) => {
           isClosable: true,
         })
       })
-      .catch((e) => {
+      .catch(() => {
         toast({
           position: 'top',
           title: 'Error',

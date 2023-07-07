@@ -2,7 +2,7 @@ import { BigNumber, utils } from 'ethers'
 import { Dispatch, FunctionComponent, SetStateAction } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useChainModal } from '@rainbow-me/rainbowkit'
 import { useAccount, useBalance, useNetwork, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
@@ -30,7 +30,6 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
   setTxID,
   timeRangeSeconds,
 }): JSX.Element => {
-  const { openConnectModal } = useConnectModal()
   const { address, isConnected } = useAccount()
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
@@ -49,21 +48,20 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
     duration: timeRangeSeconds,
   })
 
-  const { isLoading: isLoadingDepositTransaction, isSuccess: isSuccessDepositTransaction } =
-    useWaitForTransaction({
-      hash: depositData?.hash,
-      onSuccess(data) {
-        if (data?.transactionHash && data?.status) {
-          setTxID(data.transactionHash)
-          setCreateMinipoolStatus('success')
-        } else {
-          setCreateMinipoolStatus('error')
-        }
-      },
-      onError(err) {
+  const { isLoading: isLoadingDepositTransaction } = useWaitForTransaction({
+    hash: depositData?.hash,
+    onSuccess(data) {
+      if (data?.transactionHash && data?.status) {
+        setTxID(data.transactionHash)
+        setCreateMinipoolStatus('success')
+      } else {
         setCreateMinipoolStatus('error')
-      },
-    })
+      }
+    },
+    onError() {
+      setCreateMinipoolStatus('error')
+    },
+  })
 
   const { data: AVAXBalance } = useBalance({
     watch: true,

@@ -5,13 +5,11 @@ import { Flex, Text } from '@chakra-ui/react'
 export interface PendingClaimProps {
   rewardsToClaim: any
   claimAmount: any
-  transactionHash: any
 }
 
 export const PendingClaim: FunctionComponent<PendingClaimProps> = ({
   claimAmount,
   rewardsToClaim,
-  transactionHash,
 }) => {
   const restakeAmount = rewardsToClaim - claimAmount
   return (

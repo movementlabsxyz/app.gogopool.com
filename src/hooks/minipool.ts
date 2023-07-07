@@ -224,7 +224,7 @@ export const useCancelMinipool = (nodeId: string) => {
 export const useWithdrawMinipoolFunds = (nodeId: string) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
-  const toast = useToast()
+  // const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
@@ -234,7 +234,7 @@ export const useWithdrawMinipoolFunds = (nodeId: string) => {
     // We dont wanna show the toast during onError because
     // they show on the dashboard, we use the error state
     // to know whether or not to allow the button to be clicked
-    onError(error) {
+    onError() {
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({

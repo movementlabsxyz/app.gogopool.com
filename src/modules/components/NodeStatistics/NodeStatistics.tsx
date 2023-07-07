@@ -4,7 +4,6 @@ import { FunctionComponent, ReactElement } from 'react'
 import { Box, Skeleton, Stack, Text } from '@chakra-ui/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import ms from 'ms'
-import { useAccount } from 'wagmi'
 
 import { Address } from '@/common/components/Address'
 import { Title } from '@/common/components/Card'
@@ -92,7 +91,7 @@ const formatData = (
     })
 }
 
-export const Statistics: FunctionComponent<StatsProps> = ({ address, nodeID }) => {
+export const Statistics: FunctionComponent<StatsProps> = () => {
   const { openConnectModal } = useConnectModal()
 
   // const minipoolsByOwner = useMinipoolsByOwner(address || "");
@@ -102,8 +101,6 @@ export const Statistics: FunctionComponent<StatsProps> = ({ address, nodeID }) =
   // if (minipoolByID) {
   //   minipools.push(minipoolByID);
   // }
-
-  const { isConnected } = useAccount()
 
   const { isLoading, minipools } = useAllMinipools()
 

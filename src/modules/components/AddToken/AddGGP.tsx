@@ -10,7 +10,7 @@ const AddGGP = (props: ButtonProps) => {
 
   const handleAddToken = () => {
     addToken(address, 'GGP')
-      .then((r) => {
+      .then(() => {
         toast({
           title: 'Success',
           description: 'Token added to wallet.',
@@ -19,7 +19,7 @@ const AddGGP = (props: ButtonProps) => {
           isClosable: true,
         })
       })
-      .catch((e) => {
+      .catch(() => {
         toast({
           position: 'top',
           title: 'Error',

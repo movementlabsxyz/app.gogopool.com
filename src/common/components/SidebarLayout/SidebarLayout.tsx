@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, ReactNode, useState } from 'react'
 
 import { Flex } from '@chakra-ui/react'
 import { Dialog, Transition } from '@headlessui/react'
@@ -9,7 +9,6 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import ConnectButton from '../ConnectButton'
-import RouteGuard from '../RouteGuard'
 
 import { NavigationBar } from '@/modules/components/NavigationBar'
 
@@ -183,13 +182,11 @@ const navigation = [
   },
 ]
 
-export function SidebarLayout({ children }) {
+export function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <div className="h-full">
-      <RouteGuard />
-
       <Transition.Root as={Fragment} show={sidebarOpen}>
         <Dialog as="div" className="relative z-40 sm:hidden" onClose={setSidebarOpen}>
           <Transition.Child

@@ -3,14 +3,12 @@ import Image from 'next/image'
 import { useAccount } from 'wagmi'
 
 import ConnectButton from '@/common/components/ConnectButton'
-import RouteGuard from '@/common/components/RouteGuard'
 
 export default function NotConnected() {
   const { isConnected } = useAccount()
 
   return (
     <>
-      <RouteGuard />
       <header className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:px-8 mx-auto w-full max-w-7xl px-6 pt-6 sm:pt-10">
         <a href="/">
           <span className="sr-only">Your Company</span>

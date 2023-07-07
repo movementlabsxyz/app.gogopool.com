@@ -27,7 +27,6 @@ import { Button } from '@/common/components/Button'
 import { Card, Content, Footer, Title } from '@/common/components/Card'
 import ConnectButton from '@/common/components/ConnectButton'
 import { InfoCircleIcon } from '@/common/components/CustomIcon'
-import { GGPToken } from '@/common/components/CustomIcon/GGPToken'
 import { SwapIcon } from '@/common/components/CustomIcon/SwapIcon'
 import { Tooltip } from '@/common/components/Tooltip'
 import useTokenggAVAXContract from '@/hooks/contracts/tokenggAVAX'
@@ -43,7 +42,6 @@ const generateStatistics = (
   exchangeRate: BigNumberish,
   stakedAmount: BigNumberish,
   stakers: BigNumberish | string,
-  marketCap: BigNumberish | string,
   rewardPeriod?: number | null | undefined,
   tokenAddress?: string | null | undefined,
 ) => {
@@ -191,7 +189,6 @@ export const LiquidStaking: FunctionComponent = () => {
     (ggAvaxExchangeRate as BigNumberish) || 0,
     (totalStakedAVAX as BigNumberish) || 0,
     (stakerCount as BigNumberish) || 0,
-    'Coming Soon',
     (rewardsCycleLength as unknown as number) * 1000,
     ggAVAXAddress,
   )
@@ -372,7 +369,6 @@ export const LiquidStaking: FunctionComponent = () => {
                 ) : (
                   <RewardForm
                     balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
-                    icon={<GGPToken />}
                     reward={reward}
                   />
                 )}
