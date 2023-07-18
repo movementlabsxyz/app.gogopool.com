@@ -28,7 +28,6 @@ export interface StakeInputModalProps {
 }
 
 export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
-  isError,
   isLoading,
   onClose,
   refetch,

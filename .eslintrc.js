@@ -56,6 +56,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'import/no-extraneous-dependencies': [

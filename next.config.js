@@ -4,7 +4,13 @@ module.exports = {
   productionBrowserSourceMaps: true,
   trailingSlash: true,
   images: {
-    domains: ['avatars.githubusercontent.com', 'i.imgur.com', 's2.coinmarketcap.com'],
+    domains: [
+      'picsum.photos',
+      'fastly.picsum.photos',
+      'avatars.githubusercontent.com',
+      'i.imgur.com',
+      's2.coinmarketcap.com',
+    ],
   },
   redirects: async () => {
     return [
@@ -18,7 +24,7 @@ module.exports = {
 }
 
 // Injected content via Sentry wizard below
-
+/* eslint-diable no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs')
 
 module.exports = withSentryConfig(

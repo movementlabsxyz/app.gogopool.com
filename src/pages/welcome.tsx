@@ -1,23 +1,27 @@
 import { Box, Link, Text } from '@chakra-ui/react'
-import { Center, Divider } from '@mantine/core'
+import { Divider } from '@mantine/core'
 
 import { Button } from '@/common/components/Button'
-import { Card } from '@/common/components/Card'
 import { Container } from '@/common/components/Container'
+import DocumentIcon from '@/common/components/CustomIcon/DocumentIcon'
+import { GGPToken } from '@/common/components/CustomIcon/GGPToken'
+import WelcomeCard1 from '@/common/components/CustomIcon/WelcomeCard1'
+import WelcomeCard2 from '@/common/components/CustomIcon/WelcomeCard2'
+import WelcomeCard3 from '@/common/components/CustomIcon/WelcomeCard3'
+import WelcomeMountainIcon from '@/common/components/CustomIcon/WelcomeMountainIcon'
 import { PageHead } from '@/common/components/PageHead'
 import { SidebarLayout } from '@/common/components/SidebarLayout'
-import { AddGGP, AddggAVAX } from '@/modules/components/AddToken'
-import LearningSvg from '@/modules/components/LearningSvg'
-import LiquidStakingSvg from '@/modules/components/LiquidStakingSvg'
-import WelcomeImage from '@/modules/components/WelcomeImage'
+import InfoCard from '@/modules/components/Welcome/InfoCard'
+import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
+import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
 
 const Welcome = () => {
   return (
     <Box className="bg-[#F7F9FF] py-24" minH="full">
       <PageHead append={false} description="Welcome to GoGoPool!" name="Welcome to GoGoPool!" />
-      <Container className="space-y-10">
+      <Container>
         <div
-          className="relative flex items-center justify-between"
+          className="relative flex justify-between pt-12"
           style={{
             background: 'linear-gradient(99.86deg, #473CC7 31.28%, #9969FF 110.36%)',
             borderRadius: '24px',
@@ -25,135 +29,148 @@ const Welcome = () => {
           }}
         >
           <div
-            className="pl-8 text-white"
+            className="px-8 text-white"
             style={{
               width: 630,
             }}
           >
-            <Text className="font-domaine" fontSize={48} fontWeight="bold">
-              Welcome to GoGoPool!
+            <Text className="pb-4 font-domaine" fontSize={40} fontWeight="bold">
+              Become a Validator with Minipools
             </Text>
-            <Text fontSize={16} fontWeight={400}>
-              The GoGos are over the moon to help you venture into the wonderful world of subnets.
-              We have all the tools you need below! So grab your goggles and hop on board -
-              let&apos;s soar to new heights together!
+            <Text className="pb-4" fontSize={18} fontWeight={400}>
+              AVAX Validators earn more with Minipools through our triple incentive reward
+              structure. Whether you are new to Web3 or are a seasoned pioneer, GoGoPool has you
+              covered!
             </Text>
-          </div>
-
-          <WelcomeImage />
-        </div>
-
-        <div className="flex flex-col items-center space-y-2 md:flex-row md:justify-between md:space-y-0 md:space-x-2">
-          <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-            <AddGGP size="xs" variant="secondary-outline" />
-            <AddggAVAX size="xs" variant="secondary-outline" />
-          </div>
-        </div>
-        <Divider />
-        <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-          <div>
-            <Text
-              className="flex items-center space-x-2 font-domaine"
-              fontSize={20}
-              fontWeight="bold"
-            >
-              <svg
-                fill="none"
-                height="31"
-                viewBox="0 0 35 31"
-                width="35"
-                xmlns="http://www.w3.org/2000/svg"
+            <Divider />
+            <div className="flex flex-wrap gap-5 pt-7 pb-8">
+              <Link href="/create-minipool">
+                <Button variant="tertiary">Create a Minipool</Button>
+              </Link>
+              <a
+                href="https://gogopool.dappling.network/calculator"
+                rel="noreferrer"
+                target="_blank"
               >
-                <path
-                  d="M1 5.81708C1 4.93592 1.57669 4.15858 2.41999 3.90303L12 1V26.6667L3.58002 29.2182C2.29565 29.6074 1 28.6462 1 27.3041V5.81708Z"
-                  fill="#F4F0FD"
-                  stroke="#3E33BB"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M24 4.33333L31.3675 1.87749C32.6626 1.4458 34 2.40974 34 3.77485V25.2251C34 26.086 33.4491 26.8503 32.6325 27.1225L24 30V4.33333Z"
-                  fill="#F4F0FD"
-                  stroke="#3E33BB"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M24 4.33333L12 1V26.6667L24 30V4.33333Z"
-                  fill="#F4F0FD"
-                  stroke="#3E33BB"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-              <span>Subnet Roadmap</span>
-            </Text>
-            <Text className="my-4" fontSize={14} style={{ maxWidth: '500px' }}>
-              Subnets are the perfect tool to take your Web3 adventure to new heights! The GoGos are
-              here to guide you through the skies, whether you&rsquo;re a seasoned adventurer or a
-              first-time flyer. Connect with a friendly face from the GGP team today, and
-              let&rsquo;s make subnets easy together!
-            </Text>
+                <Button variant="secondary-filled">ROI Calculator</Button>
+              </a>
+            </div>
           </div>
 
-          <Link href="https://forms.gle/ZC7hoaLcDQC2T2ex8" target="_blank">
-            <Button size="xs" variant="secondary-outline">
-              Fill out our contact form...
-            </Button>
-          </Link>
+          <div className="hidden h-full self-end md:block">
+            <WelcomeMountainIcon />
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center pt-12 text-subtitle">
+          <Text className="font-domaine" fontSize={30} fontWeight="bold">
+            Quick Start Guide
+          </Text>
+          <div className="w-3/4 text-center text-default">
+            <Text fontSize={18}>
+              Minipools are validator nodes funded and initialized by GoGoPool. It is composed of
+              funds from the node operator matched with liquid staking deposits.
+            </Text>
+          </div>
+        </div>
+        <div className="flex flex-wrap justify-around gap-8 py-12">
+          <WelcomeCard
+            info={{
+              image: <WelcomeCard1 />,
+              step: 1,
+              summary: (
+                <Text>
+                  Register a NodeID, stake 100 AVAX worth of GGP, and deposit 1000 AVAX. Learn more
+                  about the{' '}
+                  <a
+                    className="text-blue-500 underline"
+                    href="https://docs.gogopool.com/readme-1/as-a-node-operator"
+                    target={'blank'}
+                  >
+                    Minipool creation process here.
+                  </a>
+                </Text>
+              ),
+              title: 'Register',
+            }}
+          />
+          <WelcomeCard
+            info={{
+              image: <WelcomeCard2 />,
+              step: 2,
+              summary: (
+                <Text>
+                  After registration, your minipool is placed into queue to be matched with liquid
+                  staking funds. You can view your status at{' '}
+                  <Link href="https://app.gogopool.com/dashboard">
+                    <span className="font-normal text-blue-500 underline">any time here.</span>
+                  </Link>
+                </Text>
+              ),
+              title: 'Match',
+            }}
+          />
+          <WelcomeCard
+            info={{
+              image: <WelcomeCard3 />,
+              step: 3,
+              summary: (
+                <Text>
+                  Once launched, you will begin to earn through our{' '}
+                  <a
+                    className="text-blue-500 underline"
+                    href="https://docs.gogopool.com/design/how-minipools-work/ggp-rewards"
+                    target={'blank'}
+                  >
+                    triple incentive rewards structure.
+                  </a>
+                </Text>
+              ),
+              title: 'Launch',
+            }}
+          />
+        </div>
+        <Divider />
+        <div className="flex flex-col items-center py-12">
+          <Text className="text-center text-tertiary" fontSize={14} fontWeight="bold">
+            EXPLORING AVERAGE ROI IN MINIPOOLS
+          </Text>
+          <Text className="text-center font-domaine text-subtitle" fontSize={30} fontWeight="bold">
+            Understand Your Rewards
+          </Text>
+          <Text className="text-center text-default">
+            PSA: These examples are from past reward cycles. They&apos;re just a guide, not a
+            guarantee.
+          </Text>
+          <WelcomeRewards />
         </div>
 
         <Divider />
 
-        <Center className="flex flex-col">
-          <Text className="font-jost uppercase" color="#E07138" fontSize={14} fontWeight="bold">
-            want to know more?
-          </Text>
-          <Text
-            className="flex items-center space-x-2 font-domaine"
-            fontSize={24}
-            fontWeight="bold"
-          >
-            Learning guides & documentation
-          </Text>
-        </Center>
-        <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2">
-          <Card className="!px-24 !pb-12">
-            <Center className="flex flex-col items-center space-y-4 text-center">
-              <div className="mt-6 flex h-32 items-end">
-                <LiquidStakingSvg />
-              </div>
-              <Text className="!mt-2 font-domaine" fontSize={20} fontWeight="bold">
-                Liquid staking
-              </Text>
-              <Text className="!mt-1" fontSize={18}>
-                Learn how to liquid stake and what you need to get started today!
-              </Text>
-              <Link href="https://docs.gogopool.com/readme-1/staking-with-gogopool" target="_blank">
-                <Button size="xs" variant="secondary-outline">
-                  Liquid staking
-                </Button>
-              </Link>
-            </Center>
-          </Card>
-          <Card className="!px-24 !pb-12">
-            <Center className="flex flex-col items-center space-y-4 text-center">
-              <LearningSvg className="mt-6 h-32" />
-              <Text className="!mt-2 font-domaine" fontSize={20} fontWeight="bold">
-                Learning the Nodes
-              </Text>
-              <Text className="!mt-1" fontSize={18}>
-                Want to pilot your own balloon? Become a node operator! We&rsquo;ve got the tools to
-                make it easy.
-              </Text>
-              <Link href="https://docs.gogopool.com/readme-1/as-a-node-operator" target="_blank">
-                <Button size="xs" variant="secondary-outline">
-                  Node Operator Guide
-                </Button>
-              </Link>
-            </Center>
-          </Card>
+        <div className="flex flex-wrap justify-around gap-10 py-12">
+          <InfoCard
+            button=<a href="https://docs.gogopool.com/gogopool-primer" target={'blank'}>
+              <Button size="xs" variant="secondary-outline">
+                Read our Primer
+              </Button>
+            </a>
+            icon=<GGPToken fill={'#3E33BB'} height={32} width={32} />
+            summary="We believe in Subnets and making them easy to setup and utilize. Our GGP token is the key to that success."
+            title="Our Token Mission"
+          />
+          <InfoCard
+            button=<a href="https://docs.gogopool.com" target={'blank'}>
+              <Button size="xs" variant="secondary-outline">
+                View Documentation
+              </Button>
+            </a>
+            icon=<DocumentIcon />
+            summary="We’ve got you covered! Take a look at our docs to get the most up-to-date info on how to get your Minipool created."
+            title="Need more information?"
+          />
         </div>
+
+        <Divider />
       </Container>
     </Box>
   )

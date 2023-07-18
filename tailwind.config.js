@@ -12,6 +12,11 @@ module.exports = {
           start: '#F6F6F3',
           end: '#FFFFFF',
         },
+        white: '#FFFFFF',
+        default: '#5A6084',
+        subtitle: '#0D0959',
+        link: '#5339D6',
+        tertiary: '#E07138',
         blue: {
           900: '#0D0959',
           800: '#15106C',
@@ -118,6 +123,7 @@ module.exports = {
       },
     },
     screens: {
+      xxs: '400px',
       xs: '600px',
       sm: '850px',
       md: '1280px',

@@ -83,6 +83,13 @@ export const Button: ComponentStyleConfig = {
         boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
       },
     }),
+    tertiary: {
+      color: 'blue.500',
+      bgColor: 'white',
+      _hover: {
+        bgColor: 'gray.100',
+      },
+    },
     'destructive-outline': ({ theme }) => ({
       boxShadow: `inset 0 0 0 2px ${theme.colors.error[500]}`,
       color: 'error.500',

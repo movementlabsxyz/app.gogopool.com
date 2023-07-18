@@ -4,7 +4,13 @@ import { Box, Button as ChakraButton, ButtonProps as ChakraButtonProps } from '@
 
 export interface ButtonProps extends ChakraButtonProps {
   size?: 'xs' | 'sm' | 'md' | 'lg'
-  variant?: 'link' | 'primary' | 'secondary-filled' | 'secondary-outline' | 'destructive-outline'
+  variant?:
+    | 'link'
+    | 'primary'
+    | 'secondary-filled'
+    | 'secondary-outline'
+    | 'tertiary'
+    | 'destructive-outline'
   iconLeft?: ReactElement
   iconRight?: ReactElement
   iconOnly?: ReactElement
