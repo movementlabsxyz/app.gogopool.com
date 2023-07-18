@@ -1,12 +1,9 @@
-import { BigNumber } from 'ethers'
-
 import { useContractRead } from 'wagmi'
 
 import useExchangeRate from './ggexchange'
 import { useGetStakerCount } from './useStake'
 
 import useTokenggAVAXContract from '@/hooks/contracts/tokenggAVAX'
-import { roundedBigNumber } from '@/utils/numberFormatter'
 
 // gets the liquid staking statistics from the contract
 const useLiquidStakingData = () => {
@@ -27,9 +24,6 @@ const useLiquidStakingData = () => {
     watch: true,
   })
 
-  const apr =
-    1 - (ggAvaxExchangeRate instanceof BigNumber ? roundedBigNumber(ggAvaxExchangeRate, 4) : 0)
-
   const { data: stakerCount } = useGetStakerCount()
 
   const isLoading = isExchangeRateLoading || isStakingBalanceLoading || isRewardsCycleLengthLoading
@@ -39,7 +33,6 @@ const useLiquidStakingData = () => {
     isLoading,
     rewardsCycleLength,
     totalStakedAVAX,
-    apr,
     stakerCount,
   }
 }

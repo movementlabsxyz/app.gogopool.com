@@ -33,12 +33,13 @@ import useTokenggAVAXContract from '@/hooks/contracts/tokenggAVAX'
 import useDeposit from '@/hooks/deposit'
 import useLiquidStakingData from '@/hooks/liquidStakingData'
 import useRedeem from '@/hooks/redeem'
+import useCeres from '@/hooks/useCeres'
 import addToken from '@/utils/addToken'
 import { formatEtherFixed } from '@/utils/formatEtherFixed'
 import { roundedBigNumber } from '@/utils/numberFormatter'
 
 const generateStatistics = (
-  apr: number | string,
+  apy: number | string,
   exchangeRate: BigNumberish,
   stakedAmount: BigNumberish,
   stakers: BigNumberish | string,
@@ -72,9 +73,9 @@ const generateStatistics = (
     {
       label: (
         <>
-          Annual Percentage Rate
+          Annual Percentage Yield
           <Tooltip
-            content="Percentage reward you get per year on your staked AVAX."
+            content="Estimated Percentage reward you get per year on your staked AVAX."
             placement="right"
           >
             <Box as="span">
@@ -83,7 +84,7 @@ const generateStatistics = (
           </Tooltip>
         </>
       ),
-      value: typeof apr === 'string' ? apr : `~${apr.toFixed(2)}%`,
+      value: typeof apy === 'string' ? apy : `~${apy.toFixed(2)}%`,
     },
     {
       label: (
@@ -137,8 +138,15 @@ export const LiquidStaking: FunctionComponent = () => {
 
   const { address: ggAVAXAddress } = useTokenggAVAXContract()
 
+  const { data: ceresData } = useCeres()
+
+  let apy = 0
+  if (ceresData) {
+    const { ggAVAXMonthlyInterestMonth } = ceresData
+    apy = Math.abs(ggAVAXMonthlyInterestMonth.value * 12)
+  }
+
   const {
-    apr,
     ggAvaxExchangeRate,
     isLoading: isLoadingStats,
     rewardsCycleLength,
@@ -185,7 +193,7 @@ export const LiquidStaking: FunctionComponent = () => {
   const isLoading = isBalanceLoading || isDepositLoading || isLoadingStats || isRedeemLoading
 
   const statisticData = generateStatistics(
-    apr,
+    apy,
     (ggAvaxExchangeRate as BigNumberish) || 0,
     (totalStakedAVAX as BigNumberish) || 0,
     (stakerCount as BigNumberish) || 0,
