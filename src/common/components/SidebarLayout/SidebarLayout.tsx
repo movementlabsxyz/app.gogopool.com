@@ -15,7 +15,7 @@ import { NavigationBar } from '@/modules/components/NavigationBar'
 const navigation = [
   {
     name: 'Welcome',
-    href: '/welcome',
+    href: '/',
     icon: (
       <svg
         className="mr-3"
@@ -42,7 +42,7 @@ const navigation = [
   },
   {
     name: 'Dashboard',
-    href: '/',
+    href: '/dashboard/',
     icon: (
       <svg
         className="mr-3"
@@ -85,7 +85,7 @@ const navigation = [
   },
   {
     name: 'Liquid Stake',
-    href: '/liquid-staking',
+    href: '/liquid-staking/',
     icon: (
       <svg
         className="mr-3"
@@ -128,7 +128,7 @@ const navigation = [
   },
   {
     name: 'Node Operator',
-    href: '/create-minipool',
+    href: '/create-minipool/',
     icon: (
       <svg
         className="mr-3"
@@ -255,7 +255,7 @@ export function SidebarLayout({ children }: { children: ReactNode }) {
                       >
                         <span
                           className={clsx(
-                            window.location.href.includes(item.href)
+                            window.location.pathname === item.href
                               ? 'bg-indigo-800 text-white'
                               : 'text-indigo-100 hover:bg-indigo-600',
                             'group flex w-full items-center py-4 px-3 text-base font-medium transition-all',
@@ -347,7 +347,7 @@ export function SidebarLayout({ children }: { children: ReactNode }) {
                 <NextLink className="flex items-center text-base" href={item.href} key={item.name}>
                   <span
                     className={clsx(
-                      window.location.href.includes(item.href)
+                      window.location.pathname === item.href
                         ? 'bg-indigo-800 text-white'
                         : 'text-indigo-100 hover:bg-indigo-600',
                       'group flex w-full items-center p-2 py-4 font-medium text-white transition-all duration-300',

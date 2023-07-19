@@ -59,7 +59,7 @@ export const WizardSuccess: FunctionComponent<WizardSuccessProps> = ({ hash }): 
         </Stack>
       </Box>
       <div className="!my-6 flex w-full justify-center">
-        <NextLink href="/">
+        <NextLink href="/dashboard">
           <Button className="max-w-full" full variant="primary">
             Go to dashboard
           </Button>

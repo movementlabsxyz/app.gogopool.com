@@ -12,15 +12,6 @@ module.exports = {
       's2.coinmarketcap.com',
     ],
   },
-  redirects: async () => {
-    return [
-      {
-        source: '/dashboard',
-        destination: '/',
-        permanent: true,
-      },
-    ]
-  },
 }
 
 // Injected content via Sentry wizard below
