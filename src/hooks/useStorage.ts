@@ -4,9 +4,8 @@ import { useContractRead, useNetwork } from 'wagmi'
 
 import { storageAddresses } from '../constants/storageAddresses'
 
-import Storage from '@/contracts/Storage.json'
-
-export type HexString = `0x${string}`
+import Storage from '@/contracts/Storage'
+import { HexString } from '@/types/cryptoGenerics'
 
 export const useGetUint = (args) => {
   const { chain } = useNetwork()
@@ -14,7 +13,7 @@ export const useGetUint = (args) => {
 
   return useContractRead({
     address: addr,
-    abi: Storage.abi,
+    abi: Storage,
     functionName: 'getUint',
     args: [args],
   })
@@ -24,11 +23,14 @@ export const useGetAddress = (key: string, storageAddr?: string) => {
   const { chain } = useNetwork()
   const addr: HexString = storageAddr || storageAddresses[chain?.id]
 
-  const args = ethers.utils.solidityKeccak256(['string', 'string'], ['contract.address', key])
+  const args = ethers.utils.solidityKeccak256(
+    ['string', 'string'],
+    ['contract.address', key],
+  ) as HexString
 
-  const resp = useContractRead<typeof Storage.abi, string, HexString>({
+  const resp = useContractRead<typeof Storage, string, HexString>({
     address: addr,
-    abi: Storage.abi,
+    abi: Storage,
     functionName: 'getAddress',
     args: [args],
   })

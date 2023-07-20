@@ -33,7 +33,6 @@ const useDeposit = (amount: BigNumber) => {
         }
       })
     },
-    args: [],
     overrides: {
       value: amount,
     },

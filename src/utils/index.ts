@@ -55,22 +55,6 @@ export const shortenNodeId = (nodeId: string) => {
   return nodeId.slice(0, 12).concat('...').concat(nodeId.slice(-6))
 }
 
-// Actual nodeID or random addresses to use for nodeIDs
-export const nodeID = (seed: string) => {
-  try {
-    seed = seed.replace(/[^a-zA-Z0-9-]/gi, '')
-    if (seed.startsWith('NodeID-')) {
-      return nodeIDToHex(seed)
-    } else if (seed.startsWith('0x')) {
-      return ethers.utils.getAddress(seed)
-    } else {
-      return emptyWallet(seed).address
-    }
-  } catch (e) {
-    return ''
-  }
-}
-
 export const parseDelta = (delta: string) => {
   const deltaInSeconds = Number.isNaN(Number(delta)) ? ms(delta) / 1000 : Number(delta)
   if (!Number.isInteger(deltaInSeconds))

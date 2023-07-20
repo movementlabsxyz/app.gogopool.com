@@ -3,7 +3,9 @@ import { useContractRead } from 'wagmi'
 import useStakingContract from './contracts/staking'
 import useTokenGGPContract from './contracts/tokenGGP'
 
-const useGGPAllowance = (address: string | undefined) => {
+import { HexString } from '@/types/cryptoGenerics'
+
+const useGGPAllowance = (address: HexString | undefined) => {
   const { abi, address: tokenAddr } = useTokenGGPContract()
   const { address: stakingAddr } = useStakingContract()
 

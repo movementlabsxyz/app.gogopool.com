@@ -1,5 +1,6 @@
 import { useContractRead } from 'wagmi'
 
+import useProtocolDaoContract from './contracts/protocolDAO'
 import useRewardsPoolContract from './contracts/rewardsPool'
 
 // this gets the start time of the last interval
@@ -17,12 +18,12 @@ export const useRewardCycleStartTime = (watch = true) => {
 }
 
 export const useGetRewardCycleLength = (watch = true) => {
-  const { abi, address } = useRewardsPoolContract()
+  const { abi, address } = useProtocolDaoContract()
 
   return useContractRead({
     address,
     abi,
-    functionName: 'getRewardsCycleLength',
+    functionName: 'getRewardsCycleSeconds',
     watch,
   })
 }

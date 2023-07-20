@@ -10,8 +10,9 @@ import { useContractRead, useContractWrite, usePrepareContractWrite, useSigner }
 
 import useMinipoolManagerContract from './contracts/minipoolManager'
 
+import { HexString } from '@/types/cryptoGenerics'
 import type Minipool from '@/types/minipool'
-import { nodeID } from '@/utils'
+import { nodeIDToHex } from '@/utils'
 import { DECODED_ERRORS } from '@/utils/consts'
 
 export interface UseCreateMinipoolParams {
@@ -38,7 +39,7 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
     amount = utils.parseEther(amount)
   }
 
-  const formattedID = nodeID(nodeId)
+  const formattedID = nodeIDToHex(nodeId)
 
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useMinipoolManagerContract()
@@ -87,8 +88,8 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
 
 export interface UseMinipoolsByStatusParams {
   status?: number
-  offset?: number
-  limit?: number
+  offset?: BigNumber
+  limit?: BigNumber
 }
 
 export const useAllMinipools = (interval = 3000) => {
@@ -128,8 +129,8 @@ export const useAllMinipools = (interval = 3000) => {
 }
 
 export const useMinipoolsByStatus = ({
-  limit = 0, // default to staking minipools
-  offset = 0, // no offset
+  limit = BigNumber.from(0), // default to staking minipools
+  offset = BigNumber.from(0), // no offset
   status = 2, // get all matching ones, no pagination
 }: UseMinipoolsByStatusParams) => {
   const { abi, address } = useMinipoolManagerContract()
@@ -156,7 +157,7 @@ export const useMinipoolByID = (ID: string | undefined) => {
     }
   }
 
-  const convertedID = nodeID(ID)
+  const convertedID = nodeIDToHex(ID)
 
   return {
     minipool: minipools.find((m) => m.nodeID === convertedID),
@@ -181,7 +182,7 @@ export const useMinipoolsByOwner = (address: string | undefined) => {
   }
 }
 
-export const useCancelMinipool = (nodeId: string) => {
+export const useCancelMinipool = (nodeId: HexString) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
 
@@ -221,7 +222,7 @@ export const useCancelMinipool = (nodeId: string) => {
   return { prepareError, ...write }
 }
 
-export const useWithdrawMinipoolFunds = (nodeId: string) => {
+export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
   // const toast = useToast()

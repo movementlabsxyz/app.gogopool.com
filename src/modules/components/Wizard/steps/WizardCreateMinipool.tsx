@@ -11,7 +11,6 @@ import { AvalancheIcon } from '@/common/components/CustomIcon/AvalancheIcon'
 import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 import { useCreateMinipool } from '@/hooks/minipool'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
-import { nodeID } from '@/utils'
 import { roundedBigNumber } from '@/utils/numberFormatter'
 
 export interface WizardStepThreeProps {
@@ -41,7 +40,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
     isLoading: isCreateMinipoolLoading,
     write: createMinipool,
   } = useCreateMinipool({
-    nodeId: nodeID(nodeId),
+    nodeId: nodeId,
     amount: utils.parseEther(amount?.toString() || '0'),
     // These need to be made user changeable in the future
     fee: BigNumber.from(20000),
