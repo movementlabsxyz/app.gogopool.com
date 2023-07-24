@@ -10,7 +10,7 @@ import {
 } from 'react'
 
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, useToast } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { useAccount, useNetwork } from 'wagmi'
 
 import { WizardContent } from './WizardContent'
@@ -22,6 +22,7 @@ import { WizardSuccess } from './steps/WizardSuccess'
 
 import { Button } from '@/common/components/Button'
 import { DEFAULT_AVAX, DEFAULT_DURATION } from '@/constants/chainDefaults'
+import { HexString } from '@/types/cryptoGenerics'
 
 export interface WizardProps {
   currentStep: number
@@ -34,7 +35,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
 }): JSX.Element => {
   const { chain } = useNetwork()
 
-  const [nodeId, setNodeId] = useState('')
+  const [formattedNodeId, setFormattedNodeId] = useState<HexString>()
 
   const defaultTimeRange = DEFAULT_DURATION[chain?.id] ? DEFAULT_DURATION[chain?.id][0] : '0'
   const [timeRange, setTimeRange] = useState(defaultTimeRange)
@@ -47,22 +48,11 @@ export const Wizard: FunctionComponent<WizardProps> = ({
   }, [defaultAVAXAmount])
 
   const [txid, setTxid] = useState('')
-  const [stakeStatus, setStakeStatus] = useState<'error' | 'loading' | 'success' | 'idle'>('idle')
-  const [createMinipoolStatus, setCreateMinipoolStatus] = useState<
-    'error' | 'loading' | 'success' | 'idle'
-  >('idle')
   const [lockStep, setLockStep] = useState(1)
 
   const { address: account } = useAccount()
 
-  const toast = useToast()
   const headerRef = useRef<HTMLDivElement>(null)
-
-  const handleChangeNodeId = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^a-zA-Z0-9-]/gi, '')
-    setNodeId(value)
-    localStorage.setItem('nodeId', value)
-  }
 
   const durationToSeconds = useCallback((duration: string) => {
     const regex = /^(\d+) (week|month|day)s?$/
@@ -79,6 +69,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     }
     return amount * secondsPerUnit[unit]
   }, [])
+
   useEffect(() => {
     setTimeRange(defaultTimeRange)
     setTimeRangeSeconds(durationToSeconds(defaultTimeRange))
@@ -89,47 +80,14 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     setTimeRangeSeconds(durationToSeconds(e.target.value || ''))
   }
 
-  useEffect(() => {
-    // load from local storage
-    const localStep = localStorage.getItem('step')
-    if (localStep) {
-      setCurrentStep(Number(localStep))
-    } else {
-      setCurrentStep(1)
+  function nextStep() {
+    setCurrentStep((step) => step + 1)
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      setCurrentStep((s) => s - 1)
     }
-
-    const nodeId = localStorage.getItem('nodeId')
-    if (nodeId) {
-      setNodeId(nodeId)
-    } else {
-      setNodeId('')
-    }
-  }, [setCurrentStep])
-
-  const nextStep = useCallback(() => {
-    setCurrentStep((s) => {
-      const next = s + 1
-
-      if (next >= 3) {
-        // clear local storage
-        localStorage.removeItem('step')
-        localStorage.removeItem('nodeId')
-      } else {
-        localStorage.setItem('step', next.toString())
-      }
-
-      return next
-    })
-  }, [setCurrentStep])
-
-  const prevStep = () => {
-    setCurrentStep((s) => {
-      if (s > 1) {
-        const prev = s - 1
-        localStorage.setItem('step', prev.toString())
-        return prev
-      }
-    })
   }
 
   const incrementLockStep = () => {
@@ -140,53 +98,18 @@ export const Wizard: FunctionComponent<WizardProps> = ({
     setLockStep(currentStep)
   }
 
-  useEffect(() => {
-    if (stakeStatus === 'error') {
-      toast({
-        position: 'top',
-        description: 'Error when making transaction',
-        status: 'error',
-      })
-      setLockStep(currentStep)
-      return
-    }
-  }, [currentStep, nextStep, stakeStatus, toast])
-
-  useEffect(() => {
-    if (createMinipoolStatus === 'error') {
-      toast({
-        position: 'top',
-        description: 'Error when sending the create minipool transaction',
-        status: 'error',
-      })
-      return
-    }
-
-    if (createMinipoolStatus === 'success' && txid !== '') {
-      toast({
-        position: 'top',
-        description: 'Create minipool successful',
-        status: 'success',
-      })
-      nextStep()
-      return
-    }
-  }, [createMinipoolStatus, nextStep, toast, txid])
-
   const renderStepAction = (): JSX.Element => {
     switch (currentStep) {
       case 1:
         return (
           <WizardNodeID
             currentStep={currentStep}
-            handleChangeNodeId={handleChangeNodeId}
             handleChangeTimeRange={handleChangeTimeRange}
             incrementLockStep={incrementLockStep}
             isConnected={!!account}
             lockCurrentStep={lockCurrentStep}
             lockStep={lockStep}
-            nextStep={nextStep}
-            nodeId={nodeId}
+            setFormattedNodeId={setFormattedNodeId}
             timeRange={timeRange}
           />
         )
@@ -198,18 +121,16 @@ export const Wizard: FunctionComponent<WizardProps> = ({
             lockCurrentStep={lockCurrentStep}
             lockStep={lockStep}
             nextStep={nextStep}
-            nodeId={nodeId}
             prevStep={prevStep}
-            setStakeStatus={setStakeStatus}
           />
         )
       case 3:
         return (
           <WizardCreateMinipool
             amount={avaxAmount}
-            nodeId={nodeId}
+            formattedNodeId={formattedNodeId}
+            nextStep={nextStep}
             setAmount={setAvaxAmount}
-            setCreateMinipoolStatus={setCreateMinipoolStatus}
             setTxID={setTxid}
             timeRangeSeconds={timeRangeSeconds}
           />
@@ -238,16 +159,15 @@ export const Wizard: FunctionComponent<WizardProps> = ({
           <WizardContent step={currentStep} />
           {renderStepAction()}
         </Box>
-        {![2, 4].includes(currentStep) && (
-          <Flex justify="space-between">
-            {currentStep > 1 && (
-              <Button onClick={prevStep} variant="secondary-outline">
-                Back <ArrowBackIcon />
-              </Button>
-            )}
-            {/* We couldn't figure out the CSS. This is scuffed but works. */}
-            {currentStep == 1 && <div />}
-            {currentStep < 3 && (
+        <Flex justify="space-between">
+          {currentStep === 3 && (
+            <Button onClick={prevStep} variant="secondary-outline">
+              Back <ArrowBackIcon />
+            </Button>
+          )}
+          {currentStep == 1 && (
+            <>
+              <div></div>
               <Button
                 disabled={lockStep <= currentStep}
                 onClick={nextStep}
@@ -255,9 +175,9 @@ export const Wizard: FunctionComponent<WizardProps> = ({
               >
                 Next <ArrowForwardIcon />
               </Button>
-            )}
-          </Flex>
-        )}
+            </>
+          )}
+        </Flex>
       </Flex>
     </Box>
   )

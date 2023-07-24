@@ -16,13 +16,18 @@ import { nodeIDToHex } from '@/utils'
 import { DECODED_ERRORS } from '@/utils/consts'
 
 export interface UseCreateMinipoolParams {
-  nodeId: string // node ID as input by the user
+  formattedId: HexString // Node ID formatted as a HexString
   duration: number | string // duration in ms
   amount: BigNumber | number | string // amount of tokens to be deposited
   fee?: BigNumber // the fee for the node. Default is 20000, or 2%
 }
 
-export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMinipoolParams) => {
+export const useCreateMinipool = ({
+  amount,
+  duration,
+  fee,
+  formattedId,
+}: UseCreateMinipoolParams) => {
   const toast = useToast()
 
   if (!fee) {
@@ -38,8 +43,6 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
   } else if (typeof amount === 'string') {
     amount = utils.parseEther(amount)
   }
-
-  const formattedID = nodeIDToHex(nodeId)
 
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useMinipoolManagerContract()
@@ -62,7 +65,7 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
       })
     },
     functionName: 'createMinipool',
-    args: [formattedID, BigNumber.from(duration), fee, amount],
+    args: [formattedId, BigNumber.from(duration), fee, amount],
     overrides: {
       value: amount,
     },
@@ -148,7 +151,14 @@ export const useMinipoolsByStatus = ({
 export const useMinipoolByID = (ID: string | undefined) => {
   const { error, isError, isLoading, minipools } = useAllMinipools()
 
-  if (!ID) {
+  let convertedID: HexString | undefined
+  try {
+    convertedID = nodeIDToHex(ID)
+  } catch (e) {
+    Sentry.captureException(e)
+  }
+
+  if (!ID || !convertedID) {
     return {
       minipool: undefined,
       isError,
@@ -156,8 +166,6 @@ export const useMinipoolByID = (ID: string | undefined) => {
       error,
     }
   }
-
-  const convertedID = nodeIDToHex(ID)
 
   return {
     minipool: minipools.find((m) => m.nodeID === convertedID),

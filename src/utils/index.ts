@@ -2,12 +2,13 @@ import { ethers } from 'ethers'
 
 import { BinTools } from 'avalanche'
 import { Buffer } from 'buffer/' // note: the slash is important!
-import ms from 'ms'
+
+import { HexString } from '@/types/cryptoGenerics'
 
 const bintools = BinTools.getInstance()
 
 // Take 0xF29Bce5F34a74301eB0dE716d5194E4a4aEA5d7A and return NodeID-P7oB2McjBGgW2NXXWVYjV8JEDFoW9xDE5
-export const nodeIDToHex = (pk: string) => {
+export const nodeIDToHex = (pk: string): HexString => {
   if (!pk.startsWith('NodeID-')) {
     throw new Error("Error: nodeID must start with 'NodeID-'")
   }
@@ -25,61 +26,6 @@ export const nodeHexToID = (h) => {
   return `NodeID-${bintools.cb58Encode(b)}`
 }
 
-const randomBytes = (seed: string, lower: number, upper: number | undefined = undefined) => {
-  if (!upper) {
-    upper = lower
-  }
-
-  if (upper === 0 && upper === lower) {
-    return new Uint8Array(0)
-  }
-
-  let result = ethers.utils.arrayify(ethers.utils.keccak256(ethers.utils.toUtf8Bytes(seed)))
-  while (result.length < upper) {
-    result = ethers.utils.concat([result, ethers.utils.keccak256(result)])
-  }
-
-  const top = ethers.utils.arrayify(ethers.utils.keccak256(result))
-  const percent = ((top[0] << 16) | (top[1] << 8) | top[2]) / 0x01000000
-
-  return result.slice(0, lower + Math.floor((upper - lower) * percent))
-}
-
-const emptyWallet = (seed: string) => {
-  const pk = randomBytes(seed, 32)
-  const w = new ethers.Wallet(pk)
-  return w
-}
-
 export const shortenNodeId = (nodeId: string) => {
   return nodeId.slice(0, 12).concat('...').concat(nodeId.slice(-6))
-}
-
-export const parseDelta = (delta: string) => {
-  const deltaInSeconds = Number.isNaN(Number(delta)) ? ms(delta) / 1000 : Number(delta)
-  if (!Number.isInteger(deltaInSeconds))
-    throw new Error('cannot be called with a non integer value')
-  if (deltaInSeconds < 0) throw new Error('cannot be called with a negative value')
-  return deltaInSeconds
-}
-
-export const randomHexString = (
-  seed: string,
-  lower: number,
-  upper: number | undefined = undefined,
-) => {
-  return ethers.utils.hexlify(randomBytes(seed, lower, upper))
-}
-
-// ANR fails lots of txs with gaslimit estimation errors, so override here
-export const overrides = {
-  gasLimit: 8000000,
-}
-
-export const sanitizeNumbers = (input: string): string => {
-  const s = input.replace(/[^0-9.]/g, '')
-  if (s.length === 0) {
-    return '0'
-  }
-  return s
 }

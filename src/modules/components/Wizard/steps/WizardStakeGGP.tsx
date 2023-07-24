@@ -1,5 +1,5 @@
 import { BigNumber, utils } from 'ethers'
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 
 import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
 import { formatEther, parseEther } from 'ethers/lib/utils.js'
@@ -17,8 +17,6 @@ import { useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 
 export interface WizardStepTwoProps {
-  setStakeStatus: Dispatch<SetStateAction<'error' | 'loading' | 'success' | 'idle'>>
-  nodeId: string
   currentStep: number
   lockStep: number
   nextStep: () => void
@@ -30,10 +28,10 @@ export interface WizardStepTwoProps {
 export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
   currentStep,
   incrementLockStep,
+  lockCurrentStep,
   lockStep,
   nextStep,
   prevStep,
-  setStakeStatus,
 }): JSX.Element => {
   const { chain } = useNetwork()
   const defaultAVAXAmount = DEFAULT_AVAX[chain?.id]
@@ -174,8 +172,8 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
                 <StakeButton
                   avaxAmount={defaultAVAXAmount}
                   ggpAmount={ggpAmount}
+                  lockCurrentStep={lockCurrentStep}
                   nextStep={nextStep}
-                  setStakeStatus={setStakeStatus}
                 />
               ) : (
                 <ApproveButton amount={ggpAmount} setApproveStatus={setApproveStatus} />

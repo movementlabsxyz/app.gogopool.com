@@ -16,8 +16,6 @@ export interface RewardsProps {
 }
 
 const Rewards = ({ address, openClaimModal }: RewardsProps) => {
-  // const eligibiltyString = isEligible ? "true" : "false";
-
   const { data: claimAmountMaybe } = useGetGGPRewards(address)
   const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
 

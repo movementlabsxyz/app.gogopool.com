@@ -8,9 +8,6 @@ import ms from 'ms'
 import { Address } from '@/common/components/Address'
 import { Title } from '@/common/components/Card'
 import { useAllMinipools } from '@/hooks/minipool'
-// import useMinipoolByID from "@/hooks/useMinipoolByID";
-// import useMinipoolsByOwner from "@/hooks/useMinipoolsByOwner";
-// import useMinipoolsByStatus from "@/hooks/useMinipoolsByStatus";
 import Minipool, { MinipoolKeys, displayName } from '@/types/minipool'
 
 export interface StatsProps {
@@ -93,14 +90,6 @@ const formatData = (
 
 export const Statistics: FunctionComponent<StatsProps> = () => {
   const { openConnectModal } = useConnectModal()
-
-  // const minipoolsByOwner = useMinipoolsByOwner(address || "");
-  // const minipoolByID = useMinipoolByID(nodeID || "");
-
-  // const minipools = [...minipoolsByOwner];
-  // if (minipoolByID) {
-  //   minipools.push(minipoolByID);
-  // }
 
   const { isLoading, minipools } = useAllMinipools()
 
