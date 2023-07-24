@@ -19,7 +19,19 @@ export const useGetUint = (args) => {
   })
 }
 
-export const useGetAddress = (key: string, storageAddr?: string) => {
+export type AllContracts =
+  | 'Oracle'
+  | 'Storage'
+  | 'MinipoolManager'
+  | 'TokenGGP'
+  | 'TokenggAVAX'
+  | 'Staking'
+  | 'OneInchMock'
+  | 'RewardsPool'
+  | 'ClaimNodeOp'
+  | 'ProtocolDAO'
+
+export const useGetAddress = (key: AllContracts, storageAddr?: string) => {
   const { chain } = useNetwork()
   const addr: HexString = storageAddr || storageAddresses[chain?.id]
 
