@@ -103,7 +103,7 @@ const Countdown = () => {
                 <Text>
                   After registration, your minipool is placed into queue to be matched with liquid
                   staking funds. You can view your status at{' '}
-                  <Link href="https://app.gogopool.com/dashboard">
+                  <Link href="/dashboard">
                     <span className="font-normal text-blue-500 underline">any time here.</span>
                   </Link>
                 </Text>
@@ -150,7 +150,7 @@ const Countdown = () => {
 
         <div className="flex flex-col items-center py-12">
           <Text className="text-center text-tertiary" fontSize={14} fontWeight="bold">
-            WANT TO LEARN MORE
+            WANT TO LEARN MORE?
           </Text>
           <Text className="text-center font-domaine text-subtitle" fontSize={30} fontWeight="bold">
             Discover the Why and How

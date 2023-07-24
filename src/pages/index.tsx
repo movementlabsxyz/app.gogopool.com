@@ -101,7 +101,7 @@ const Welcome = () => {
                 <Text>
                   After registration, your minipool is placed into queue to be matched with liquid
                   staking funds. You can view your status at{' '}
-                  <Link href="https://app.gogopool.com/dashboard">
+                  <Link href="/dashboard">
                     <span className="font-normal text-blue-500 underline">any time here.</span>
                   </Link>
                 </Text>
@@ -146,27 +146,35 @@ const Welcome = () => {
 
         <Divider />
 
-        <div className="flex flex-wrap justify-around gap-10 py-12">
-          <InfoCard
-            button=<a href="https://docs.gogopool.com/gogopool-primer" target={'blank'}>
-              <Button size="xs" variant="secondary-outline">
-                Read our Primer
-              </Button>
-            </a>
-            icon=<GGPToken fill={'#3E33BB'} height={32} width={32} />
-            summary="We believe in Subnets and making them easy to setup and utilize. Our GGP token is the key to that success."
-            title="Our Token Mission"
-          />
-          <InfoCard
-            button=<a href="https://docs.gogopool.com" target={'blank'}>
-              <Button size="xs" variant="secondary-outline">
-                View Documentation
-              </Button>
-            </a>
-            icon=<DocumentIcon />
-            summary="We’ve got you covered! Take a look at our docs to get the most up-to-date info on how to get your Minipool created."
-            title="Need more information?"
-          />
+        <div className="flex flex-col items-center py-12">
+          <Text className="text-center text-tertiary" fontSize={14} fontWeight="bold">
+            WANT TO LEARN MORE?
+          </Text>
+          <Text className="text-center font-domaine text-subtitle" fontSize={30} fontWeight="bold">
+            Discover the Why and How
+          </Text>
+          <div className="flex flex-wrap justify-around gap-10 py-12">
+            <InfoCard
+              button=<a href="https://docs.gogopool.com/gogopool-primer" target={'blank'}>
+                <Button size="xs" variant="secondary-outline">
+                  Read our Primer
+                </Button>
+              </a>
+              icon=<GGPToken fill={'#3E33BB'} height={32} width={32} />
+              summary="We believe in Subnets and making them easy to setup and utilize. Our GGP token is the key to that success."
+              title="Our Token Mission"
+            />
+            <InfoCard
+              button=<a href="https://docs.gogopool.com" target={'blank'}>
+                <Button size="xs" variant="secondary-outline">
+                  View Documentation
+                </Button>
+              </a>
+              icon=<DocumentIcon />
+              summary="We’ve got you covered! Take a look at our docs to get the most up-to-date info on how to get your Minipool created."
+              title="Need more information?"
+            />
+          </div>
         </div>
 
         <Divider />
