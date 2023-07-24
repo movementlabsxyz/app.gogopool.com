@@ -1,7 +1,8 @@
 import { utils } from 'ethers'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 
 import { useToast } from '@chakra-ui/react'
+import * as Sentry from '@sentry/nextjs'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
@@ -14,10 +15,10 @@ export const MAX_RATIO = 150
 export interface StakeButtonProps {
   avaxAmount: number
   ggpAmount: number
+  lockCurrentStep: () => void
   nextStep: () => void
-  setStakeStatus: Dispatch<SetStateAction<'error' | 'loading' | 'success' | 'idle'>>
 }
-const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeButtonProps) => {
+const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: StakeButtonProps) => {
   const toast = useToast()
 
   const { isConnected } = useAccount()
@@ -25,6 +26,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeB
 
   const {
     data: stakeData,
+    error: stakeError,
     isLoading: isStakeLoading,
     writeAsync: stake,
   } = useStakeGGP(utils.parseEther(ggpAmount?.toString() || '0'))
@@ -37,7 +39,6 @@ const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeB
 
   const handleSubmit = async () => {
     try {
-      setStakeStatus('loading')
       setLoadingStake(true)
       const result = await stake()
       const resp = await result?.wait()
@@ -53,11 +54,23 @@ const StakeButton = ({ avaxAmount, ggpAmount, nextStep, setStakeStatus }: StakeB
       }
       if (!resp.status) {
         setLoadingStake(false)
-        setStakeStatus('error')
+        Sentry.captureException(stakeError)
+        toast({
+          position: 'top',
+          description: 'Error when making transaction',
+          status: 'error',
+        })
+        lockCurrentStep()
       }
     } catch (error) {
       setLoadingStake(false)
-      setStakeStatus('error')
+      Sentry.captureException(stakeError)
+      toast({
+        position: 'top',
+        description: 'Error when making transaction',
+        status: 'error',
+      })
+      lockCurrentStep()
     }
   }
 

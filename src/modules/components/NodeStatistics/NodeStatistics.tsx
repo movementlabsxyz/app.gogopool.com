@@ -4,14 +4,10 @@ import { FunctionComponent, ReactElement } from 'react'
 import { Box, Skeleton, Stack, Text } from '@chakra-ui/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import ms from 'ms'
-import { useAccount } from 'wagmi'
 
 import { Address } from '@/common/components/Address'
 import { Title } from '@/common/components/Card'
 import { useAllMinipools } from '@/hooks/minipool'
-// import useMinipoolByID from "@/hooks/useMinipoolByID";
-// import useMinipoolsByOwner from "@/hooks/useMinipoolsByOwner";
-// import useMinipoolsByStatus from "@/hooks/useMinipoolsByStatus";
 import Minipool, { MinipoolKeys, displayName } from '@/types/minipool'
 
 export interface StatsProps {
@@ -92,18 +88,8 @@ const formatData = (
     })
 }
 
-export const Statistics: FunctionComponent<StatsProps> = ({ address, nodeID }) => {
+export const Statistics: FunctionComponent<StatsProps> = () => {
   const { openConnectModal } = useConnectModal()
-
-  // const minipoolsByOwner = useMinipoolsByOwner(address || "");
-  // const minipoolByID = useMinipoolByID(nodeID || "");
-
-  // const minipools = [...minipoolsByOwner];
-  // if (minipoolByID) {
-  //   minipools.push(minipoolByID);
-  // }
-
-  const { isConnected } = useAccount()
 
   const { isLoading, minipools } = useAllMinipools()
 

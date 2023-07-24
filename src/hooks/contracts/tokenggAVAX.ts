@@ -2,17 +2,17 @@ import { utils } from 'ethers'
 
 import { useGetAddress } from '../useStorage'
 
-import TokenggAVAX from '@/contracts/TokenggAVAX.json'
+import TokenggAVAX from '@/contracts/TokenggAVAX'
 
 const useTokenggAVAXContract = () => {
   const { data } = useGetAddress('TokenggAVAX')
 
-  const contractInterface = new utils.Interface(TokenggAVAX.abi)
+  const contractInterface = new utils.Interface(TokenggAVAX)
 
   return {
     address: data,
     contractInterface,
-    abi: TokenggAVAX.abi,
+    abi: TokenggAVAX,
   }
 }
 

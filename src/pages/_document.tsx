@@ -1,5 +1,4 @@
 import { ColorModeScript } from '@chakra-ui/react'
-import { MantineProvider } from '@mantine/core'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -42,9 +41,7 @@ class MyDocument extends Document {
         </Head>
         <body className="h-full">
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <MantineProvider withGlobalStyles withNormalizeCSS>
-            <Main />
-          </MantineProvider>
+          <Main />
           <NextScript />
         </body>
       </Html>

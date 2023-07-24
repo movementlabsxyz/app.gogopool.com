@@ -28,7 +28,7 @@ export const UnstakeModal = ({ isOpen, onClose, ...modalProps }) => {
     write: withdraw,
   } = useWithdrawGGP(parseEther(withdrawAmount?.toString() || '0'))
 
-  const { data, isError, isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading, isSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
   })
 

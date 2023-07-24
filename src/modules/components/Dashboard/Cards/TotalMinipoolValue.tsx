@@ -22,7 +22,6 @@ export interface TotalMinipoolValueProps {
 const TotalMinipoolValue = ({
   avaxStake = 0,
   avaxValue = 0,
-  ggpStake = 0,
   ggpValue = 0,
   isLoading = false,
   ratio = 0,

@@ -2,18 +2,18 @@ import { utils } from 'ethers'
 
 import { useGetAddress } from '../useStorage'
 
-import Oracle from '@/contracts/Oracle.json'
-import Staking from '@/contracts/Staking.json'
+import Oracle from '@/contracts/Oracle'
+import Staking from '@/contracts/Staking'
 
 const useStakingContract = () => {
   const { data } = useGetAddress('Staking')
 
-  const contractInterface = new utils.Interface(Staking.abi)
+  const contractInterface = new utils.Interface(Staking)
 
   return {
     address: data,
     contractInterface,
-    abi: Staking.abi,
+    abi: Staking,
   }
 }
 
@@ -22,11 +22,11 @@ export default useStakingContract
 export const useOracleContract = () => {
   const { data } = useGetAddress('Oracle')
 
-  const contractInterface = new utils.Interface(Oracle.abi)
+  const contractInterface = new utils.Interface(Oracle)
 
   return {
     address: data,
     contractInterface,
-    abi: Oracle.abi,
+    abi: Oracle,
   }
 }

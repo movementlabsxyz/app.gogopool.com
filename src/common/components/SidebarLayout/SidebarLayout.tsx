@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, ReactNode, useState } from 'react'
 
 import { Flex } from '@chakra-ui/react'
 import { Dialog, Transition } from '@headlessui/react'
@@ -9,14 +9,13 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import ConnectButton from '../ConnectButton'
-import RouteGuard from '../RouteGuard'
 
 import { NavigationBar } from '@/modules/components/NavigationBar'
 
 const navigation = [
   {
     name: 'Welcome',
-    href: '/welcome',
+    href: '/',
     icon: (
       <svg
         className="mr-3"
@@ -43,7 +42,7 @@ const navigation = [
   },
   {
     name: 'Dashboard',
-    href: '/dashboard',
+    href: '/dashboard/',
     icon: (
       <svg
         className="mr-3"
@@ -86,7 +85,7 @@ const navigation = [
   },
   {
     name: 'Liquid Stake',
-    href: '/liquid-staking',
+    href: '/liquid-staking/',
     icon: (
       <svg
         className="mr-3"
@@ -129,7 +128,7 @@ const navigation = [
   },
   {
     name: 'Node Operator',
-    href: '/create-minipool',
+    href: '/create-minipool/',
     icon: (
       <svg
         className="mr-3"
@@ -183,13 +182,11 @@ const navigation = [
   },
 ]
 
-export function SidebarLayout({ children }) {
+export function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <div className="h-full">
-      <RouteGuard />
-
       <Transition.Root as={Fragment} show={sidebarOpen}>
         <Dialog as="div" className="relative z-40 sm:hidden" onClose={setSidebarOpen}>
           <Transition.Child
@@ -258,7 +255,7 @@ export function SidebarLayout({ children }) {
                       >
                         <span
                           className={clsx(
-                            window.location.href.includes(item.href)
+                            window.location.pathname === item.href
                               ? 'bg-indigo-800 text-white'
                               : 'text-indigo-100 hover:bg-indigo-600',
                             'group flex w-full items-center py-4 px-3 text-base font-medium transition-all',
@@ -350,7 +347,7 @@ export function SidebarLayout({ children }) {
                 <NextLink className="flex items-center text-base" href={item.href} key={item.name}>
                   <span
                     className={clsx(
-                      window.location.href.includes(item.href)
+                      window.location.pathname === item.href
                         ? 'bg-indigo-800 text-white'
                         : 'text-indigo-100 hover:bg-indigo-600',
                       'group flex w-full items-center p-2 py-4 font-medium text-white transition-all duration-300',

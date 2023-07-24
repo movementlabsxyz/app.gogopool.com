@@ -7,8 +7,10 @@ import * as Sentry from '@sentry/nextjs'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
 
+import useMinipoolManagerContract from './contracts/minipoolManager'
 import useStakingContract, { useOracleContract } from './contracts/staking'
 
+import { HexString } from '@/types/cryptoGenerics'
 import { DECODED_ERRORS } from '@/utils/consts'
 
 // approve has to be called first
@@ -100,7 +102,7 @@ export const useWithdrawGGP = (amount: BigNumber) => {
 }
 
 // getAVAXStake
-export const useGetAVAXStake = (stakerAddr: string) => {
+export const useGetAVAXStake = (stakerAddr: HexString) => {
   const { abi, address: stakingAddress } = useStakingContract()
 
   const { data, isError, isLoading } = useContractRead({
@@ -119,7 +121,7 @@ export const useGetAVAXStake = (stakerAddr: string) => {
 }
 
 // getGGPStake
-export const useGetGGPStake = (stakerAddr: string, watch = true) => {
+export const useGetGGPStake = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
   const { data, error, isError, isLoading } = useContractRead({
@@ -139,7 +141,7 @@ export const useGetGGPStake = (stakerAddr: string, watch = true) => {
 }
 
 // getAVAXAssigned
-export const useGetAVAXAssigned = (stakerAddr: string, watch = true) => {
+export const useGetAVAXAssigned = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
   const { data, error, isError, isLoading } = useContractRead({
@@ -166,7 +168,6 @@ export const useGetGGPPrice = (watch = true) => {
     address,
     abi,
     functionName: 'getGGPPriceInAVAX',
-    args: [],
     watch,
   })
 
@@ -186,7 +187,7 @@ export const useGetGGPPrice = (watch = true) => {
 }
 
 // getCollateralizationRatio
-export const useGetCollateralizationRatio = (stakerAddr: string, watch = true) => {
+export const useGetCollateralizationRatio = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
   const { data, error, isError, isLoading } = useContractRead({
@@ -212,7 +213,7 @@ export const useGetCollateralizationRatio = (stakerAddr: string, watch = true) =
   }
 }
 
-export const useGetEffectiveRewardsRatio = (stakerAddr: string, watch = true) => {
+export const useGetEffectiveRewardsRatio = () => {
   const { abi, address } = useStakingContract()
   const { data, error, isError, isLoading } = useContractRead({
     address,
@@ -235,7 +236,7 @@ export const useGetEffectiveRewardsRatio = (stakerAddr: string, watch = true) =>
   }
 }
 
-export const useGetEffectiveGGPStaked = (stakerAddr: string, watch = true) => {
+export const useGetEffectiveGGPStaked = () => {
   const { abi, address } = useStakingContract()
   const { data, error, isError, isLoading } = useContractRead({
     address,
@@ -279,7 +280,7 @@ export const useGetStakerCount = () => {
   })
 }
 
-export const useRequireValidStaker = (stakerAddr: string) => {
+export const useRequireValidStaker = (stakerAddr: HexString) => {
   const { abi, address } = useStakingContract()
 
   return useContractRead({
@@ -290,7 +291,7 @@ export const useRequireValidStaker = (stakerAddr: string) => {
   })
 }
 
-export const useGetGGPRewards = (stakerAddr: string, watch = true) => {
+export const useGetGGPRewards = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
   return useContractRead({
@@ -302,13 +303,12 @@ export const useGetGGPRewards = (stakerAddr: string, watch = true) => {
   })
 }
 
-export const useGetMinipoolCount = (stakerAddr: string) => {
-  const { abi, address } = useStakingContract()
+export const useGetMinipoolCount = () => {
+  const { abi, address } = useMinipoolManagerContract()
 
   return useContractRead({
     address,
     abi,
     functionName: 'getMinipoolCount',
-    args: [stakerAddr],
   })
 }

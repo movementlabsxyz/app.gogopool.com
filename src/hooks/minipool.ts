@@ -10,18 +10,24 @@ import { useContractRead, useContractWrite, usePrepareContractWrite, useSigner }
 
 import useMinipoolManagerContract from './contracts/minipoolManager'
 
+import { HexString } from '@/types/cryptoGenerics'
 import type Minipool from '@/types/minipool'
-import { nodeID } from '@/utils'
+import { nodeIDToHex } from '@/utils'
 import { DECODED_ERRORS } from '@/utils/consts'
 
 export interface UseCreateMinipoolParams {
-  nodeId: string // node ID as input by the user
+  formattedId: HexString // Node ID formatted as a HexString
   duration: number | string // duration in ms
   amount: BigNumber | number | string // amount of tokens to be deposited
   fee?: BigNumber // the fee for the node. Default is 20000, or 2%
 }
 
-export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMinipoolParams) => {
+export const useCreateMinipool = ({
+  amount,
+  duration,
+  fee,
+  formattedId,
+}: UseCreateMinipoolParams) => {
   const toast = useToast()
 
   if (!fee) {
@@ -37,8 +43,6 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
   } else if (typeof amount === 'string') {
     amount = utils.parseEther(amount)
   }
-
-  const formattedID = nodeID(nodeId)
 
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useMinipoolManagerContract()
@@ -61,7 +65,7 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
       })
     },
     functionName: 'createMinipool',
-    args: [formattedID, BigNumber.from(duration), fee, amount],
+    args: [formattedId, BigNumber.from(duration), fee, amount],
     overrides: {
       value: amount,
     },
@@ -87,8 +91,8 @@ export const useCreateMinipool = ({ amount, duration, fee, nodeId }: UseCreateMi
 
 export interface UseMinipoolsByStatusParams {
   status?: number
-  offset?: number
-  limit?: number
+  offset?: BigNumber
+  limit?: BigNumber
 }
 
 export const useAllMinipools = (interval = 3000) => {
@@ -128,8 +132,8 @@ export const useAllMinipools = (interval = 3000) => {
 }
 
 export const useMinipoolsByStatus = ({
-  limit = 0, // default to staking minipools
-  offset = 0, // no offset
+  limit = BigNumber.from(0), // default to staking minipools
+  offset = BigNumber.from(0), // no offset
   status = 2, // get all matching ones, no pagination
 }: UseMinipoolsByStatusParams) => {
   const { abi, address } = useMinipoolManagerContract()
@@ -147,7 +151,14 @@ export const useMinipoolsByStatus = ({
 export const useMinipoolByID = (ID: string | undefined) => {
   const { error, isError, isLoading, minipools } = useAllMinipools()
 
-  if (!ID) {
+  let convertedID: HexString | undefined
+  try {
+    convertedID = nodeIDToHex(ID)
+  } catch (e) {
+    Sentry.captureException(e)
+  }
+
+  if (!ID || !convertedID) {
     return {
       minipool: undefined,
       isError,
@@ -155,8 +166,6 @@ export const useMinipoolByID = (ID: string | undefined) => {
       error,
     }
   }
-
-  const convertedID = nodeID(ID)
 
   return {
     minipool: minipools.find((m) => m.nodeID === convertedID),
@@ -181,7 +190,7 @@ export const useMinipoolsByOwner = (address: string | undefined) => {
   }
 }
 
-export const useCancelMinipool = (nodeId: string) => {
+export const useCancelMinipool = (nodeId: HexString) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
 
@@ -221,10 +230,10 @@ export const useCancelMinipool = (nodeId: string) => {
   return { prepareError, ...write }
 }
 
-export const useWithdrawMinipoolFunds = (nodeId: string) => {
+export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
-  const toast = useToast()
+  // const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
@@ -234,7 +243,7 @@ export const useWithdrawMinipoolFunds = (nodeId: string) => {
     // We dont wanna show the toast during onError because
     // they show on the dashboard, we use the error state
     // to know whether or not to allow the button to be clicked
-    onError(error) {
+    onError() {
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({

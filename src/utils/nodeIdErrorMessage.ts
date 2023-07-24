@@ -1,19 +1,26 @@
+import { HexString } from '@/types/cryptoGenerics'
 import Minipool from '@/types/minipool'
 import { nodeIDToHex } from '@/utils'
 
-export default function nodeIdErrorMessage(minipool: Minipool, debouncedNodeId: string): string {
-  let message = ''
-  if (debouncedNodeId === '') return ''
+export default function nodeIdErrorerrorMessage(
+  minipool: Minipool,
+  debouncedNodeId: string,
+): { errorMessage: string; formattedNodeId: HexString | null } {
+  let errorMessage = ''
+  let formattedNodeId = null
+
+  if (debouncedNodeId === '') return { errorMessage, formattedNodeId }
+
   try {
-    nodeIDToHex(debouncedNodeId)
-  } catch (e) {
-    message = 'NodeID checksum invalid'
+    formattedNodeId = nodeIDToHex(debouncedNodeId)
+  } catch {
+    errorMessage = 'NodeID checksum invalid'
   }
   if (minipool && !(minipool.status.toNumber() == 4 || minipool.status.toNumber() == 5)) {
-    message = 'NodeID is already in use'
+    errorMessage = 'NodeID is already in use'
   }
   if (!debouncedNodeId.startsWith('NodeID-')) {
-    message = "NodeID must start with 'NodeID-'"
+    errorMessage = "NodeID must start with 'NodeID-'"
   }
-  return message
+  return { errorMessage, formattedNodeId }
 }

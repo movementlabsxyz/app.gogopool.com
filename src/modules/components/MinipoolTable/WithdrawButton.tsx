@@ -5,11 +5,8 @@ import { Tooltip } from '@/common/components/Tooltip'
 import { useWithdrawMinipoolFunds } from '@/hooks/minipool'
 
 const WithdrawButton = ({ children, isFinished, nodeId }) => {
-  const {
-    data: withdrawData,
-    prepareError: isPrepareErrorWithdraw,
-    write: withdrawFunds,
-  } = useWithdrawMinipoolFunds(nodeId)
+  const { prepareError: isPrepareErrorWithdraw, write: withdrawFunds } =
+    useWithdrawMinipoolFunds(nodeId)
 
   let tooltipLabel = 'Withdraw funds'
   if (isFinished) tooltipLabel = 'Already withdrawn, no actions can be taken.'
@@ -26,13 +23,7 @@ const WithdrawButton = ({ children, isFinished, nodeId }) => {
             'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
           !enabled && 'cursor-default hover:bg-white',
         )}
-        onClick={
-          enabled
-            ? withdrawFunds
-            : () => {
-                // empty
-              }
-        }
+        onClick={() => enabled && withdrawFunds}
       >
         {children}
         {enabled && (

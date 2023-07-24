@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
 
 import { useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
@@ -7,25 +7,10 @@ import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagm
 
 import useClaimNodeOpContract from './contracts/claimNodeOp'
 
+import { HexString } from '@/types/cryptoGenerics'
 import { DECODED_ERRORS } from '@/utils/consts'
 
-export const usePreviewCalculateAndDistributeRewards = (
-  ownerAddress: string,
-  totalGgpStaked: BigNumberish,
-  watch = true,
-) => {
-  const { abi, address: contractAddress } = useClaimNodeOpContract()
-
-  return useContractRead({
-    address: contractAddress,
-    abi,
-    functionName: 'previewCalculateAndDistributeRewards',
-    args: [ownerAddress, totalGgpStaked],
-    watch,
-  })
-}
-
-export const useIsEligible = (owner: string) => {
+export const useIsEligible = (owner: HexString) => {
   const { abi, address } = useClaimNodeOpContract()
 
   return useContractRead({

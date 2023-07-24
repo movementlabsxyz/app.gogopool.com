@@ -1,4 +1,4 @@
-import { Skeleton } from '@mantine/core'
+import { Skeleton } from '@chakra-ui/react'
 import clsx from 'clsx'
 import { formatUnits } from 'ethers/lib/utils'
 import { useRouter } from 'next/router'
@@ -168,7 +168,6 @@ const MinipoolView = ({ ownerAddress }) => {
       <div className="flex items-center space-x-4">
         <h3 className="text-base font-semibold leading-6 text-gray-900">Your Minipools</h3>
         <Button
-          className="!flex"
           onClick={() => router.push('/create-minipool')}
           size="xs"
           variant="secondary-outline"

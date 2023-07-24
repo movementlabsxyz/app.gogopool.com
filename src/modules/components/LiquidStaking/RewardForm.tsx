@@ -6,21 +6,13 @@ import { NumericFormat } from 'react-number-format'
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
-import { AvalancheIcon } from '@/common/components/CustomIcon/AvalancheIcon'
-
 interface Props {
   reward: number
   balance: number
   token?: string
-  icon?: JSX.Element
 }
 
-export const RewardForm: FunctionComponent<Props> = ({
-  reward,
-  balance,
-  token = 'ggAVAX',
-  icon = <AvalancheIcon />,
-}) => {
+export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 'ggAVAX' }) => {
   return (
     <>
       <div className="flex items-center justify-between">

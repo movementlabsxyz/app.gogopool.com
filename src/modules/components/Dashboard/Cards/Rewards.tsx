@@ -8,15 +8,14 @@ import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
 import { useRewardCycleStartTime } from '@/hooks/useRewards'
 import { useGetGGPRewards, useGetGGPStake } from '@/hooks/useStake'
+import { HexString } from '@/types/cryptoGenerics'
 
 export interface RewardsProps {
-  address: string
+  address: HexString
   openClaimModal: () => void
 }
 
 const Rewards = ({ address, openClaimModal }: RewardsProps) => {
-  // const eligibiltyString = isEligible ? "true" : "false";
-
   const { data: claimAmountMaybe } = useGetGGPRewards(address)
   const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
 
