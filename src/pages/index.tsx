@@ -1,5 +1,4 @@
-import { Box, Link, Text } from '@chakra-ui/react'
-import { Divider } from '@mantine/core'
+import { Box, Divider, Link, Text } from '@chakra-ui/react'
 
 import { Button } from '@/common/components/Button'
 import { Container } from '@/common/components/Container'
