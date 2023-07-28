@@ -66,6 +66,7 @@ const MinipoolCard = ({ minipool }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
   const isWithdrawable = minipool.status.toNumber() === MinipoolStatus.Withdrawable
   const isPrelaunch = minipool.status.toNumber() === MinipoolStatus.Prelaunch
+  const isError = minipool.status.toNumber() === MinipoolStatus.Error
 
   const cardInternals = (
     <li className="relative flex w-full items-center space-x-4 py-4" key={minipool.id}>
@@ -138,7 +139,7 @@ const MinipoolCard = ({ minipool }) => {
         {cardInternals}
       </CancelButton>
     )
-  } else if (isWithdrawable) {
+  } else if (isWithdrawable || isError) {
     return (
       <WithdrawButton isFinished={isFinished} nodeId={minipool.nodeID}>
         {cardInternals}
