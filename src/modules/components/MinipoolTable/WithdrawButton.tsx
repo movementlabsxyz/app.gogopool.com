@@ -23,7 +23,7 @@ const WithdrawButton = ({ children, isFinished, nodeId }) => {
             'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
           !enabled && 'cursor-default hover:bg-white',
         )}
-        onClick={() => enabled && withdrawFunds}
+        onClick={enabled && withdrawFunds}
       >
         {children}
         {enabled && (

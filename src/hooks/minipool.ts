@@ -243,7 +243,8 @@ export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
     // We dont wanna show the toast during onError because
     // they show on the dashboard, we use the error state
     // to know whether or not to allow the button to be clicked
-    onError() {
+    onError(e) {
+      Sentry.captureException(e)
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({
@@ -266,6 +267,9 @@ export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
         hash: data.hash,
         description: 'Withdraw minipool funds',
       })
+    },
+    onError(e) {
+      Sentry.captureException(e)
     },
   })
 
