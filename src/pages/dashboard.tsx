@@ -2,11 +2,11 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 
 import { PageHead } from '@/common/components/PageHead'
-import { SidebarLayout } from '@/common/components/SidebarLayout'
 import Rewards from '@/modules/components/Dashboard/Cards/Rewards'
 import TotalStaked from '@/modules/components/Dashboard/Cards/TotalStaked'
 import MinipoolTable from '@/modules/components/MinipoolTable'
 import { ClaimAndRestakeModal } from '@/modules/components/Modal/ClaimAndRestakeModal'
+import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 
 const Dashboard = () => {
   const { address } = useAccount()
@@ -22,7 +22,7 @@ const Dashboard = () => {
         ownerAddress={address}
         status={'success'}
       />
-      <Box className="space-y-6 bg-[#F7F9FF] p-12" minH="full">
+      <Box className="space-y-6 bg-[#F7F9FF] p-8" minH="full">
         <TotalStaked />
         <Rewards address={address} openClaimModal={onOpen} />
         <MinipoolTable ownerAddress={address} />
@@ -32,7 +32,7 @@ const Dashboard = () => {
 }
 
 Dashboard.getLayout = function getLayout(page) {
-  return <SidebarLayout>{page}</SidebarLayout>
+  return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
 export default Dashboard

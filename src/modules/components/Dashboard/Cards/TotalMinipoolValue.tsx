@@ -1,5 +1,5 @@
 import { Box, useDisclosure, useToken } from '@chakra-ui/react'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { HiOutlineInformationCircle } from 'react-icons/hi2'
 import { ClimbingBoxLoader } from 'react-spinners'
 
 import { EmptyState } from '../../MinipoolTable/EmptyState'
@@ -40,7 +40,7 @@ const TotalMinipoolValue = ({
             content="Total amount you have staked in the
           protocol"
           >
-            <InformationCircleIcon className="h-6 text-gray-500" />
+            <HiOutlineInformationCircle className="h-6 text-gray-500" />
           </Tooltip>
         </span>
         <Tooltip content={!ggpValue ? 'You cannot unstake as you do not have any GGP staked' : ''}>
@@ -130,7 +130,7 @@ const TotalMinipoolValue = ({
             <div className="flex justify-center overflow-hidden text-center text-base font-bold text-indigo-600">
               <span>Ratio: {avaxStake ? (ratio || 0).toLocaleString() : 0}%</span>
               <Tooltip content="Your collateral ratio">
-                <InformationCircleIcon className="h-4 text-gray-500" />
+                <HiOutlineInformationCircle className="h-4 text-gray-500" />
               </Tooltip>
             </div>
           </div>

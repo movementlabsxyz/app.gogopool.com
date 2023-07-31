@@ -1,12 +1,12 @@
 import { Box, VStack } from '@chakra-ui/react'
 
 import { PageHead } from '@/common/components/PageHead'
-import { SidebarLayout } from '@/common/components/SidebarLayout'
 import { LiquidStaking } from '@/modules/components/LiquidStaking'
+import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 
 const Stake = () => {
   return (
-    <Box className="bg-[#F7F9FF] py-24" minH="full">
+    <Box className="bg-[#F7F9FF] pt-8" minH="full">
       <PageHead append={false} description="Liquid Staking" name="Liquid Staking" />
       <VStack spacing="8">
         <LiquidStaking />
@@ -16,7 +16,7 @@ const Stake = () => {
 }
 
 Stake.getLayout = function getLayout(page) {
-  return <SidebarLayout>{page}</SidebarLayout>
+  return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
 export default Stake
