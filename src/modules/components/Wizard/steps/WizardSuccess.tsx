@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react'
 
 import { Box, Button as ChakraButton, Stack, Text, useToast } from '@chakra-ui/react'
-import { IconBrandTwitter } from '@tabler/icons'
 import { shortenTransactionHash } from '@usedapp/core'
 import NextLink from 'next/link'
+import { TbBrandTwitter } from 'react-icons/tb'
 
 import { Button } from '@/common/components/Button'
 import { CopyIcon } from '@/common/components/CustomIcon/CopyIcon'
@@ -71,7 +71,7 @@ export const WizardSuccess: FunctionComponent<WizardSuccessProps> = ({ hash }): 
           colorScheme="twitter"
           href={'https://twitter.com/GoGoPool_'}
           rel="noopener noreferrer"
-          rightIcon={<IconBrandTwitter />}
+          rightIcon={<TbBrandTwitter />}
           target="_blank"
           variant="outline"
         >

@@ -10,25 +10,25 @@ export const Button: ComponentStyleConfig = {
     width: 'fit-content',
   },
   sizes: {
-    xs: {
+    'xs': {
       paddingX: '20px',
       paddingY: '6px',
       fontSize: '14px',
       lineHeight: '22px',
     },
-    sm: {
+    'sm': {
       paddingX: '20px',
       paddingY: '10px',
       fontSize: '14px',
       lineHeight: '22px',
     },
-    md: {
+    'md': {
       paddingX: '24px',
       paddingY: '12px',
       fontSize: '16px',
       lineHeight: '24px',
     },
-    lg: {
+    'lg': {
       paddingX: '28px',
       paddingY: '14px',
       fontSize: '18px',
@@ -56,7 +56,7 @@ export const Button: ComponentStyleConfig = {
     },
   },
   variants: {
-    primary: {
+    'primary': {
       bgColor: 'green.500',
       _hover: {
         bgColor: 'green.600',
@@ -83,7 +83,7 @@ export const Button: ComponentStyleConfig = {
         boxShadow: `inset 0 0 0 2px ${theme.colors.blue[550]}`,
       },
     }),
-    tertiary: {
+    'tertiary': {
       color: 'blue.500',
       bgColor: 'white',
       _hover: {

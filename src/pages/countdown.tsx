@@ -9,8 +9,8 @@ import WelcomeCard1 from '@/common/components/CustomIcon/WelcomeCard1'
 import WelcomeCard2 from '@/common/components/CustomIcon/WelcomeCard2'
 import WelcomeCard3 from '@/common/components/CustomIcon/WelcomeCard3'
 import { PageHead } from '@/common/components/PageHead'
-import { SidebarLayout } from '@/common/components/SidebarLayout'
 import CountdownTimer from '@/modules/components/Countdown/CountdownTimer'
+import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 import InfoCard from '@/modules/components/Welcome/InfoCard'
 import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
 import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
@@ -186,7 +186,7 @@ const Countdown = () => {
 }
 
 Countdown.getLayout = function getLayout(page) {
-  return <SidebarLayout>{page}</SidebarLayout>
+  return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
 export default Countdown

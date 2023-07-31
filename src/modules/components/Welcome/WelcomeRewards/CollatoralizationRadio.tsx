@@ -8,7 +8,7 @@ type Props = {
 export default function CollatoralizationRadio({ checked, details, radio }: Props) {
   return (
     <div
-      className={`w-96 rounded-xl border transition-colors duration-300 ${
+      className={`flex rounded-xl border transition-colors duration-300 ${
         checked ? 'bg-white' : 'bg-[#F7F9FF]'
       } p-7`}
     >

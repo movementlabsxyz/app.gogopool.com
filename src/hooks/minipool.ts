@@ -155,7 +155,7 @@ export const useMinipoolByID = (ID: string | undefined) => {
   try {
     convertedID = nodeIDToHex(ID)
   } catch (e) {
-    Sentry.captureException(e)
+    // Sentry.captureException(e)
   }
 
   if (!ID || !convertedID) {

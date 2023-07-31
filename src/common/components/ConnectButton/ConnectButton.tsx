@@ -12,7 +12,7 @@ export const CB = () => {
           <div
             {...(!mounted && {
               'aria-hidden': true,
-              style: {
+              'style': {
                 opacity: 0,
                 pointerEvents: 'none',
                 userSelect: 'none',
@@ -59,10 +59,12 @@ export const CB = () => {
                     )}
                     {chain.name}
                   </Button>
-                  <Button onClick={openAccountModal} variant="secondary-outline">
-                    {account.displayName}
-                    {account.displayBalance ? ` (${account.displayBalance})` : ''}
-                  </Button>
+                  <span className="hidden sm:flex">
+                    <Button onClick={openAccountModal} variant="secondary-outline">
+                      {account.displayName}
+                      {account.displayBalance ? ` (${account.displayBalance})` : ''}
+                    </Button>
+                  </span>
                 </div>
               )
             })()}

@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react'
-import { IconBrandTwitter } from '@tabler/icons'
+import { TbBrandTwitter } from 'react-icons/tb'
 
 export interface TweetThisButtonProps {
   text: string
@@ -13,7 +13,7 @@ const TweetThisButton = ({ text }: TweetThisButtonProps) => {
       as="a"
       colorScheme="twitter"
       href={url}
-      leftIcon={<IconBrandTwitter />}
+      leftIcon={<TbBrandTwitter />}
       rel="noopener noreferrer"
       target="_blank"
       variant="outline"

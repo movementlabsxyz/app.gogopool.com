@@ -1,4 +1,5 @@
-import { Box, Divider, Link, Text } from '@chakra-ui/react'
+import { Box, Divider, Text } from '@chakra-ui/react'
+import NextLink from 'next/link'
 
 import { Button } from '@/common/components/Button'
 import { Container } from '@/common/components/Container'
@@ -9,18 +10,18 @@ import WelcomeCard2 from '@/common/components/CustomIcon/WelcomeCard2'
 import WelcomeCard3 from '@/common/components/CustomIcon/WelcomeCard3'
 import WelcomeMountainIcon from '@/common/components/CustomIcon/WelcomeMountainIcon'
 import { PageHead } from '@/common/components/PageHead'
-import { SidebarLayout } from '@/common/components/SidebarLayout'
+import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 import InfoCard from '@/modules/components/Welcome/InfoCard'
 import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
 import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
 
 const Welcome = () => {
   return (
-    <Box className="bg-[#F7F9FF] py-24" minH="full">
+    <Box className="bg-[#F7F9FF] py-8" minH="full">
       <PageHead append={false} description="Welcome to GoGoPool!" name="Welcome to GoGoPool!" />
       <Container>
         <div
-          className="relative flex justify-between pt-12"
+          className="relative flex justify-between pt-12 text-center sm:text-left"
           style={{
             background: 'linear-gradient(99.86deg, #473CC7 31.28%, #9969FF 110.36%)',
             borderRadius: '24px',
@@ -33,7 +34,7 @@ const Welcome = () => {
               width: 630,
             }}
           >
-            <Text className="pb-4 font-domaine" fontSize={40} fontWeight="bold">
+            <Text className="pb-4 font-domaine text-4xl sm:text-[40px]" fontWeight="bold">
               Become a Validator with Minipools
             </Text>
             <Text className="pb-4" fontSize={18} fontWeight={400}>
@@ -42,10 +43,10 @@ const Welcome = () => {
               covered!
             </Text>
             <Divider />
-            <div className="flex flex-wrap gap-5 pt-7 pb-8">
-              <Link href="/create-minipool">
+            <div className="flex flex-wrap justify-center gap-5 pt-7 pb-8 sm:justify-start">
+              <NextLink href="/create-minipool">
                 <Button variant="tertiary">Create a Minipool</Button>
-              </Link>
+              </NextLink>
               <a
                 href="https://gogopool.dappling.network/calculator"
                 rel="noreferrer"
@@ -101,9 +102,9 @@ const Welcome = () => {
                 <Text>
                   After registration, your minipool is placed into queue to be matched with liquid
                   staking funds. You can view your status at{' '}
-                  <Link href="/dashboard">
+                  <NextLink href="/dashboard">
                     <span className="font-normal text-blue-500 underline">any time here.</span>
-                  </Link>
+                  </NextLink>
                 </Text>
               ),
               title: 'Match',
@@ -184,7 +185,7 @@ const Welcome = () => {
 }
 
 Welcome.getLayout = function getLayout(page) {
-  return <SidebarLayout>{page}</SidebarLayout>
+  return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
 export default Welcome

@@ -2,6 +2,8 @@ import { Spinner } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useAccount } from 'wagmi'
 
+import gogoPoolTitle from '/public/assets/img/nav/logo.svg'
+
 import ConnectButton from '@/common/components/ConnectButton'
 
 export default function NotConnected() {
@@ -16,7 +18,7 @@ export default function NotConnected() {
             alt="logo"
             className="h-10 w-auto sm:h-12"
             height={32}
-            src={'/assets/img/nav/logo.svg'}
+            src={gogoPoolTitle}
             width={118}
           />
         </a>

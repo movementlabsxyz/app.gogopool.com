@@ -1,8 +1,8 @@
 import { Box, VStack } from '@chakra-ui/react'
 
 import { PageHead } from '@/common/components/PageHead'
-import { SidebarLayout } from '@/common/components/SidebarLayout'
 import { Faqs } from '@/modules/components/Faqs'
+import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 
 const FAQ = () => {
   return (
@@ -16,7 +16,7 @@ const FAQ = () => {
 }
 
 FAQ.getLayout = function getLayout(page) {
-  return <SidebarLayout>{page}</SidebarLayout>
+  return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
 export default FAQ

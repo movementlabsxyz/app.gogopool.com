@@ -10,9 +10,11 @@ type Props = {
 }
 export default function InfoCard({ button, icon, summary, title }: Props) {
   return (
-    <div className="flex w-[420px] flex-col justify-center rounded-xl border border-blue-100 bg-white px-16 py-8">
+    <div className="flex basis-[420px] flex-col justify-center rounded-xl border border-blue-100 bg-white px-16 py-8">
       <div className="flex justify-center pb-2">{icon}</div>
-      <Text className="flex justify-center text-lg font-bold text-blue-900">{title}</Text>
+      <Text className="flex justify-center text-center text-lg font-bold text-blue-900">
+        {title}
+      </Text>
       <Text className="flex text-center text-default">{summary}</Text>
       <div className="flex justify-center pt-4">{button}</div>
     </div>

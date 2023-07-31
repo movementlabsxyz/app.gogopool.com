@@ -1,5 +1,9 @@
-import { images } from '@/assets/images'
 import { WizardData } from '@/types/wizard'
+
+import step1pic from '/public/assets/img/wizard/step-1.png'
+import step2pic from '/public/assets/img/wizard/step-2.svg'
+import step3pic from '/public/assets/img/wizard/step-3.svg'
+import step4pic from '/public/assets/img/wizard/step-4.svg'
 
 export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[] = ({
   defaultAvax,
@@ -11,7 +15,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
       title: 'Register a node',
       description:
         'Once you have AVAX and GGP in your wallet, you can register your node with the GoGoPool network.',
-      image: images.wizardStep1,
+      image: step1pic,
       size: {
         width: 160,
         height: 186,
@@ -21,7 +25,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
       step: 2,
       header: 'Stake GGP',
       title: 'Borrow AVAX by staking GGP',
-      image: images.wizardStep2,
+      image: step2pic,
       size: {
         width: 101,
         height: 103,
@@ -32,7 +36,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
       header: 'Deposit AVAX',
       title: 'Deposit AVAX',
       description: `Create your minipool by depositing ${defaultAvax} AVAX. GoGoPool will match your funds, and register you as a new validator node.`,
-      image: images.wizardStep3,
+      image: step3pic,
       size: {
         width: 103,
         height: 84,
@@ -43,7 +47,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
       header: 'Success!',
       title: 'Success!',
       description: "You've setup your node with GoGoPool.",
-      image: images.wizardStep4,
+      image: step4pic,
       size: {
         width: 251,
         height: 253,
