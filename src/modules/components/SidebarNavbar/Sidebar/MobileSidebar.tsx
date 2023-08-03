@@ -9,6 +9,7 @@ import { HiXMark } from 'react-icons/hi2'
 import whiteLogo from '/public/assets/img/nav/white-logo.svg'
 
 import { SideItem } from '../SidebarNavbar'
+import BottomBarLinks from './BottomBarLinks'
 import SidebarItem from './SidebarItem'
 
 type Props = {
@@ -138,32 +139,7 @@ export default function MobileSidebar({
                 </nav>
               </div>
               <div className="z-10" style={{ padding: '1rem' }}>
-                <NextLink
-                  className="mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
-                  href="https://www.gogopool.com"
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: '0.8rem',
-                    padding: '0.5rem 1rem',
-                    border: '2px solid #fff',
-                  }}
-                >
-                  Back to site
-                </NextLink>
-                <NextLink
-                  className="flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
-                  href="https://docs.gogopool.com"
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: '0.8rem',
-                    padding: '0.5rem 1rem',
-                    border: '2px solid #fff',
-                  }}
-                >
-                  View Documentation
-                </NextLink>
+                <BottomBarLinks />
               </div>
             </Dialog.Panel>
           </Transition.Child>

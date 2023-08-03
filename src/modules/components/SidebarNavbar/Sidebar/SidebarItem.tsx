@@ -9,12 +9,14 @@ type Props = {
 }
 
 export default function SidebarItem({ item, setSidebarOpen }: Props) {
+  const isExternalLink = item.href.toLowerCase().includes('http')
   return (
     <NextLink
       className="flex w-full items-center text-base"
       href={item.href}
       key={item.name}
       onClick={setSidebarOpen ? () => setSidebarOpen(false) : undefined}
+      target={isExternalLink ? '_blank' : ''}
     >
       <span
         className={clsx(

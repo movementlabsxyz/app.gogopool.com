@@ -1,8 +1,8 @@
 import { ReactNode, useState } from 'react'
 
 import { useRouter } from 'next/router'
+import { BiBarChartAlt, BiBookOpen } from 'react-icons/bi'
 import { FaHammer, FaRegCompass } from 'react-icons/fa'
-import { IoStatsChart } from 'react-icons/io5'
 import { LuArrowDownUp } from 'react-icons/lu'
 import { TbVectorBezierCircle } from 'react-icons/tb'
 
@@ -22,17 +22,22 @@ const validateSidebar = [
   {
     name: 'Getting Started',
     href: '/',
-    icon: <FaRegCompass color="#ffffff" size={24} />,
+    icon: <FaRegCompass color="#fff" size={24} />,
   },
   {
     name: 'Create a Minipool',
     href: '/create-minipool/',
-    icon: <TbVectorBezierCircle color="#ffffff" size={24} />,
+    icon: <TbVectorBezierCircle color="#fff" size={24} />,
   },
   {
     name: 'Minipool Dashboard',
     href: '/dashboard/',
-    icon: <IoStatsChart color="#ffffff" size={24} />,
+    icon: <BiBarChartAlt color="#fff" size={24} />,
+  },
+  {
+    name: 'Documentation',
+    href: 'https://docs.gogopool.com',
+    icon: <BiBookOpen color="#fff" size={24} />,
   },
 ]
 
@@ -40,7 +45,7 @@ const liquidSidebar = [
   {
     name: 'Liquid Stake',
     href: '/liquid-staking/',
-    icon: <LuArrowDownUp color="#ffffff" size={24} />,
+    icon: <LuArrowDownUp color="#fff" size={24} />,
   },
 ]
 
@@ -48,7 +53,7 @@ const gogoSidebar = [
   {
     name: 'GoGo Pass',
     href: '/work-in-progress/',
-    icon: <FaHammer color="#ffffff" size={24} />,
+    icon: <FaHammer color="#fff" size={24} />,
   },
 ]
 
