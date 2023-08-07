@@ -1,11 +1,5 @@
-import { Flex } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
-import Image from 'next/image'
-import NextLink from 'next/link'
-
-import balloonMenu from '/public/assets/img/large_assets/balloon-menu.png'
-
 import { SideItem } from '../SidebarNavbar'
+import BottomBarLinks from './BottomBarLinks'
 import SidebarItem from './SidebarItem'
 
 type Props = {
@@ -27,50 +21,7 @@ export default function DesktopSidebar({ sidebarItems }: Props) {
           </nav>
         </div>
         <div className="z-10" style={{ padding: '1rem' }}>
-          <motion.button
-            style={{ width: '100%' }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <NextLink
-              className="mb-3 flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
-              href="https://www.gogopool.com"
-              style={{
-                color: 'white',
-                fontWeight: '600',
-                fontSize: '0.8rem',
-                padding: '0.5rem 1rem',
-                border: '2px solid #fff',
-                width: '100%',
-              }}
-            >
-              Back to site
-            </NextLink>
-          </motion.button>
-          <motion.button
-            style={{ width: '100%' }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <NextLink
-              className="flex w-full items-center justify-center rounded-full p-1 focus:ring-2 focus:ring-inset focus:ring-white"
-              href="https://docs.gogopool.com"
-              style={{
-                color: 'white',
-                fontWeight: '600',
-                fontSize: '0.8rem',
-                padding: '0.5rem 1rem',
-                border: '2px solid #fff',
-              }}
-            >
-              View Documentation
-            </NextLink>
-          </motion.button>
-        </div>
-        <div className="absolute bottom-0 z-0 p-4">
-          <Flex justifyContent="center" marginBottom={8}>
-            <Image alt="balloon menu" height={238} src={balloonMenu} width={210} />
-          </Flex>
+          <BottomBarLinks />
         </div>
       </div>
     </div>
