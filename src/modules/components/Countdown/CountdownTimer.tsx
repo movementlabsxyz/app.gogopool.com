@@ -1,61 +1,35 @@
+import { useEffect, useState } from 'react'
+
 import { Text } from '@chakra-ui/react'
 
 import CountdownNumber from './CountdownNumber'
 
 import CalendarCheck from '@/common/components/CustomIcon/CalendarCheck'
 import CalendarClose from '@/common/components/CustomIcon/CalendarClose'
-import { useGetRewardCycleLength, useRewardCycleStartTime } from '@/hooks/useRewards'
 
 const daysInMillis = 1000 * 60 * 60 * 24
+export default function CountdownTimer({ ceresData }) {
+  const cycleStartMs = ceresData.rewardsCycleSeconds.value * 1000
+  const rewardsMs = ceresData.rewardsEligibilityMinSeconds.value * 1000
+  const cutoffDateMs = cycleStartMs + rewardsMs
 
-export default function CountdownTimer() {
-  const {
-    data: cycleStart,
-    isError: startError,
-    isLoading: startLoading,
-  } = useRewardCycleStartTime()
-  const {
-    data: cycleLength,
-    isError: lengthError,
-    isLoading: lengthLoading,
-  } = useGetRewardCycleLength()
+  const [msUntilCutoff, setMsUntilCutoff] = useState(cutoffDateMs - Date.now())
+  const [countdownSub1, setCountdownSub1] = useState('YOU ARE ELIGIBLE FOR REWARDS THIS CYCLE!')
+  const [countdownSub2, setCountdownSub2] = useState('ELIGIBILITY ENDS IN:')
 
-  if (startLoading || lengthLoading) {
-    return (
-      <Text className="font-domaine text-blue-900" fontSize={32}>
-        ...Timer Loading
-      </Text>
-    )
-  }
-  if (!cycleLength || !cycleStart) {
-    return (
-      <Text className="font-domaine text-blue-900" fontSize={32}>
-        Please connect to an <span className="text-red-500">AVAX</span> wallet.
-      </Text>
-    )
-  }
-  if (startError || lengthError) {
-    return (
-      <Text className="font-domaine text-blue-900" fontSize={32}>
-        An Error Occurred
-      </Text>
-    )
-  }
+  useEffect(() => {
+    if (msUntilCutoff >= 0) {
+      setTimeout(() => {
+        setMsUntilCutoff(msUntilCutoff - 1000)
+      }, 1000)
+    } else {
+      setCountdownSub1('MISSED ELIGIBILITY FOR REWARDS THIS CYCLE!')
+      setCountdownSub2('ELIGIBILITY STARTS IN:')
+      setMsUntilCutoff(msUntilCutoff + rewardsMs)
+    }
+  }, [msUntilCutoff, rewardsMs])
 
-  const cycleStartMillis = Number(cycleStart.toString()) * 1000
-  const cycleLengthMillis = Number(cycleLength.toString()) * 1000
-  const millisUntilCutoff = cycleStartMillis + cycleLengthMillis / 2 - Date.now()
-
-  let countdownSubtitle1 = 'YOU ARE ELIGIBLE FOR REWARDS THIS CYCLE!'
-  let countdownSubtitle2 = 'ELIGIBILITY ENDS IN:'
-  let daysUntilCutoff = millisUntilCutoff / daysInMillis
-
-  if (millisUntilCutoff <= 0) {
-    countdownSubtitle1 = 'MISSED ELIGIBILITY FOR REWARDS THIS CYCLE!'
-    countdownSubtitle2 = 'ELIGIBILITY STARTS IN:'
-    daysUntilCutoff = (cycleStartMillis + cycleLengthMillis - Date.now()) / daysInMillis
-  }
-
+  const daysUntilCutoff = msUntilCutoff / daysInMillis
   const hoursUntilCutoff = (daysUntilCutoff % 1) * 24
   const minutesUntilCutoff = (hoursUntilCutoff % 1) * 60
   const secondsUntilCutoff = (minutesUntilCutoff % 1) * 60
@@ -64,14 +38,14 @@ export default function CountdownTimer() {
     <div>
       <div className="flex tracking-wide text-[#9499C2]">
         <span className="pr-2 pt-1">
-          {millisUntilCutoff < 0 ? <CalendarClose /> : <CalendarCheck />}
+          {msUntilCutoff < 0 ? <CalendarClose /> : <CalendarCheck />}
         </span>
         <div>
           <Text fontSize={14} fontWeight={800}>
-            {countdownSubtitle1}
+            {countdownSub1}
           </Text>
           <Text fontSize={14} fontWeight={800}>
-            {countdownSubtitle2}
+            {countdownSub2}
           </Text>
         </div>
       </div>

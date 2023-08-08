@@ -2,7 +2,7 @@ import { Text } from '@chakra-ui/react'
 
 type Props = {
   number: number
-  subtitle: 'DAYS' | 'HRS' | 'MINS' | 'SECS'
+  subtitle: 'DAYS' | 'HRS' | 'MINS' | 'SECS' | 'MS'
 }
 
 export default function CountdownNumber({ number, subtitle }: Props) {

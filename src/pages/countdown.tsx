@@ -9,6 +9,7 @@ import WelcomeCard1 from '@/common/components/CustomIcon/WelcomeCard1'
 import WelcomeCard2 from '@/common/components/CustomIcon/WelcomeCard2'
 import WelcomeCard3 from '@/common/components/CustomIcon/WelcomeCard3'
 import { PageHead } from '@/common/components/PageHead'
+import useCeres from '@/hooks/useCeres'
 import CountdownTimer from '@/modules/components/Countdown/CountdownTimer'
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 import InfoCard from '@/modules/components/Welcome/InfoCard'
@@ -16,6 +17,7 @@ import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
 import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
 
 const Countdown = () => {
+  const { data: ceresData, isError, isLoading } = useCeres()
   return (
     <Box className="bg-[#F7F9FF] py-24" minH="full">
       <PageHead append={false} description="Welcome to GoGoPool!" name="Welcome to GoGoPool!" />
@@ -33,7 +35,17 @@ const Countdown = () => {
               width: 560,
             }}
           >
-            <CountdownTimer />
+            {isLoading && (
+              <Text className="font-domaine text-blue-900" fontSize={32}>
+                ...Timer Loading
+              </Text>
+            )}
+            {isError && (
+              <Text className="font-domaine text-blue-900" fontSize={32}>
+                An Error Occurred
+              </Text>
+            )}
+            {!isLoading && !isError && <CountdownTimer ceresData={ceresData} />}
             <Divider />
             <Text className="py-4 font-domaine text-blue-900" fontSize={24} fontWeight="bold">
               Become a Validator with Minipools
