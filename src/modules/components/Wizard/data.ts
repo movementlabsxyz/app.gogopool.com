@@ -24,7 +24,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
     {
       step: 2,
       header: 'Stake GGP',
-      title: 'Borrow AVAX by staking GGP',
+      title: 'Match AVAX by staking GGP',
       image: step2pic,
       size: {
         width: 101,
