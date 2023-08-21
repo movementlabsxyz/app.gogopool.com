@@ -119,10 +119,10 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
         <StakeInput
           amount={defaultAVAXAmount}
           disabled
-          note={`Currently we only support borrowing ${DEFAULT_AVAX[chain?.id] || 0} AVAX.`}
-          title="Amount to borrow"
+          note={`Currently we only support matching ${DEFAULT_AVAX[chain?.id] || 0} AVAX.`}
+          title="Amount to Match"
           token="AVAX"
-          tooltip="Borrowed AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."
+          tooltip="Matched AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."
         />
         <StakeInput
           amount={ggpAmount}

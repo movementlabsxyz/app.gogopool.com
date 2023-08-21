@@ -25,7 +25,7 @@ const TotalStaked = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { isOpen: isOpenUnstake, onClose: onCloseUnstake, onOpen: onOpenUnstake } = useDisclosure()
 
-  const { data: avaxBorrowed } = useGetAVAXAssigned(address)
+  const { data: avaxMatched } = useGetAVAXAssigned(address)
 
   const ggpPrice = useGetGGPPrice()
   const ggpStakeInAVAX = ggpPrice.data ? ggpStake * ggpPrice.data : 0
@@ -37,7 +37,7 @@ const TotalStaked = () => {
     },
     { name: 'Total GGP staked', stat: `${ggpStake.toLocaleString()} GGP` },
     { name: 'Total GGP staked converted to AVAX', stat: `${ggpStakeInAVAX.toLocaleString()} AVAX` },
-    { name: 'Borrowing', stat: `${avaxBorrowed.toLocaleString()} AVAX` },
+    { name: 'Matching', stat: `${avaxMatched.toLocaleString()} AVAX` },
   ]
 
   return (

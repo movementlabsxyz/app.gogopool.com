@@ -17,7 +17,7 @@ export default function WelcomeRewards() {
         >
           <CollatoralizationRadio
             checked={collat === '10'}
-            details="Interested in starting small? Our protocol allows for you to stake as little as 10% in GGP for collatoral to borrow the 1000 AVAX needed."
+            details="Interested in starting small? Our protocol allows for you to stake as little as 10% in GGP for collatoral to match the 1000 AVAX needed."
             radio=<Radio colorScheme={'purple'} value={'10'}>
               <div className="text-lg font-semibold text-blue-900">10% Collateralization</div>
             </Radio>
