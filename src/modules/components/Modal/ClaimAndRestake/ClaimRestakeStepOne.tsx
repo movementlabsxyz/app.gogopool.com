@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers'
 
-import { Divider, Flex } from '@chakra-ui/react'
+import { Button, Divider, Flex } from '@chakra-ui/react'
 import { formatEther } from 'ethers/lib/utils.js'
 
 import { Title } from '@/common/components/Card'
@@ -73,12 +73,9 @@ export default function ClaimRestakeStepOne({
         <button className="text-[18px] font-semibold text-grey-600 underline" onClick={handleClose}>
           Cancel
         </button>
-        <button
-          className="rounded-full bg-blue-400 py-3 px-6 font-bold text-white"
-          onClick={() => setCurrentStep(2)}
-        >
+        <Button onClick={() => setCurrentStep(2)} variant="secondary-filled">
           {restakeAmount.eq(0) ? 'Claim All...' : 'Claim and Restake...'}
-        </button>
+        </Button>
       </Flex>
     </div>
   )

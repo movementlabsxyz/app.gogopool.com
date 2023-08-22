@@ -11,13 +11,9 @@ import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
 import { Modal } from '@/common/components/Modal'
 import { useClaimAndRestake } from '@/hooks/useClaimNodeOp'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
-import { useGetGGPRewards } from '@/hooks/useStake'
 
-export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalProps }) => {
+export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modalProps }) => {
   const [currentStep, setCurrentStep] = useState(1)
-
-  const { data: rewardsToClaimMaybe } = useGetGGPRewards(ownerAddress)
-  const rewardsToClaim: BigNumber = rewardsToClaimMaybe || BigNumber.from(0)
 
   const [claimAmount, setClaimAmount] = useState<BigNumber>(rewardsToClaim)
   const [restakeAmount, setRestakeAmount] = useState<BigNumber>(BigNumber.from(0))
@@ -34,7 +30,7 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalPr
     avaxAmount: BigNumber.from(0),
   })
 
-  const { data: claimData, reset, write: claim } = useClaimAndRestake(claimAmount)
+  const { data: claimData, reset, write: claim } = useClaimAndRestake(claimAmount, restakeAmount)
 
   const { isLoading: transactionLoading, isSuccess: transactionSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
