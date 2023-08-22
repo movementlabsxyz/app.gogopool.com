@@ -1,4 +1,4 @@
-import { BigNumber, Contract, utils } from 'ethers'
+import { BigNumber, Contract } from 'ethers'
 import { useState } from 'react'
 
 import { useInterval, useToast } from '@chakra-ui/react'
@@ -18,7 +18,7 @@ import { DECODED_ERRORS } from '@/utils/consts'
 export interface UseCreateMinipoolParams {
   formattedId: HexString // Node ID formatted as a HexString
   duration: number | string // duration in ms
-  amount: BigNumber | number | string // amount of tokens to be deposited
+  amount: BigNumber // amount of tokens to be deposited
   fee?: BigNumber // the fee for the node. Default is 20000, or 2%
 }
 
@@ -36,12 +36,6 @@ export const useCreateMinipool = ({
 
   if (typeof duration === 'string') {
     duration = ms(duration) / 1000
-  }
-
-  if (typeof amount === 'number') {
-    amount = BigNumber.from(amount)
-  } else if (typeof amount === 'string') {
-    amount = utils.parseEther(amount)
   }
 
   const addRecentTransaction = useAddRecentTransaction()

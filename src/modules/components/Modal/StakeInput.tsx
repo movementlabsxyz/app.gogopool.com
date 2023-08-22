@@ -1,9 +1,8 @@
-import { BigNumber, utils } from 'ethers'
+import { BigNumber } from 'ethers'
 import { FunctionComponent, useState } from 'react'
 
 import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils'
-import { NumericFormat } from 'react-number-format'
+import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount, useBalance } from 'wagmi'
 
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
@@ -12,15 +11,16 @@ import { MIN_RATIO } from '../Wizard/components/StakeButton'
 
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
+import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import useGGPAllowance from '@/hooks/allowance'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
 export interface StakeInputModalProps {
-  stake: any
-  rewardsToClaim: any
-  stakeAmount: any
-  setStakeAmount: any
+  stake: () => void
+  ggpStake: BigNumber
+  stakeAmount: BigNumber
+  setStakeAmount: (arg0: BigNumber) => void
   isLoading: boolean
   isError: boolean
   onClose: any
@@ -28,15 +28,15 @@ export interface StakeInputModalProps {
 }
 
 export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
+  ggpStake,
   isLoading,
   onClose,
   refetch,
-  rewardsToClaim,
   setStakeAmount,
   stake,
   stakeAmount,
 }) => {
-  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: stakeAmount }) // something to get the future ratio here
+  const ratio = useGetCollateralRatio({ ggpAmount: stakeAmount }) // something to get the future ratio here
   const { address: account } = useAccount()
   const { address: ggpAddress } = useTokenGGPContract()
   const [approveStatus, setApproveStatus] = useState<'error' | 'loading' | 'success' | 'idle'>(
@@ -48,9 +48,11 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
     address: account,
     token: ggpAddress as `0x${string}`,
   })
-  const allowance = (ggpAllowance as unknown as BigNumber) || BigNumber.from(0)
-  const ggpBalance = Number(formatEther(ggpBalanceMaybe?.value || 0))
-  const amountBN = utils.parseEther(`${stakeAmount || 0}`)
+  const allowance = ggpAllowance || BigNumber.from(0)
+  const ggpBalance = ggpBalanceMaybe?.value || BigNumber.from(0)
+
+  const min = BigNumber.from(0)
+  const max = ggpBalance
 
   return (
     <Flex direction="column" gap={2}>
@@ -60,16 +62,12 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
       </div>
 
       <div className="flex items-center justify-between">
-        <NumericFormat
+        <BigNumberInput
+          bnValue={stakeAmount}
           className="mr-2 w-full rounded-xl bg-gray-50 p-2"
-          max={rewardsToClaim}
-          min={0}
-          onValueChange={({ floatValue }) => {
-            setStakeAmount(floatValue)
-          }}
-          placeholder="0.0"
-          thousandSeparator
-          value={stakeAmount || 0}
+          max={max}
+          min={min}
+          onChange={setStakeAmount}
         />
         <GGPPillUnit value={null} />
       </div>
@@ -82,14 +80,14 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
           }}
           variant="link"
         >
-          Balance: {ggpBalance.toLocaleString()} GGP
+          Balance: {Number(formatEther(ggpBalance)).toFixed(2)} GGP
         </Button>
         <div
           className={`text-right text-xs font-bold ${
-            ratio < MIN_RATIO ? 'text-red-500' : 'text-green-700'
+            ratio.lt(MIN_RATIO) ? 'text-red-500' : 'text-green-700'
           }`}
         >
-          Collateralization ratio: {(ratio || 0).toLocaleString()}%
+          Collateralization ratio: {Number(formatEther(ratio)).toFixed(2)}%
         </div>
       </div>
 
@@ -126,9 +124,7 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
             </svg>
           </div>
 
-          <p className="text-[22px]">
-            {rewardsToClaim + (stakeAmount || 0) < 0 ? 0 : rewardsToClaim + (stakeAmount || 0)}
-          </p>
+          <p className="text-[22px]">{Number(formatEther(ggpStake.add(stakeAmount))).toFixed(2)}</p>
         </div>
         <div>
           <Text color="#B7AFF8">Resulting amount in the protocol</Text>
@@ -142,9 +138,9 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
         </a>
 
         <>
-          {allowance.gte(amountBN) || approveStatus === 'success' ? (
+          {allowance.gte(ggpBalance) || approveStatus === 'success' ? (
             <Button
-              disabled={stakeAmount <= 0 || !stake || isLoading}
+              disabled={stakeAmount.lte(0) || !stake || isLoading}
               isLoading={isLoading}
               onClick={stake}
               size="sm"

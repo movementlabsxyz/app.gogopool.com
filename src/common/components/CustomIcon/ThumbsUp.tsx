@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const ThumbsUp = (props) => (
+export const ThumbsUp = (props) => (
   <svg fill="none" height={99} width={180} xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle cx={90.5} cy={50} fill="#E9F8FF" r={43.5} stroke="#000" />
     <path
@@ -44,5 +44,3 @@ const ThumbsUp = (props) => (
     />
   </svg>
 )
-
-export default ThumbsUp

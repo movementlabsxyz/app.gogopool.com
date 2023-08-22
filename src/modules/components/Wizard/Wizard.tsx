@@ -127,7 +127,7 @@ export const Wizard: FunctionComponent<WizardProps> = ({
       case 3:
         return (
           <WizardCreateMinipool
-            amount={avaxAmount}
+            avaxAmount={avaxAmount}
             formattedNodeId={formattedNodeId}
             nextStep={nextStep}
             setAmount={setAvaxAmount}

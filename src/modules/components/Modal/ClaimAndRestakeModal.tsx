@@ -1,7 +1,6 @@
-import { BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
-import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useWaitForTransaction } from 'wagmi'
 
 import ClaimRestakeStepOne from './ClaimAndRestake/ClaimRestakeStepOne'
@@ -18,32 +17,24 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalPr
   const [currentStep, setCurrentStep] = useState(1)
 
   const { data: rewardsToClaimMaybe } = useGetGGPRewards(ownerAddress)
-  const rewardsToClaim = Number(formatEther((rewardsToClaimMaybe as BigNumberish) || 0))
+  const rewardsToClaim: BigNumber = rewardsToClaimMaybe || BigNumber.from(0)
 
-  const [claimAmount, setClaimAmount] = useState(rewardsToClaim)
-  const [restakeAmount, setRestakeAmount] = useState(0)
+  const [claimAmount, setClaimAmount] = useState<BigNumber>(rewardsToClaim)
+  const [restakeAmount, setRestakeAmount] = useState<BigNumber>(BigNumber.from(0))
 
-  const setRestakeAndClaim = (val: number) => {
-    setRestakeAmount(val || 0)
-
-    const claimAmount = Number(
-      formatEther(parseEther(rewardsToClaim.toString()).sub(parseEther(val.toString())).toString()),
-    )
-    setClaimAmount(claimAmount)
+  const setRestakeAndClaim = (val: BigNumber) => {
+    setRestakeAmount(val || BigNumber.from(0))
+    setClaimAmount(rewardsToClaim.sub(val))
   }
 
-  const currentRatio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
+  const currentRatio = useGetCollateralRatio({})
 
   const futureRatio = useGetCollateralRatio({
     ggpAmount: restakeAmount,
-    avaxAmount: 0,
+    avaxAmount: BigNumber.from(0),
   })
 
-  const {
-    data: claimData,
-    reset,
-    write: claim,
-  } = useClaimAndRestake(ownerAddress, parseEther(claimAmount?.toString() || '0'))
+  const { data: claimData, reset, write: claim } = useClaimAndRestake(claimAmount)
 
   const { isLoading: transactionLoading, isSuccess: transactionSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
@@ -53,7 +44,7 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalPr
     onClose()
     reset()
     setClaimAmount(rewardsToClaim)
-    setRestakeAmount(0)
+    setRestakeAmount(BigNumber.from(0))
     setCurrentStep(1)
   }
 

@@ -1,4 +1,4 @@
-import { BigNumberish, utils } from 'ethers'
+import { BigNumber, BigNumberish } from 'ethers'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 import {
@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useChainModal } from '@rainbow-me/rainbowkit'
-import { formatEther } from 'ethers/lib/utils.js'
+import { formatEther, parseEther } from 'ethers/lib/utils.js'
 import ms from 'ms'
 import { useAccount, useBalance, useNetwork, useWaitForTransaction } from 'wagmi'
 
@@ -36,7 +36,6 @@ import useRedeem from '@/hooks/redeem'
 import useCeres from '@/hooks/useCeres'
 import addToken from '@/utils/addToken'
 import { formatEtherFixed } from '@/utils/formatEtherFixed'
-import { roundedBigNumber } from '@/utils/numberFormatter'
 
 const generateStatistics = (
   apy: number | string,
@@ -131,8 +130,8 @@ export const LiquidStaking: FunctionComponent = () => {
   const { chain } = useNetwork()
 
   const [swapDirection, setSwapDirection] = useState(false) // false for AVAX -> ggAVAX, true for ggAVAX -> AVAX
-  const [amount, setAmount] = useState<number>() // stake value
-  const [reward, setReward] = useState<number>(0) // reward value
+  const [amount, setAmount] = useState<BigNumber>(parseEther('0')) // stake value
+  const [reward, setReward] = useState<BigNumber>(parseEther('0')) // reward value
 
   const { address: account, isConnected } = useAccount()
 
@@ -173,7 +172,7 @@ export const LiquidStaking: FunctionComponent = () => {
     isError: isDepositError,
     isLoading: isDepositLoading,
     write: deposit,
-  } = useDeposit(utils.parseEther(amount?.toString() || '0'))
+  } = useDeposit(amount)
 
   // redeem ggAVAX
   const {
@@ -181,7 +180,7 @@ export const LiquidStaking: FunctionComponent = () => {
     isError: isRedeemError,
     isLoading: isRedeemLoading,
     write: redeem,
-  } = useRedeem(utils.parseEther(amount?.toString() || '0'))
+  } = useRedeem(amount)
 
   const { status: redeemStatus } = useWaitForTransaction({
     hash: redeemData?.hash,
@@ -218,7 +217,7 @@ export const LiquidStaking: FunctionComponent = () => {
         duration: 15000,
         description: <span>Deposited!</span>,
       })
-      setAmount(0)
+      setAmount(parseEther('0'))
       return
     }
     if (depositStatus === 'error') {
@@ -239,7 +238,7 @@ export const LiquidStaking: FunctionComponent = () => {
         status: 'success',
         description: 'Redeemed!',
       })
-      setAmount(0)
+      setAmount(parseEther('0'))
       return
     }
     if (redeemStatus === 'error') {
@@ -254,20 +253,17 @@ export const LiquidStaking: FunctionComponent = () => {
 
   useEffect(() => {
     if (swapDirection) {
-      const rate = Number(utils.formatEther((ggAvaxExchangeRate as BigNumberish) || 0))
-
-      const rewardAmount = amount / rate
-      if (isNaN(rewardAmount)) {
-        setReward(0)
+      if (!ggAvaxExchangeRate) {
+        setReward(parseEther('0'))
       } else {
+        const rewardAmount = amount.mul(BigNumber.from(10).pow(18)).div(ggAvaxExchangeRate)
         setReward(rewardAmount)
       }
     } else {
-      const rate = Number(utils.formatEther((ggAvaxExchangeRate as BigNumberish) || 0))
-      const rewardAmount = rate * amount
-      if (isNaN(rewardAmount)) {
-        setReward(0)
+      if (!ggAvaxExchangeRate) {
+        setReward(parseEther('0'))
       } else {
+        const rewardAmount = amount.mul(ggAvaxExchangeRate).div(BigNumber.from(10).pow(18))
         setReward(rewardAmount)
       }
     }
@@ -276,8 +272,8 @@ export const LiquidStaking: FunctionComponent = () => {
   const displayButton = () => {
     const buttonText = swapDirection ? 'Redeem ggAVAX' : 'Deposit AVAX'
     const sufficientBalance = swapDirection
-      ? ggAVAXBalance?.value.lt(utils.parseEther(amount?.toString() || '0'))
-      : balance?.value.lt(utils.parseEther(amount?.toString() || '0'))
+      ? ggAVAXBalance?.value.lt(amount)
+      : balance?.value.lt(amount)
 
     if (!isConnected) {
       return <ConnectButton />
@@ -335,7 +331,7 @@ export const LiquidStaking: FunctionComponent = () => {
                   {swapDirection ? (
                     <StakeForm
                       amount={amount}
-                      balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
+                      balance={ggAVAXBalance?.value || parseEther('0')}
                       header="Amount to redeem"
                       setAmount={setAmount}
                       setReward={setReward}
@@ -344,7 +340,7 @@ export const LiquidStaking: FunctionComponent = () => {
                   ) : (
                     <StakeForm
                       amount={amount}
-                      balance={roundedBigNumber(balance?.value || 0)}
+                      balance={balance?.value || parseEther('0')}
                       setAmount={setAmount}
                       setReward={setReward}
                     />
@@ -370,15 +366,12 @@ export const LiquidStaking: FunctionComponent = () => {
               <Content>
                 {swapDirection ? (
                   <RewardForm
-                    balance={roundedBigNumber(balance?.value || 0)}
+                    balance={balance?.value || parseEther('0')}
                     reward={reward}
                     token="AVAX"
                   />
                 ) : (
-                  <RewardForm
-                    balance={roundedBigNumber(ggAVAXBalance?.value || 0)}
-                    reward={reward}
-                  />
+                  <RewardForm balance={ggAVAXBalance?.value || parseEther('0')} reward={reward} />
                 )}
               </Content>
             </Card>

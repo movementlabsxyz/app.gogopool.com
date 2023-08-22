@@ -1,4 +1,7 @@
+import { BigNumber } from 'ethers'
+
 import { Divider, Flex } from '@chakra-ui/react'
+import { formatEther } from 'ethers/lib/utils.js'
 
 import { Title } from '@/common/components/Card'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
@@ -6,12 +9,12 @@ import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 type Props = {
   handleClose: () => void
   setCurrentStep: (step: number) => void
-  rewardsToClaim: number
-  currentRatio: number
-  restakeAmount: number
-  futureRatio: number
-  claimAmount: number
-  setRestakeAndClaim: (val: number) => void
+  rewardsToClaim: BigNumber
+  currentRatio: BigNumber
+  restakeAmount: BigNumber
+  futureRatio: BigNumber
+  claimAmount: BigNumber
+  setRestakeAndClaim: (val: BigNumber) => void
 }
 
 export default function ClaimRestakeStepOne({
@@ -37,11 +40,13 @@ export default function ClaimRestakeStepOne({
       <Flex justify="space-between">
         <Flex fontSize="14px" gap="10px">
           <div className="font-semibold text-grey-500">GGP Rewards:</div>
-          <div className="font-bold text-grey-1000">{rewardsToClaim.toLocaleString()} GGP</div>
+          <div className="font-bold text-grey-1000">{formatEther(rewardsToClaim)} GGP</div>
         </Flex>
         <Flex fontSize="14px" gap="10px">
           <div className="font-semibold text-grey-500">Current Collateralization:</div>
-          <div className="font-bold text-grey-1000">{currentRatio.toLocaleString()}%</div>
+          <div className="font-bold text-grey-1000">
+            {Number(formatEther(currentRatio)).toFixed(2)}%
+          </div>
         </Flex>
       </Flex>
 
@@ -49,13 +54,13 @@ export default function ClaimRestakeStepOne({
 
       <div className="mt-6">
         <StakeInput
-          amount={restakeAmount || 0}
+          amount={restakeAmount}
           balance={claimAmount}
           balanceLabel="Withraw Amount"
           canUseAll={true}
           lowerText="Future Collateralization:"
-          lowerTextValue={(futureRatio || 0).toLocaleString() + '%'}
-          max={restakeAmount + claimAmount}
+          lowerTextValue={futureRatio}
+          max={restakeAmount.add(claimAmount)}
           setAmount={setRestakeAndClaim}
           title="How much do you want to restake?"
           token="GGP"
@@ -72,7 +77,7 @@ export default function ClaimRestakeStepOne({
           className="rounded-full bg-blue-400 py-3 px-6 font-bold text-white"
           onClick={() => setCurrentStep(2)}
         >
-          {restakeAmount === 0 ? 'Claim All...' : 'Claim and Restake...'}
+          {restakeAmount.eq(0) ? 'Claim All...' : 'Claim and Restake...'}
         </button>
       </Flex>
     </div>

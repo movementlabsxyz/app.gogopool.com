@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Button, Flex, Text } from '@chakra-ui/react'
@@ -5,16 +6,17 @@ import { formatEther } from 'ethers/lib/utils'
 import { useAccount, useBalance } from 'wagmi'
 
 import { TransactionHash } from '../TransactionHash'
-import ThumbsUp from './ThumbsUp'
 
+import { ThumbsUp } from '@/common/components/CustomIcon/ThumbsUp'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetGGPStake } from '@/hooks/useStake'
+import { HexString } from '@/types/cryptoGenerics'
 
 export interface SuccessfulClaimProps {
-  transactionHash: any
+  transactionHash: HexString
   onClose: any
-  staked?: number
-  collateralization?: number
+  staked?: BigNumber
+  collateralization?: BigNumber
 }
 
 export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
@@ -31,7 +33,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
     token: ggpAddress as `0x${string}`,
     watch: true,
   })
-  const ggpBalance = Number(formatEther(ggpBalanceMaybe?.value || 0))
+  const ggpBalance = ggpBalanceMaybe?.value ? ggpBalanceMaybe.value : BigNumber.from(0)
 
   const { data: ggpStake } = useGetGGPStake(address)
 
@@ -51,7 +53,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
           textAlign="center"
         >
           <span>GGP Balance</span>
-          <span className="text-black">{Math.round(ggpBalance).toLocaleString()}</span>
+          <span className="text-black">{Number(formatEther(ggpBalance)).toFixed(2)}</span>
         </Text>
         {staked ? (
           <Text
@@ -63,7 +65,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Staked Amount</span>
-            <span className="text-black">{staked.toLocaleString()}</span>
+            <span className="text-black">{Number(formatEther(staked)).toFixed(2)}</span>
           </Text>
         ) : (
           <Text
@@ -75,12 +77,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Stake Amount</span>
-            <span className="text-black">
-              {Math.round(ggpStake).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              })}
-            </span>
+            <span className="text-black">{Number(formatEther(ggpStake)).toFixed(2)}</span>
           </Text>
         )}
         {collateralization && (
@@ -93,7 +90,9 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Collateralization Ratio</span>
-            <span className="text-black">{collateralization.toLocaleString() + '%'}</span>
+            <span className="text-black">
+              {Number(formatEther(collateralization)).toFixed(2) + '%'}
+            </span>
           </Text>
         )}
       </div>

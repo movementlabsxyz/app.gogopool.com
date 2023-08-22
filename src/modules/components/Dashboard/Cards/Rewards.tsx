@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
 
 import { formatEther } from 'ethers/lib/utils'
 
@@ -17,7 +17,7 @@ export interface RewardsProps {
 
 const Rewards = ({ address, openClaimModal }: RewardsProps) => {
   const { data: claimAmountMaybe } = useGetGGPRewards(address)
-  const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
+  const claimAmount = claimAmountMaybe ? claimAmountMaybe : BigNumber.from(0)
 
   const { data: ggpStake } = useGetGGPStake(address)
 
@@ -38,11 +38,11 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
   const stats = [
     {
       name: 'Claimable Rewards',
-      stat: `${claimAmount.toLocaleString()} GGP`,
+      stat: `${Number(formatEther(claimAmount)).toFixed(2)} GGP`,
     },
     {
       name: 'GGP Staked',
-      stat: `${claimAmount ? ggpStake.toLocaleString() : 0} GGP`,
+      stat: `${Number(formatEther(ggpStake)).toFixed(2)} GGP`,
     },
     {
       name: 'Next Reward Cycle',
@@ -54,9 +54,9 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
     <>
       <div className="flex items-center space-x-4">
         <h3 className="text-base font-semibold leading-6 text-gray-900">Rewards Information</h3>
-        <Tooltip content={claimAmount <= 0 ? 'No rewards available' : ''} placement="top">
+        <Tooltip content={claimAmount.lte(0) ? 'No rewards available' : ''} placement="top">
           <Button
-            disabled={claimAmount <= 0}
+            disabled={claimAmount.lte(0)}
             onClick={openClaimModal}
             size="xs"
             variant="secondary-outline"

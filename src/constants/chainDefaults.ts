@@ -1,5 +1,15 @@
-export const DEFAULT_AVAX = { 43112: 1000, 43113: 1, 43114: 1000 }
-export const DEFAULT_GGP = { 43112: 100, 43113: 1, 43114: 100 }
+import { parseEther } from 'ethers/lib/utils.js'
+
+export const DEFAULT_AVAX = {
+  43112: parseEther('1000'),
+  43113: parseEther('1'),
+  43114: parseEther('1000'),
+}
+export const DEFAULT_GGP = {
+  43112: parseEther('100'),
+  43113: parseEther('1'),
+  43114: parseEther('100'),
+}
 export const DEFAULT_DURATION = {
   43112: ['15 minutes'],
   43113: ['1 day'],

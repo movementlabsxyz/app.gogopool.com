@@ -1,4 +1,7 @@
+import { BigNumber, constants } from 'ethers'
+
 import { useDisclosure } from '@chakra-ui/react'
+import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount } from 'wagmi'
 
 import { EmptyState } from '../../MinipoolTable/EmptyState'
@@ -9,8 +12,7 @@ import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
 import {
   useGetAVAXAssigned,
-  useGetAVAXStake,
-  useGetCollateralizationRatio,
+  useGetContractCollateralizationRatio,
   useGetGGPPrice,
   useGetGGPStake,
 } from '@/hooks/useStake'
@@ -18,26 +20,29 @@ import {
 const TotalStaked = () => {
   const { address } = useAccount()
 
-  const { data: avaxStake } = useGetAVAXStake(address)
   const { data: ggpStake } = useGetGGPStake(address)
-  const { data: straightRatio } = useGetCollateralizationRatio(address)
+  const { data: straightRatio } = useGetContractCollateralizationRatio(address)
+  const { data: avaxMatched } = useGetAVAXAssigned(address)
+  const { data: ggpPrice } = useGetGGPPrice()
 
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { isOpen: isOpenUnstake, onClose: onCloseUnstake, onOpen: onOpenUnstake } = useDisclosure()
 
-  const { data: avaxMatched } = useGetAVAXAssigned(address)
-
-  const ggpPrice = useGetGGPPrice()
-  const ggpStakeInAVAX = ggpPrice.data ? ggpStake * ggpPrice.data : 0
+  const ggpStakeInAVAX = ggpStake.mul(ggpPrice).div(BigNumber.from(10).pow(18))
 
   const stats = [
     {
       name: 'GGP collateral ratio',
-      stat: `${avaxStake ? (straightRatio || 0).toLocaleString() : 0}%`,
+      stat: `${
+        straightRatio.eq(constants.MaxUint256) ? '∞' : Number(formatEther(straightRatio)).toFixed(2)
+      }%`,
     },
-    { name: 'Total GGP staked', stat: `${ggpStake.toLocaleString()} GGP` },
-    { name: 'Total GGP staked converted to AVAX', stat: `${ggpStakeInAVAX.toLocaleString()} AVAX` },
-    { name: 'Matching', stat: `${avaxMatched.toLocaleString()} AVAX` },
+    { name: 'Total GGP staked', stat: `${Number(formatEther(ggpStake)).toFixed(2)} GGP` },
+    {
+      name: 'Total GGP staked converted to AVAX',
+      stat: `${Number(formatEther(ggpStakeInAVAX)).toFixed(2)} AVAX`,
+    },
+    { name: 'Matching', stat: `${Number(formatEther(avaxMatched)).toFixed(2)} AVAX` },
   ]
 
   return (
@@ -49,8 +54,6 @@ const TotalStaked = () => {
             Stake {ggpStake ? 'more' : ''}
           </Button>
           <Tooltip content={!ggpStake ? 'You do not have any GGP staked' : ''}>
-            {/* this should maybe be more explicit. we should allow them to unstake if they are above 150% colalteralization */}
-            {/* so then I should show collateralization in the main card */}
             <Button
               disabled={!ggpStake}
               onClick={onOpenUnstake}

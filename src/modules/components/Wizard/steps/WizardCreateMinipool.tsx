@@ -1,21 +1,20 @@
-import { BigNumber, utils } from 'ethers'
+import { BigNumber } from 'ethers'
 import { Dispatch, FunctionComponent, SetStateAction } from 'react'
 
 import { Flex, Text, useToast } from '@chakra-ui/react'
 import { useChainModal } from '@rainbow-me/rainbowkit'
+import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount, useBalance, useNetwork, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
 import ConnectButton from '@/common/components/ConnectButton'
 import { AvalancheIcon } from '@/common/components/CustomIcon/AvalancheIcon'
-import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 import { useCreateMinipool } from '@/hooks/minipool'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 import { HexString } from '@/types/cryptoGenerics'
-import { roundedBigNumber } from '@/utils/numberFormatter'
 
-export interface WizardStepThreeProps {
-  amount: number
+export interface WizardCreateMinipoolProps {
+  avaxAmount: BigNumber
   setAmount: Dispatch<SetStateAction<number>>
   timeRangeSeconds: number
   setTxID: Dispatch<SetStateAction<string>>
@@ -23,8 +22,8 @@ export interface WizardStepThreeProps {
   formattedNodeId: HexString
 }
 
-export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
-  amount,
+export const WizardCreateMinipool: FunctionComponent<WizardCreateMinipoolProps> = ({
+  avaxAmount,
   formattedNodeId,
   nextStep,
   setTxID,
@@ -34,7 +33,6 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
 
-  const defaultAVAXAmount = DEFAULT_AVAX[chain?.id] || 0
   const toast = useToast()
 
   const {
@@ -43,8 +41,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
     write: createMinipool,
   } = useCreateMinipool({
     formattedId: formattedNodeId,
-    amount: utils.parseEther(amount?.toString() || '0'),
-    // These need to be made user changeable in the future
+    amount: avaxAmount,
     fee: BigNumber.from(20000),
     duration: timeRangeSeconds,
   })
@@ -85,8 +82,8 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
   return (
     <Flex className="space-y-4" direction="column">
       <StakeInput
-        amount={defaultAVAXAmount}
-        balance={roundedBigNumber(AVAXBalance?.value || BigNumber.from(0))}
+        amount={avaxAmount}
+        balance={AVAXBalance?.value || BigNumber.from(0)}
         currencySymbol="$"
         disabled
         icon={<AvalancheIcon />}
@@ -98,7 +95,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
         <Button
           data-testid="deposit-avax"
           disabled={
-            AVAXBalance?.value.lt(utils.parseEther(defaultAVAXAmount.toString())) ||
+            AVAXBalance?.value.lt(avaxAmount) ||
             isCreateMinipoolLoading ||
             isLoadingDepositTransaction
           }
@@ -106,13 +103,13 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
           isLoading={isCreateMinipoolLoading || isLoadingDepositTransaction}
           onClick={createMinipool}
         >
-          Deposit {defaultAVAXAmount.toString()} AVAX
+          Deposit {Number(formatEther(avaxAmount)).toFixed(2)} AVAX
         </Button>
       )}
       {/* Wallet is connected but the createMinipool callStatic failed */}
       {!chain?.unsupported && isConnected && !createMinipool && (
         <Button disabled full mt={4} variant="destructive-outline">
-          {AVAXBalance?.value.lt(utils.parseEther(defaultAVAXAmount.toString()))
+          {AVAXBalance?.value.lt(avaxAmount)
             ? 'Insufficient AVAX balance'
             : 'Cannot deposit AVAX right now.'}
         </Button>
@@ -126,7 +123,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardStepThreeProps> = ({
       {!isConnected && <ConnectButton />}
       <Text className="mt-6 text-right text-gray-400" size="sm">
         Currently we only support minipools of{' '}
-        <b>{defaultAVAXAmount?.toLocaleString() || 0} AVAX</b>
+        <b>{Number(formatEther(avaxAmount)).toFixed(2)} AVAX</b>
       </Text>
     </Flex>
   )
