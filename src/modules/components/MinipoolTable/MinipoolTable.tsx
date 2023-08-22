@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers'
+
 import { Skeleton } from '@chakra-ui/react'
 import clsx from 'clsx'
 import { formatUnits } from 'ethers/lib/utils'
@@ -6,12 +8,12 @@ import { useRouter } from 'next/router'
 import CancelButton from './CancelButton'
 import DefaultButton from './DefaultButton'
 import { EmptyState } from './EmptyState'
+import ErrorButton from './ErrorButton'
 import WithdrawButton from './WithdrawButton'
 
 import { Button } from '@/common/components/Button'
-import { Tooltip } from '@/common/components/Tooltip'
 import { useMinipoolsByOwner } from '@/hooks/minipool'
-import { MinipoolStatus } from '@/types/minipool'
+import Minipool, { MinipoolStatus } from '@/types/minipool'
 import { nodeHexToID } from '@/utils'
 
 const statuses = {
@@ -38,7 +40,7 @@ export interface MinipoolTableProps {
   ownerAddress: string
 }
 
-const formatTime = (t) => {
+const formatTime = (t: BigNumber) => {
   if (Number(t) === 0) {
     return '--'
   }
@@ -56,20 +58,21 @@ const formatTime = (t) => {
     }) + ' UTC'
   )
 }
-const copyTransaction = (nodeId) => {
+
+const copyTransaction = (nodeId: string) => {
   navigator.clipboard.writeText(`https://explorer.avax.network/tx/${nodeId}`).catch((err) => {
     console.error('Failed to copy transaction hash: ', err)
   })
 }
 
-const MinipoolCard = ({ minipool }) => {
+const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
   const isWithdrawable = minipool.status.toNumber() === MinipoolStatus.Withdrawable
   const isPrelaunch = minipool.status.toNumber() === MinipoolStatus.Prelaunch
   const isError = minipool.status.toNumber() === MinipoolStatus.Error
 
   const cardInternals = (
-    <li className="relative flex w-full items-center space-x-4 py-4" key={minipool.id}>
+    <li className="relative flex w-full items-center space-x-4 py-4" key={minipool.nodeID}>
       <div className="min-w-0 flex-auto">
         <div className="flex items-center gap-x-3">
           <div className={clsx(statuses[minipool.status.toNumber()], 'flex-none rounded-full p-1')}>
@@ -90,36 +93,26 @@ const MinipoolCard = ({ minipool }) => {
           </h2>
         </div>
         <div className="mt-3 flex items-center gap-x-2.5 text-sm leading-5 text-gray-800">
-          <Tooltip content="Staked by node operator">
-            {formatUnits(minipool.avaxNodeOpAmt)} staked
-          </Tooltip>
+          {formatUnits(minipool.avaxNodeOpAmt)} staked
           <svg className="h-0.5 w-0.5 flex-none fill-gray-300" viewBox="0 0 2 2">
             <circle cx={1} cy={1} r={1} />
           </svg>
-          <Tooltip content="AVAX rewards for node operator">
-            {formatUnits(minipool.avaxNodeOpRewardAmt)} rewards
-          </Tooltip>
+          {formatUnits(minipool.avaxNodeOpRewardAmt)} rewards
           <p className="whitespace-nowrap"></p>
         </div>
         <div className="mt-3 flex flex-col gap-1 text-sm leading-5 text-gray-800">
-          <Tooltip content="Created time" wrap={false}>
-            <time className="flex gap-4" dateTime={minipool.creationTime}>
-              <span>Created:</span>
-              <span>{formatTime(minipool.creationTime)}</span>
-            </time>
-          </Tooltip>
-          <Tooltip content="Start time" wrap={false}>
-            <time className="flex gap-9" dateTime={minipool.startTime}>
-              <span>Start:</span>
-              <span>{formatTime(minipool.startTime)}</span>
-            </time>
-          </Tooltip>
-          <Tooltip content="End time" wrap={false}>
-            <time className="flex gap-10" dateTime={minipool.endTIme}>
-              <span>End:</span>
-              <span>{formatTime(minipool.endTime)}</span>
-            </time>
-          </Tooltip>
+          <time className="flex gap-4">
+            <span>Created:</span>
+            <span>{formatTime(minipool.creationTime)}</span>
+          </time>
+          <time className="flex gap-9">
+            <span>Start:</span>
+            <span>{formatTime(minipool.startTime)}</span>
+          </time>
+          <time className="flex gap-10">
+            <span>End:</span>
+            <span>{formatTime(minipool.endTime)}</span>
+          </time>
         </div>
       </div>
       <div
@@ -135,25 +128,31 @@ const MinipoolCard = ({ minipool }) => {
 
   if (isPrelaunch) {
     return (
-      <CancelButton isFinished={isFinished} nodeId={minipool.nodeID}>
+      <CancelButton isFinished={isFinished} minipool={minipool}>
         {cardInternals}
       </CancelButton>
     )
-  } else if (isWithdrawable || isError) {
+  } else if (isWithdrawable) {
     return (
-      <WithdrawButton isFinished={isFinished} nodeId={minipool.nodeID}>
+      <WithdrawButton isFinished={isFinished} minipool={minipool}>
         {cardInternals}
       </WithdrawButton>
+    )
+  } else if (isError) {
+    return (
+      <ErrorButton isFinished={isFinished} minipool={minipool}>
+        {cardInternals}
+      </ErrorButton>
     )
   } else {
     return <DefaultButton status={minipool.status.toNumber()}>{cardInternals}</DefaultButton>
   }
 }
 
-const MinipoolList = ({ minipools }) => {
+const MinipoolList = ({ minipools }: { minipools: Minipool[] }) => {
   return (
     <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2" role="list">
-      {minipools?.map((minipool) => (
+      {minipools.map((minipool) => (
         <MinipoolCard key={minipool.nodeID} minipool={minipool} />
       ))}
     </ul>

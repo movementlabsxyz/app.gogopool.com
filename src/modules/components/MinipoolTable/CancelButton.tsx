@@ -4,8 +4,10 @@ import clsx from 'clsx'
 import { Tooltip } from '@/common/components/Tooltip'
 import { useCancelMinipool } from '@/hooks/minipool'
 
-const CancelButton = ({ children, isFinished, nodeId }) => {
-  const { prepareError: isPrepareErrorCancel, write: cancelMinipool } = useCancelMinipool(nodeId)
+const CancelButton = ({ children, isFinished, minipool }) => {
+  const { prepareError: isPrepareErrorCancel, write: cancelMinipool } = useCancelMinipool(
+    minipool.nodeID,
+  )
 
   const canCancel = !isPrepareErrorCancel
   let tooltipLabel = ''
@@ -25,13 +27,7 @@ const CancelButton = ({ children, isFinished, nodeId }) => {
             'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
           !enabled && 'cursor-default hover:bg-white',
         )}
-        onClick={
-          enabled
-            ? cancelMinipool
-            : () => {
-                // empty
-              }
-        }
+        onClick={enabled ? cancelMinipool : undefined}
       >
         {children}
         {enabled && (
