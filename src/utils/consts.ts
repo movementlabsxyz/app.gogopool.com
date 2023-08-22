@@ -1,3 +1,11 @@
+import { BigNumber } from 'ethers'
+
+export const WEI_VALUE = BigNumber.from(10).pow(18)
+
+export const INVESTOR_LIST = ['0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127']
+export const RETAIL_REWARD_POOL = BigNumber.from('45749504487698707175523')
+export const INVESTOR_REWARD_POOL = BigNumber.from('5083278276410967463947')
+
 export const DECODED_ERRORS = {
   '0x402192dc': 'CancellationTooEarly()',
   '0x954e323d': 'CannotWithdrawUnder150CollateralizationRatio()',
