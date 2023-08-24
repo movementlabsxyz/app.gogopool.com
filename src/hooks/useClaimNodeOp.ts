@@ -31,7 +31,7 @@ export const useClaimAndRestake = (claimAmount: BigNumber, restakeAmount: BigNum
     abi,
     functionName: 'claimAndRestake',
     args: [claimAmount],
-    enabled: !claimAmount.eq(BigNumber.from(0)) && restakeAmount.eq(BigNumber.from(0)),
+    enabled: !(claimAmount.eq(0) && restakeAmount.eq(0)),
     onError(error) {
       Object.keys(DECODED_ERRORS).forEach((key) => {
         if (error?.message.includes(key)) {

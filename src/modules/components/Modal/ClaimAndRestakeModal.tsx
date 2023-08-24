@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useWaitForTransaction } from 'wagmi'
 
@@ -17,6 +17,10 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modal
 
   const [claimAmount, setClaimAmount] = useState<BigNumber>(rewardsToClaim)
   const [restakeAmount, setRestakeAmount] = useState<BigNumber>(BigNumber.from(0))
+
+  useEffect(() => {
+    setClaimAmount(rewardsToClaim.sub(restakeAmount))
+  }, [rewardsToClaim, restakeAmount])
 
   const setRestakeAndClaim = (val: BigNumber) => {
     setRestakeAmount(val || BigNumber.from(0))

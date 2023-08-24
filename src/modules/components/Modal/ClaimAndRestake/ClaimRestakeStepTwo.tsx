@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers'
 
-import { Divider, Flex } from '@chakra-ui/react'
+import { Button, Divider, Flex } from '@chakra-ui/react'
 import { SendTransactionResult } from '@wagmi/core'
 import { formatEther } from 'ethers/lib/utils.js'
 
@@ -61,18 +61,18 @@ export default function ClaimRestakeStepTwo({
 
       <Flex gap="6" justify="flex-end">
         <button
-          className="text-[18px] font-semibold text-grey-600 underline"
+          className="text-[16px] font-semibold text-grey-600 underline"
           onClick={() => setCurrentStep(1)}
         >
           Back
         </button>
-        <button
-          className="rounded-full bg-green-500 px-10 py-3 font-bold text-black disabled:opacity-60"
+        <Button
           disabled={transactionLoading && claimData?.hash !== undefined}
           onClick={claim}
+          variant="primary"
         >
           {transactionLoading && claimData?.hash ? 'Processing...' : 'Confirm'}
-        </button>
+        </Button>
       </Flex>
     </div>
   )
