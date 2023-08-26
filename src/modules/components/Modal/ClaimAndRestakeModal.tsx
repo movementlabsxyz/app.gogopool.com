@@ -1,7 +1,6 @@
-import { BigNumberish } from 'ethers'
-import { useState } from 'react'
+import { BigNumber } from 'ethers'
+import { useEffect, useState } from 'react'
 
-import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useWaitForTransaction } from 'wagmi'
 
 import ClaimRestakeStepOne from './ClaimAndRestake/ClaimRestakeStepOne'
@@ -12,38 +11,30 @@ import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
 import { Modal } from '@/common/components/Modal'
 import { useClaimAndRestake } from '@/hooks/useClaimNodeOp'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
-import { useGetGGPRewards } from '@/hooks/useStake'
 
-export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalProps }) => {
+export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modalProps }) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { data: rewardsToClaimMaybe } = useGetGGPRewards(ownerAddress)
-  const rewardsToClaim = Number(formatEther((rewardsToClaimMaybe as BigNumberish) || 0))
+  const [claimAmount, setClaimAmount] = useState<BigNumber>(rewardsToClaim)
+  const [restakeAmount, setRestakeAmount] = useState<BigNumber>(BigNumber.from(0))
 
-  const [claimAmount, setClaimAmount] = useState(rewardsToClaim)
-  const [restakeAmount, setRestakeAmount] = useState(0)
+  useEffect(() => {
+    setClaimAmount(rewardsToClaim.sub(restakeAmount))
+  }, [rewardsToClaim, restakeAmount])
 
-  const setRestakeAndClaim = (val: number) => {
-    setRestakeAmount(val || 0)
-
-    const claimAmount = Number(
-      formatEther(parseEther(rewardsToClaim.toString()).sub(parseEther(val.toString())).toString()),
-    )
-    setClaimAmount(claimAmount)
+  const setRestakeAndClaim = (val: BigNumber) => {
+    setRestakeAmount(val || BigNumber.from(0))
+    setClaimAmount(rewardsToClaim.sub(val))
   }
 
-  const currentRatio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: 0 })
+  const currentRatio = useGetCollateralRatio({})
 
   const futureRatio = useGetCollateralRatio({
     ggpAmount: restakeAmount,
-    avaxAmount: 0,
+    avaxAmount: BigNumber.from(0),
   })
 
-  const {
-    data: claimData,
-    reset,
-    write: claim,
-  } = useClaimAndRestake(ownerAddress, parseEther(claimAmount?.toString() || '0'))
+  const { data: claimData, reset, write: claim } = useClaimAndRestake(claimAmount, restakeAmount)
 
   const { isLoading: transactionLoading, isSuccess: transactionSuccess } = useWaitForTransaction({
     hash: claimData?.hash,
@@ -53,7 +44,7 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, ownerAddress, ...modalPr
     onClose()
     reset()
     setClaimAmount(rewardsToClaim)
-    setRestakeAmount(0)
+    setRestakeAmount(BigNumber.from(0))
     setCurrentStep(1)
   }
 

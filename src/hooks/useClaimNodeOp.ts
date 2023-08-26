@@ -21,7 +21,7 @@ export const useIsEligible = (owner: HexString) => {
   })
 }
 
-export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber) => {
+export const useClaimAndRestake = (claimAmount: BigNumber, restakeAmount: BigNumber) => {
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useClaimNodeOpContract()
   const toast = useToast()
@@ -31,7 +31,7 @@ export const useClaimAndRestake = (owner: `0x${string}`, claimAmount: BigNumber)
     abi,
     functionName: 'claimAndRestake',
     args: [claimAmount],
-    enabled: !claimAmount.eq(BigNumber.from(0)),
+    enabled: !(claimAmount.eq(0) && restakeAmount.eq(0)),
     onError(error) {
       Object.keys(DECODED_ERRORS).forEach((key) => {
         if (error?.message.includes(key)) {

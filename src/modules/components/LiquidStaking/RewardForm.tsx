@@ -1,14 +1,17 @@
+import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
-import { NumericFormat } from 'react-number-format'
+import { formatEther } from 'ethers/lib/utils.js'
 
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
+import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
+
 interface Props {
-  reward: number
-  balance: number
+  reward: BigNumber
+  balance: BigNumber
   token?: string
 }
 
@@ -16,14 +19,15 @@ export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 
   return (
     <>
       <div className="flex items-center justify-between">
-        <NumericFormat
+        <BigNumberInput
           autoFocus
+          bnValue={reward}
           className="mr-2 w-full rounded-xl bg-gray-50 p-2 text-3xl disabled:bg-gray-200"
           disabled
-          min={0}
+          max={balance}
+          min={BigNumber.from(0)}
+          onChange={() => undefined}
           placeholder="0.0"
-          thousandSeparator
-          value={reward}
         />
         {token === 'AVAX' ? (
           <AVAXPillUnit value={null} />
@@ -37,7 +41,7 @@ export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 
       </FormLabel>
       <div className="flex justify-end">
         <Text color="grey.600" size="xs">
-          {`Balance ${balance.toLocaleString()} ${token}`}
+          {`Balance ${Number(formatEther(balance)).toFixed(2)} ${token}`}
         </Text>
       </div>
     </>

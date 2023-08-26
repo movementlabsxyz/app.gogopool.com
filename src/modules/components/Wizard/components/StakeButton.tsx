@@ -1,8 +1,9 @@
-import { utils } from 'ethers'
+import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
 import { useToast } from '@chakra-ui/react'
 import * as Sentry from '@sentry/nextjs'
+import { parseEther } from 'ethers/lib/utils.js'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
@@ -10,11 +11,12 @@ import ConnectButton from '@/common/components/ConnectButton'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 import { useStakeGGP } from '@/hooks/useStake'
 
-export const MIN_RATIO = 10
-export const MAX_RATIO = 150
+export const MIN_RATIO = parseEther('0.1')
+export const MAX_RATIO = parseEther('1.5')
+
 export interface StakeButtonProps {
-  avaxAmount: number
-  ggpAmount: number
+  avaxAmount: BigNumber
+  ggpAmount: BigNumber
   lockCurrentStep: () => void
   nextStep: () => void
 }
@@ -29,7 +31,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
     error: stakeError,
     isLoading: isStakeLoading,
     writeAsync: stake,
-  } = useStakeGGP(utils.parseEther(ggpAmount?.toString() || '0'))
+  } = useStakeGGP(ggpAmount)
 
   const { isLoading, status } = useWaitForTransaction({
     hash: stakeData?.hash,
@@ -81,7 +83,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
       {isConnected ? (
         <div className="flex w-full flex-col items-center">
           <Button
-            disabled={!stake || ratio < MIN_RATIO || loading || loadingStake}
+            disabled={!stake || ratio.lt(MIN_RATIO) || loading || loadingStake}
             full
             isLoading={loading || loadingStake}
             onClick={handleSubmit}

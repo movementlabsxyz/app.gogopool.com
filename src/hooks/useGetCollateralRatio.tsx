@@ -1,18 +1,27 @@
+import { BigNumber, constants } from 'ethers'
+
 import { useAccount } from 'wagmi'
 
 import { useGetAVAXAssigned, useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
 
-export const useGetCollateralRatio = ({ avaxAmount = 0, ggpAmount = 0 }) => {
+export const useGetCollateralRatio = ({
+  avaxAmount = BigNumber.from(0),
+  ggpAmount = BigNumber.from(0),
+}): BigNumber => {
   const { address } = useAccount()
   const { data: ggpPriceInAvax } = useGetGGPPrice()
   const { data: ggpStake } = useGetGGPStake(address)
   const { data: avaxAssigned } = useGetAVAXAssigned(address)
 
-  if (avaxAssigned + avaxAmount === 0) {
-    return Infinity // Return Infinity if division by zero would occur
+  if (avaxAssigned.add(avaxAmount).eq(0)) {
+    return constants.MaxUint256 // Return Infinity if division by zero would occur
   }
 
-  const ratio = (((ggpStake + ggpAmount) * ggpPriceInAvax) / (avaxAssigned + avaxAmount)) * 100
+  const ratio = ggpStake
+    .add(ggpAmount)
+    .mul(ggpPriceInAvax)
+    .div(avaxAssigned.add(avaxAmount))
+    .mul(BigNumber.from(100))
 
   return ratio
 }

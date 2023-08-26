@@ -1,8 +1,9 @@
+import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Divider, Flex, FormLabel, Spacer, Text } from '@chakra-ui/react'
 import { useChainModal } from '@rainbow-me/rainbowkit'
-import { NumericFormat } from 'react-number-format'
+import { formatEther } from 'ethers/lib/utils.js'
 import { useNetwork } from 'wagmi'
 
 import { GGPPillUnit } from '../../Dashboard/Cards/GGPPillUnit'
@@ -11,18 +12,19 @@ import { MAX_RATIO } from '../../Wizard/components/StakeButton'
 
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
+import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 
-export interface ClaimAndRestakeModalProps {
-  withdraw: any
-  rewardsToClaim: any
-  withdrawAmount: any
-  setWithdrawAmount: any
-  onClose: any
-  ggpStake: any
+interface UnstakeInputProps {
+  withdraw: () => void
+  rewardsToClaim: BigNumber
+  withdrawAmount: BigNumber
+  setWithdrawAmount: (arg0: BigNumber) => void
+  onClose: () => void
+  ggpStake: BigNumber
 }
 
-export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
+export const UnstakeInput: FunctionComponent<UnstakeInputProps> = ({
   ggpStake,
   onClose,
   rewardsToClaim,
@@ -33,7 +35,10 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
 
-  const ratio = useGetCollateralRatio({ avaxAmount: 0, ggpAmount: -withdrawAmount })
+  const ratio = useGetCollateralRatio({ ggpAmount: BigNumber.from(0).sub(withdrawAmount) })
+
+  const min = BigNumber.from(0)
+  const max = rewardsToClaim.add(ggpStake)
 
   return (
     <Flex direction="column" gap={2}>
@@ -43,16 +48,12 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
       </div>
 
       <div className="flex items-center justify-between">
-        <NumericFormat
+        <BigNumberInput
+          bnValue={withdrawAmount}
           className="mr-2 w-full rounded-xl bg-gray-50 p-2"
-          max={rewardsToClaim}
-          min={0}
-          onValueChange={({ floatValue }) => {
-            setWithdrawAmount(floatValue)
-          }}
-          placeholder="0.0"
-          thousandSeparator
-          value={withdrawAmount || 0}
+          max={max}
+          min={min}
+          onChange={setWithdrawAmount}
         />
         <GGPPillUnit value={null} />
       </div>
@@ -61,20 +62,13 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
         <Text color="grey.600">Amount to unstake</Text>
       </FormLabel>
 
-      <a
-        className="text-right text-xs hover:underline"
-        href="#"
-        onClick={(e) => {
-          e.preventDefault()
-          setWithdrawAmount(rewardsToClaim)
-        }}
-      >
-        Balance: {ggpStake.toLocaleString()} GGP
-      </a>
+      <span className="text-right text-xs hover:underline">
+        Balance: {Number(formatEther(ggpStake)).toFixed(2)} GGP
+      </span>
       <div
-        className={`text-right text-xs ${ratio < MAX_RATIO ? 'text-red-500' : 'text-green-700'}`}
+        className={`text-right text-xs ${ratio.lt(MAX_RATIO) ? 'text-red-500' : 'text-green-700'}`}
       >
-        Collateralization ratio: {(ratio || 0).toLocaleString()}%
+        Collateralization ratio: {Number(formatEther(ratio)).toFixed(2)}%
       </div>
       <Spacer />
       <div className="flex items-center justify-end space-x-6">
@@ -88,7 +82,7 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
         )}
         {!chain?.unsupported && (
           <Button
-            disabled={!withdraw || ratio < MAX_RATIO}
+            disabled={!withdraw || ratio.lt(MAX_RATIO)}
             onClick={withdraw}
             size="sm"
             variant="primary"
@@ -98,7 +92,7 @@ export const UnstakeInput: FunctionComponent<ClaimAndRestakeModalProps> = ({
         )}
       </div>
 
-      {ratio < MAX_RATIO && (
+      {ratio.lt(MAX_RATIO) && (
         <ErrorMessage message={`Ratio must be above ${MAX_RATIO}% to unstake`} />
       )}
     </Flex>

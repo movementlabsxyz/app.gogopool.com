@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { FunctionComponent, useEffect, useState } from 'react'
 
 import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
@@ -16,7 +16,7 @@ import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 import { useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 
-export interface WizardStepTwoProps {
+export interface WizardStakeGGPProps {
   currentStep: number
   lockStep: number
   nextStep: () => void
@@ -25,7 +25,7 @@ export interface WizardStepTwoProps {
   prevStep: () => void
 }
 
-export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
+export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
   currentStep,
   incrementLockStep,
   lockCurrentStep,
@@ -34,20 +34,23 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
   prevStep,
 }): JSX.Element => {
   const { chain } = useNetwork()
-  const defaultAVAXAmount = DEFAULT_AVAX[chain?.id]
+  const defaultAVAXAmount: BigNumber = DEFAULT_AVAX[chain?.id] || parseEther('0')
 
   const ggpPrice = useGetGGPPrice()
-  const defaultGGPAmount = ggpPrice.data ? (defaultAVAXAmount / ggpPrice.data) * 0.1 : 0
 
-  const [ggpAmount, setGgpAmount] = useState<number>(defaultGGPAmount)
+  const defaultGGPAmount: BigNumber = !ggpPrice.data.eq(0)
+    ? defaultAVAXAmount.mul(parseEther('0.1')).div(ggpPrice.data)
+    : BigNumber.from(0)
+
+  const [ggpAmount, setGgpAmount] = useState<BigNumber>(defaultGGPAmount)
   const [approved, setApproved] = useState<boolean>(false)
   const [approveStatus, setApproveStatus] = useState<'error' | 'loading' | 'success' | 'idle'>(
     'idle',
   )
 
   useEffect(() => {
-    if (ggpPrice.data) {
-      setGgpAmount((defaultAVAXAmount / ggpPrice.data) * 0.1)
+    if (!ggpPrice.data.eq(0)) {
+      setGgpAmount(defaultAVAXAmount.mul(parseEther('0.1')).div(ggpPrice.data))
     }
   }, [ggpPrice, defaultAVAXAmount])
 
@@ -56,7 +59,10 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
   const { data: ggpAllowance } = useGGPAllowance(account)
 
   // For calculating ratio
-  const futureRatio = useGetCollateralRatio({ ggpAmount, avaxAmount: defaultAVAXAmount })
+  const futureRatio = useGetCollateralRatio({
+    ggpAmount,
+    avaxAmount: defaultAVAXAmount,
+  })
   const currentRatio = useGetCollateralRatio({})
   const currentRatioWithIncomingAVAX = useGetCollateralRatio({ avaxAmount: defaultAVAXAmount })
 
@@ -67,9 +73,6 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
     token: ggpAddress as `0x${string}`,
   })
 
-  const allowance = (ggpAllowance as unknown as BigNumber) || BigNumber.from(0)
-  const amountBN = utils.parseEther((ggpAmount || 0).toString())
-
   useEffect(() => {
     if (!approved && approveStatus === 'success') {
       setApproved(true)
@@ -78,7 +81,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
 
   // determine if the user can skip ggp step
   useEffect(() => {
-    if (currentRatioWithIncomingAVAX === 0) {
+    if (currentRatioWithIncomingAVAX.eq(0)) {
       return
     }
 
@@ -105,11 +108,16 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
       <div className="my-2 flex justify-between">
         <Flex gap="2">
           <Text color="grey.600">Current ratio: </Text>
-          <Text fontWeight="bold">{(currentRatio || 0).toLocaleString()}%</Text>
+          <Text fontWeight="bold">
+            {currentRatio.eq(constants.MaxUint256)
+              ? '∞'
+              : Number(formatEther(currentRatio)).toFixed(2)}
+            %
+          </Text>
         </Flex>
         <Flex gap="2">
           <Text color="grey.600">Currently staked: </Text>
-          <Text fontWeight="bold">{ggpStake.toLocaleString()} GGP</Text>
+          <Text fontWeight="bold">{Number(formatEther(ggpStake)).toFixed(2)} GGP</Text>
         </Flex>
       </div>
 
@@ -119,34 +127,41 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
         <StakeInput
           amount={defaultAVAXAmount}
           disabled
-          note={`Currently we only support borrowing ${DEFAULT_AVAX[chain?.id] || 0} AVAX.`}
-          title="Amount to borrow"
+          note={`Currently we only support matching ${Number(
+            formatEther(defaultAVAXAmount),
+          ).toFixed(2)} AVAX.`}
+          placeholder={Number(formatEther(defaultAVAXAmount)).toFixed(2)}
+          title="Amount to Match"
           token="AVAX"
-          tooltip="Borrowed AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."
+          tooltip="Matched AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."
         />
         <StakeInput
           amount={ggpAmount}
-          balance={formatEther(ggpBalance?.value || parseEther('0'))}
+          balance={ggpBalance?.value || parseEther('0')}
           canUseAll={true}
           lowerText="Future Collateralization:"
           lowerTextTooltip="The new collateralization ratio after the proposed GGP is staked"
-          lowerTextValue={(futureRatio || 0).toLocaleString() + '%'}
-          max={ggpBalance?.value ? parseInt(formatEther(ggpBalance.value)) : undefined}
-          min={0.0}
+          lowerTextValue={futureRatio}
+          max={ggpBalance?.value ? ggpBalance.value : undefined}
+          min={BigNumber.from(0)}
           setAmount={setGgpAmount}
           title="Amount to deposit"
           token="GGP"
         />
       </div>
 
-      {futureRatio > MAX_RATIO && futureRatio != Infinity && (
+      {futureRatio > MAX_RATIO && !futureRatio.eq(constants.MaxUint256) && (
         <ErrorMessage
-          message={`Max collateral ratio is ${MAX_RATIO}%. More than ${MAX_RATIO}% will not count towards GGP rewards.`}
+          message={`Max collateral ratio is ${Number(formatEther(MAX_RATIO)) * 100}%. More than ${
+            Number(formatEther(MAX_RATIO)) * 100
+          }% will not count towards GGP rewards.`}
         />
       )}
       {futureRatio < MIN_RATIO && account != undefined && (
         <ErrorMessage
-          message={`Min collateral ratio is ${MIN_RATIO}%. You won't be able to launch your minipool at the current ratio`}
+          message={`Min collateral ratio is ${
+            Number(formatEther(MIN_RATIO)) * 100
+          }%. You won't be able to launch your minipool at the current ratio`}
         />
       )}
 
@@ -155,7 +170,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
       <Flex alignItems="center" justify="space-between">
         {lockStep > currentStep && (
           <Text fontWeight="medium">
-            You are above {MIN_RATIO}% collateral.{' '}
+            You are above {Number(formatEther(MIN_RATIO)) * 100}% collateral.{' '}
             <button className="text-blue-400 underline" onClick={nextStep}>
               Skip Step?
             </button>
@@ -168,7 +183,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStepTwoProps> = ({
           </button>
           {!ggpBalance?.value.isZero() || currentRatio >= MIN_RATIO ? (
             <div>
-              {ggpAmount > 0 && (allowance.gte(amountBN) || approved) ? (
+              {ggpAmount.gt(0) && (ggpAllowance?.gte(ggpAmount) || approved) ? (
                 <StakeButton
                   avaxAmount={defaultAVAXAmount}
                   ggpAmount={ggpAmount}

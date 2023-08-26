@@ -1,14 +1,17 @@
-import { Divider, Flex } from '@chakra-ui/react'
+import { BigNumber } from 'ethers'
+
+import { Button, Divider, Flex } from '@chakra-ui/react'
 import { SendTransactionResult } from '@wagmi/core'
+import { formatEther } from 'ethers/lib/utils.js'
 
 import { Title } from '@/common/components/Card'
 
 type Props = {
   claimData: SendTransactionResult
   setCurrentStep: (step: number) => void
-  restakeAmount: number
-  futureRatio: number
-  claimAmount: number
+  restakeAmount: BigNumber
+  futureRatio: BigNumber
+  claimAmount: BigNumber
   claim: () => void
   transactionLoading: boolean
 }
@@ -33,37 +36,43 @@ export default function ClaimRestakeStepTwo({
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Claiming:</div>
-        <div className="font-bold text-black">{claimAmount.toLocaleString()} GGP</div>
+        <div className="font-bold text-black">
+          {Number(formatEther(claimAmount)).toFixed(2)} GGP
+        </div>
       </Flex>
       <Divider borderColor="grey.300" my="4" variant="dashed" />
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Restaking:</div>
-        <div className="font-bold text-black">{restakeAmount.toLocaleString()} GGP</div>
+        <div className="font-bold text-black">
+          {Number(formatEther(restakeAmount)).toFixed(2)} GGP
+        </div>
       </Flex>
       <Divider borderColor="grey.300" my="4" variant="dashed" />
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Future Collateralization:</div>
-        <div className="font-bold text-black">{(futureRatio || 0).toLocaleString() + '%'}</div>
+        <div className="font-bold text-black">
+          {Number(formatEther(futureRatio)).toFixed(2) + '%'}
+        </div>
       </Flex>
 
       <Divider borderColor="grey.300" mb="4" mt="10" />
 
       <Flex gap="6" justify="flex-end">
         <button
-          className="text-[18px] font-semibold text-grey-600 underline"
+          className="text-[16px] font-semibold text-grey-600 underline"
           onClick={() => setCurrentStep(1)}
         >
           Back
         </button>
-        <button
-          className="rounded-full bg-green-500 px-10 py-3 font-bold text-black disabled:opacity-60"
+        <Button
           disabled={transactionLoading && claimData?.hash !== undefined}
           onClick={claim}
+          variant="primary"
         >
           {transactionLoading && claimData?.hash ? 'Processing...' : 'Confirm'}
-        </button>
+        </Button>
       </Flex>
     </div>
   )

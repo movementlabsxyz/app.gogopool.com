@@ -1,4 +1,4 @@
-import { utils } from 'ethers'
+import { BigNumber } from 'ethers'
 import { Dispatch, SetStateAction } from 'react'
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
@@ -8,7 +8,7 @@ import { Button } from '@/common/components/Button'
 import useApproveGGP from '@/hooks/approve'
 
 export interface ApproveProps {
-  amount: number
+  amount: BigNumber
   setApproveStatus: Dispatch<SetStateAction<'error' | 'loading' | 'success' | 'idle'>>
 }
 
@@ -18,11 +18,7 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
 
-  const {
-    data,
-    isLoading: isApproveLoading,
-    write: approve,
-  } = useApproveGGP(utils.parseEther(amount?.toString() || '0'))
+  const { data, isLoading: isApproveLoading, write: approve } = useApproveGGP(amount)
 
   const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
@@ -48,7 +44,7 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
 
   return isConnected ? (
     <Button
-      disabled={!amount || amount < 0 || isApproveLoading || !approve || isLoading}
+      disabled={!amount || amount.lt(0) || isApproveLoading || !approve || isLoading}
       full
       isLoading={isApproveLoading || isLoading}
       onClick={approve}

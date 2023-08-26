@@ -15,7 +15,7 @@ module.exports = {
   },
   ignorePatterns: ['node_modules/**/*'],
   settings: {
-    react: {
+    'react': {
       pragma: 'React',
       version: 'detect',
     },
@@ -73,20 +73,20 @@ module.exports = {
         ignoreDeclarationSort: true,
       },
     ],
-    semi: ['error', 'never'],
+    'semi': ['error', 'never'],
     'no-warning-comments': 0,
     'import/extensions': 0,
     'import/no-unresolved': 0,
     'import/order': [
       'error',
       {
-        alphabetize: { order: 'asc' },
-        groups: [
+        'alphabetize': { order: 'asc' },
+        'groups': [
           ['builtin', 'external'],
           ['internal', 'parent', 'sibling', 'index'],
         ],
         'newlines-between': 'always',
-        pathGroups: [
+        'pathGroups': [
           { group: 'builtin', pattern: 'react', position: 'before' },
           {
             group: 'external',
@@ -95,7 +95,7 @@ module.exports = {
             position: 'before',
           },
         ],
-        pathGroupsExcludedImportTypes: ['builtin'],
+        'pathGroupsExcludedImportTypes': ['builtin'],
       },
     ],
     'import/prefer-default-export': 0,

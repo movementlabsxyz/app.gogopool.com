@@ -1,6 +1,6 @@
+import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
-import { parseEther } from 'ethers/lib/utils'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
@@ -12,10 +12,10 @@ import { useGetGGPStake, useStakeGGP } from '@/hooks/useStake'
 import { StakeInput } from '@/modules/components/Modal/StakeInput'
 
 export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
-  const [stakeAmount, setStakeAmount] = useState(0)
+  const [stakeAmount, setStakeAmount] = useState(BigNumber.from(0))
 
   const { address } = useAccount()
-  const { data: rewardsToClaim } = useGetGGPStake(address)
+  const { data: ggpStake } = useGetGGPStake(address)
 
   const {
     data: stakeData,
@@ -24,7 +24,7 @@ export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
     refetch,
     reset,
     write: stake,
-  } = useStakeGGP(parseEther(stakeAmount?.toString() || '0'))
+  } = useStakeGGP(stakeAmount)
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: stakeData?.hash,
@@ -33,18 +33,18 @@ export const StakeModal = ({ isOpen, onClose, ...modalProps }) => {
   const handleClose = () => {
     onClose()
     reset()
-    setStakeAmount(0)
+    setStakeAmount(BigNumber.from(0))
   }
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} {...modalProps}>
       {!stakeData?.hash && (
         <StakeInput
+          ggpStake={ggpStake}
           isError={isStakingError}
           isLoading={isStaking}
           onClose={handleClose}
           refetch={refetch}
-          rewardsToClaim={rewardsToClaim}
           setStakeAmount={setStakeAmount}
           stake={stake}
           stakeAmount={stakeAmount}

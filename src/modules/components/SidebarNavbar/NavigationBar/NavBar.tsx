@@ -59,13 +59,22 @@ export const NavBar = ({ navbarTitle, setNavbarTitle, setSidebarOpen }: Props) =
               setNavbarTitle={setNavbarTitle}
               title="LIQUID STAKE"
             />
-            <NavItem
-              href="/work-in-progress"
+            <a className="flex cursor-default select-none space-x-2" href="#">
+              <GoGoPassIcon />
+              <span className="uppercase">GoGoPass</span>
+
+              <span className="flex items-center truncate rounded-full bg-[#B7AFF8] px-2 text-xs text-white">
+                Coming Soon
+              </span>
+            </a>
+            {/* <NavItem
+              href="/#"
               icon={<GoGoPassIcon fill={navbarTitle === 'GOGO PASS' ? '#6255F1' : '#0D0959'} />}
               navbarTitle={navbarTitle}
               setNavbarTitle={setNavbarTitle}
               title="GOGO PASS"
-            />
+            /> */}
+            {/* Commented this out for now until GoGoPass is ready */}
           </div>
         </div>
 

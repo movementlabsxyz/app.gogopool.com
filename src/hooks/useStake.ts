@@ -22,7 +22,7 @@ export const useStakeGGP = (amount: BigNumber) => {
   const { config, refetch } = usePrepareContractWrite({
     address: stakingAddress,
     abi,
-    enabled: !amount.eq(BigNumber.from(0)),
+    enabled: !amount.eq(0),
     functionName: 'stakeGGP',
     args: [amount],
     onError(error) {
@@ -70,7 +70,7 @@ export const useWithdrawGGP = (amount: BigNumber) => {
     abi,
     functionName: 'withdrawGGP',
     args: [amount],
-    enabled: !amount.eq(BigNumber.from(0)),
+    enabled: !amount.eq(0),
     onError(error) {
       Object.keys(DECODED_ERRORS).forEach((key) => {
         if (error?.message.includes(key)) {
@@ -79,7 +79,7 @@ export const useWithdrawGGP = (amount: BigNumber) => {
             title: 'Error during withdraw GGP',
             description: DECODED_ERRORS[key],
             status: 'error',
-            duration: 20000,
+            duration: 3000,
             isClosable: true,
           })
         }
@@ -114,13 +114,12 @@ export const useGetAVAXStake = (stakerAddr: HexString) => {
   })
 
   return {
-    data: data instanceof BigNumber ? Number(formatEther(data || 0)) : 0,
+    data: data ? data : BigNumber.from(0),
     isLoading,
     isError,
   }
 }
 
-// getGGPStake
 export const useGetGGPStake = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
@@ -133,7 +132,7 @@ export const useGetGGPStake = (stakerAddr: HexString, watch = true) => {
   })
 
   return {
-    data: data instanceof BigNumber ? Number(formatEther(data || 0)) : 0,
+    data: data ? data : BigNumber.from(0),
     isLoading,
     isError,
     error,
@@ -153,7 +152,7 @@ export const useGetAVAXAssigned = (stakerAddr: HexString, watch = true) => {
   })
 
   return {
-    data: data instanceof BigNumber ? Number(formatEther(data || 0)) : 0,
+    data: data ? data : BigNumber.from(0),
     isLoading,
     isError,
     error,
@@ -171,23 +170,19 @@ export const useGetGGPPrice = (watch = true) => {
     watch,
   })
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore -___-
-  const price = data?.price ?? 0
-
   return useMemo(
     () => ({
-      data: Number(formatEther(price)),
+      data: data?.price ? data.price : BigNumber.from(0),
       isLoading,
       isError,
       error,
     }),
-    [error, isError, isLoading, price],
+    [error, isError, isLoading, data?.price],
   )
 }
 
 // getCollateralizationRatio
-export const useGetCollateralizationRatio = (stakerAddr: HexString, watch = true) => {
+export const useGetContractCollateralizationRatio = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()
 
   const { data, error, isError, isLoading } = useContractRead({
@@ -198,15 +193,8 @@ export const useGetCollateralizationRatio = (stakerAddr: HexString, watch = true
     watch,
   })
 
-  const result =
-    data instanceof BigNumber
-      ? data.eq(constants.MaxUint256)
-        ? Infinity
-        : Number(formatUnits(data, 18)) * 100
-      : 0
-
   return {
-    data: result,
+    data: data ? data : BigNumber.from(0),
     isLoading,
     isError,
     error,

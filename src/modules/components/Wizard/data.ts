@@ -1,3 +1,5 @@
+import { formatEther } from 'ethers/lib/utils.js'
+
 import { WizardData } from '@/types/wizard'
 
 import step1pic from '/public/assets/img/wizard/step-1.png'
@@ -24,7 +26,7 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
     {
       step: 2,
       header: 'Stake GGP',
-      title: 'Borrow AVAX by staking GGP',
+      title: 'Match AVAX by Staking GGP',
       image: step2pic,
       size: {
         width: 101,
@@ -35,7 +37,9 @@ export const wizardSteps: ({ defaultAvax }: { defaultAvax: any }) => WizardData[
       step: 3,
       header: 'Deposit AVAX',
       title: 'Deposit AVAX',
-      description: `Create your minipool by depositing ${defaultAvax} AVAX. GoGoPool will match your funds, and register you as a new validator node.`,
+      description: `Create your minipool by depositing ${Number(formatEther(defaultAvax)).toFixed(
+        2,
+      )} AVAX. GoGoPool will match your funds, and register you as a new validator node.`,
       image: step3pic,
       size: {
         width: 103,

@@ -1,16 +1,19 @@
+import { BigNumber } from 'ethers'
 import { Dispatch, SetStateAction } from 'react'
 
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
-import { NumericFormat } from 'react-number-format'
+import { formatEther, parseEther } from 'ethers/lib/utils.js'
 
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
+import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
+
 export interface StakeFormProps {
-  amount: number
-  setAmount: Dispatch<SetStateAction<number>>
-  setReward: Dispatch<SetStateAction<number>>
-  balance: number
+  amount: BigNumber
+  setAmount: Dispatch<SetStateAction<BigNumber>>
+  setReward: Dispatch<SetStateAction<BigNumber>>
+  balance: BigNumber
   token?: string
   header?: string
 }
@@ -25,24 +28,20 @@ export const StakeForm = ({
 }: StakeFormProps): JSX.Element => {
   const handleMaxClick = () => {
     setAmount(balance)
-    setReward(0) // change Reward accordingly
+    setReward(parseEther('0')) // change Reward accordingly
   }
 
   return (
     <>
       <div className="flex items-center justify-between">
         <div className="relative w-full">
-          <NumericFormat
+          <BigNumberInput
             autoFocus
+            bnValue={amount}
             className="w-full rounded-xl bg-gray-50 p-2 pr-16 text-3xl"
-            min={0}
-            onValueChange={({ floatValue }) => {
-              setAmount(floatValue)
-              setReward(0) // change Reward accordingly
-            }}
-            placeholder="0.0"
-            thousandSeparator
-            value={amount}
+            max={balance}
+            min={parseEther('0')}
+            onChange={(amount) => setAmount(amount)}
           />
           <button className="absolute top-0 right-0 h-full px-4" onClick={handleMaxClick}>
             Max
@@ -61,7 +60,7 @@ export const StakeForm = ({
       {balance ? (
         <div className="flex justify-end">
           <Text color="grey.600" size="xs">
-            {`Balance ${balance.toLocaleString()} ${token}`}
+            {`Balance ${Number(formatEther(balance)).toFixed(2)} ${token}`}
           </Text>
         </div>
       ) : null}

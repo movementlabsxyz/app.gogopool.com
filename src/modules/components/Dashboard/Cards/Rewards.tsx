@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
 
 import { formatEther } from 'ethers/lib/utils'
 
@@ -7,18 +7,16 @@ import { EmptyState } from '../../MinipoolTable/EmptyState'
 import { Button } from '@/common/components/Button'
 import { Tooltip } from '@/common/components/Tooltip'
 import { useRewardCycleStartTime } from '@/hooks/useRewards'
-import { useGetGGPRewards, useGetGGPStake } from '@/hooks/useStake'
+import { useGetGGPStake } from '@/hooks/useStake'
 import { HexString } from '@/types/cryptoGenerics'
 
 export interface RewardsProps {
   address: HexString
   openClaimModal: () => void
+  rewardsToClaim: BigNumber
 }
 
-const Rewards = ({ address, openClaimModal }: RewardsProps) => {
-  const { data: claimAmountMaybe } = useGetGGPRewards(address)
-  const claimAmount = Number(formatEther((claimAmountMaybe as BigNumberish) || 0))
-
+const Rewards = ({ address, openClaimModal, rewardsToClaim }: RewardsProps) => {
   const { data: ggpStake } = useGetGGPStake(address)
 
   const { data: rewardCycleStartTime } = useRewardCycleStartTime()
@@ -38,11 +36,11 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
   const stats = [
     {
       name: 'Claimable Rewards',
-      stat: `${claimAmount.toLocaleString()} GGP`,
+      stat: `${Number(formatEther(rewardsToClaim)).toFixed(2)} GGP`,
     },
     {
       name: 'GGP Staked',
-      stat: `${claimAmount ? ggpStake.toLocaleString() : 0} GGP`,
+      stat: `${Number(formatEther(ggpStake)).toFixed(2)} GGP`,
     },
     {
       name: 'Next Reward Cycle',
@@ -54,9 +52,9 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
     <>
       <div className="flex items-center space-x-4">
         <h3 className="text-base font-semibold leading-6 text-gray-900">Rewards Information</h3>
-        <Tooltip content={claimAmount <= 0 ? 'No rewards available' : ''} placement="top">
+        <Tooltip content={rewardsToClaim.lte(0) ? 'No rewards available' : ''} placement="top">
           <Button
-            disabled={claimAmount <= 0}
+            disabled={rewardsToClaim.lte(0)}
             onClick={openClaimModal}
             size="xs"
             variant="secondary-outline"
@@ -66,7 +64,7 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
         </Tooltip>
       </div>
       <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        {!!claimAmount &&
+        {rewardsToClaim.gt(0) &&
           stats.map((item) => (
             <div
               className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
@@ -79,7 +77,7 @@ const Rewards = ({ address, openClaimModal }: RewardsProps) => {
             </div>
           ))}
 
-        {!claimAmount && (
+        {rewardsToClaim.eq(0) && (
           <EmptyState
             description="Create a minipool and start staking to earn rewards!"
             icon={

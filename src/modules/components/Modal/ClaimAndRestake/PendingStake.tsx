@@ -1,15 +1,18 @@
+import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
+import { formatEther } from 'ethers/lib/utils.js'
 
 import { TransactionHash } from '../TransactionHash'
 
 import DepositAvaxIcon from '@/common/components/CustomIcon/DepositAvaxIcon'
+import { HexString } from '@/types/cryptoGenerics'
 
 export interface PendingStakeProps {
-  amount: any
-  transactionHash: any
-  message: any
+  amount: BigNumber
+  transactionHash: HexString
+  message: string
 }
 
 export const PendingStake: FunctionComponent<PendingStakeProps> = ({
@@ -27,10 +30,7 @@ export const PendingStake: FunctionComponent<PendingStakeProps> = ({
 
       <div className="mb-6 flex w-full justify-between border-b border-dashed border-gray-400 pb-2">
         <span>{`${message}`}</span>
-        {amount.toLocaleString(undefined, {
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2,
-        })}
+        {Number(formatEther(amount)).toFixed(2)}
       </div>
       <TransactionHash transactionHash={transactionHash} />
     </Flex>

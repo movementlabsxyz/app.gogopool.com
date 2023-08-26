@@ -14,7 +14,6 @@ export interface StatsProps {
   address?: string
   nodeID?: string
 }
-// TODO make the "status" field a string instead of an int
 const formatData = (
   input: Minipool,
 ): { label: string | ReactElement; value: string | ReactElement }[] => {
@@ -31,12 +30,6 @@ const formatData = (
     })
     .map((key) => {
       const value = input[key]
-      // if (key.toLowerCase().includes("time")) {
-      //   return {
-      //     label: key,
-      //     value: new Date(value.toNumber() * 1000).toLocaleString(),
-      //   };
-      // }
       if (key === 'duration') {
         return {
           label: displayName(key as MinipoolKeys),
