@@ -108,7 +108,12 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
       <div className="my-2 flex justify-between">
         <Flex gap="2">
           <Text color="grey.600">Current ratio: </Text>
-          <Text fontWeight="bold">{Number(formatEther(currentRatio)).toFixed(2)}%</Text>
+          <Text fontWeight="bold">
+            {currentRatio.eq(constants.MaxUint256)
+              ? '∞'
+              : Number(formatEther(currentRatio)).toFixed(2)}
+            %
+          </Text>
         </Flex>
         <Flex gap="2">
           <Text color="grey.600">Currently staked: </Text>
@@ -178,7 +183,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
           </button>
           {!ggpBalance?.value.isZero() || currentRatio >= MIN_RATIO ? (
             <div>
-              {ggpAmount.gt(0) && (ggpAllowance.gte(ggpAmount) || approved) ? (
+              {ggpAmount.gt(0) && (ggpAllowance?.gte(ggpAmount) || approved) ? (
                 <StakeButton
                   avaxAmount={defaultAVAXAmount}
                   ggpAmount={ggpAmount}
