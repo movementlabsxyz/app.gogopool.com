@@ -1,6 +1,12 @@
 import { BigNumber } from 'ethers'
 
+import { parseEther } from 'ethers/lib/utils.js'
+
 export const WEI_VALUE = BigNumber.from(10).pow(18)
+
+// as of 7/13/2023
+export const AVAX_VALIDATOR_BASE_APY = parseEther('0.0798')
+export const MINIPOOL_BASE_APY = parseEther('0.075')
 
 export const INVESTOR_LIST = ['0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127']
 export const RETAIL_REWARD_POOL = BigNumber.from('45749504487698707175523')

@@ -300,3 +300,14 @@ export const useGetMinipoolCount = () => {
     functionName: 'getMinipoolCount',
   })
 }
+
+export const useRewardStartTime = (stakerAddr: HexString) => {
+  const { abi, address } = useStakingContract()
+
+  return useContractRead({
+    address,
+    abi,
+    functionName: 'getRewardsStartTime',
+    args: [stakerAddr],
+  })
+}

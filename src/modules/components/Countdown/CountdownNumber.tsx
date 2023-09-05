@@ -1,17 +1,14 @@
-import { Text } from '@chakra-ui/react'
-
 type Props = {
   number: number
   subtitle: 'DAYS' | 'HRS' | 'MINS' | 'SECS' | 'MS'
+  font?: string
 }
 
-export default function CountdownNumber({ number, subtitle }: Props) {
+export default function CountdownNumber({ font = 'font-domaine', number, subtitle }: Props) {
   return (
-    <div className="flex-col items-center text-center">
-      <span className="font-domaine">{number}</span>
-      <Text className="mt-[-12px]" fontSize={14}>
-        {subtitle}
-      </Text>
+    <div className="flex flex-col items-center text-center text-2xl">
+      <span className={`${font} pb-3 text-[32px]`}>{number}</span>
+      <span className="text-sm text-blue-500">{subtitle}</span>
     </div>
   )
 }

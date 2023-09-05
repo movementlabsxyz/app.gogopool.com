@@ -6,30 +6,14 @@ import { avalanche } from 'viem/chains'
 
 import Oracle from '@/contracts/Oracle'
 import Staking from '@/contracts/Staking'
-import { HexString } from '@/types/cryptoGenerics'
-import { INVESTOR_LIST, RETAIL_REWARD_POOL, WEI_VALUE } from '@/utils/consts'
+import { CalculatorData, Staker } from '@/types/api/rewards-estimator'
+import { INVESTOR_LIST, INVESTOR_REWARD_POOL, RETAIL_REWARD_POOL, WEI_VALUE } from '@/utils/consts'
 
-export type CalculatorData = {
-  ggpStaked: BigNumber
-  avaxStaked: BigNumber
-}
-
-export type Staker = {
-  stakerAddr: HexString
-  avaxAssigned: BigNumber
-  avaxStaked: BigNumber
-  avaxValidating: BigNumber
-  avaxValidatingHighWater: BigNumber
-  ggpRewards: BigNumber
-  ggpStaked: BigNumber
-  lastRewardsCycleCompleted: BigNumber
-  rewardsStartTime: BigNumber
-  ggpLockedUntil: BigNumber
-}
+const customTransport = http(process.env.API_RPC_ENDPOINT)
 
 const client = createPublicClient({
   chain: avalanche,
-  transport: http(),
+  transport: customTransport,
 })
 
 /**
@@ -65,15 +49,18 @@ export async function fetchAvaxPriceUSD() {
 /**
  * Reward amount in GGP
  */
-export function getRewardAmount(ggpStake: BigNumber, totalGGPStake: BigNumber) {
+export function getRewardAmount(ggpStake: BigNumber, totalGGPStake: BigNumber, investor?: boolean) {
+  if (investor) {
+    return ggpStake.mul(WEI_VALUE).div(totalGGPStake).mul(INVESTOR_REWARD_POOL).div(WEI_VALUE)
+  }
   return ggpStake.mul(WEI_VALUE).div(totalGGPStake).mul(RETAIL_REWARD_POOL).div(WEI_VALUE)
 }
 
 /**
  * Calculate total effective GGP staked
  */
-export function calculateTEGS(stakers: Staker[], ggpPriceInAvax: BigNumber, ggpStaked: BigNumber) {
-  let retailTegs = ggpStaked
+export function calculateTEGS(stakers: Staker[], ggpPriceInAvax: BigNumber) {
+  let retailTegs = BigNumber.from('0')
   let investorTegs = BigNumber.from('0')
 
   stakers

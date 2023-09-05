@@ -98,7 +98,8 @@ const Countdown = () => {
                   <a
                     className="text-blue-500 underline"
                     href="https://docs.gogopool.com/readme-1/as-a-node-operator"
-                    target={'blank'}
+                    rel="noreferrer"
+                    target={'_blank'}
                   >
                     Minipool creation process here.
                   </a>
@@ -169,7 +170,11 @@ const Countdown = () => {
           </Text>
           <div className="flex flex-wrap justify-around gap-10 py-12">
             <InfoCard
-              button=<a href="https://docs.gogopool.com/gogopool-primer" target={'blank'}>
+              button=<a
+                href="https://docs.gogopool.com/gogopool-primer"
+                rel="noreferrer"
+                target={'_blank'}
+              >
                 <Button size="xs" variant="secondary-outline">
                   Read our Primer
                 </Button>
@@ -179,7 +184,7 @@ const Countdown = () => {
               title="Our Token Mission"
             />
             <InfoCard
-              button=<a href="https://docs.gogopool.com" target={'blank'}>
+              button=<a href="https://docs.gogopool.com" rel="noreferrer" target={'_blank'}>
                 <Button size="xs" variant="secondary-outline">
                   View Documentation
                 </Button>

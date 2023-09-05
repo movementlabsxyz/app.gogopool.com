@@ -3,8 +3,8 @@ import * as React from 'react'
 
 import { formatEther, parseEther } from 'ethers/lib/utils.js'
 
-// 🙏 Prayer hands in chat for the next person that has to
-// understand this input
+// 🙏 Prayer hands in chat
+// Logic is similar to https://www.npmjs.com/package/big-number-input npm package
 
 export type BigNumberInputProps = {
   onChange: (value: BigNumber) => void
