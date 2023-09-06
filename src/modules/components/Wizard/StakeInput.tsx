@@ -2,7 +2,6 @@ import { BigNumber, constants } from 'ethers'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 
 import { Flex, Stack, Text, useTheme } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils.js'
 
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
@@ -10,6 +9,7 @@ import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 import { InfoCircleIcon } from '@/common/components/CustomIcon'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { Tooltip } from '@/common/components/Tooltip'
+import { displayBN } from '@/utils/numberFormatter'
 
 type StakeInputProps = {
   amount: BigNumber
@@ -120,7 +120,7 @@ export const StakeInput = ({
                 <InfoCircleIcon className="ml-1 inline h-5 w-5" fill="blue.300" />
               )}
               <Text color="green.700" paddingLeft="1">
-                {Number(formatEther(lowerTextValue)).toFixed(2)}%
+                {displayBN(lowerTextValue)}%
               </Text>
             </Flex>
           </Tooltip>
@@ -130,7 +130,7 @@ export const StakeInput = ({
           <Flex fontSize="sm" fontWeight="bold" gap="2">
             {balanceLabel ? balanceLabel : 'Balance'}
             <Text color="green.700">
-              {Number(formatEther(balance)).toFixed(2)} {token}
+              {displayBN(balance)} {token}
             </Text>
           </Flex>
         )}

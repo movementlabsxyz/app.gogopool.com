@@ -2,12 +2,12 @@ import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils.js'
 
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
+import { displayBN } from '@/utils/numberFormatter'
 
 interface Props {
   reward: BigNumber
@@ -41,7 +41,7 @@ export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 
       </FormLabel>
       <div className="flex justify-end">
         <Text color="grey.600" size="xs">
-          {`Balance ${Number(formatEther(balance)).toFixed(2)} ${token}`}
+          {`Balance ${displayBN(balance)} ${token}`}
         </Text>
       </div>
     </>

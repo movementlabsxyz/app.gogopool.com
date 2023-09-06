@@ -2,7 +2,6 @@ import { BigNumber } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Button, Flex, Text } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils'
 import { useAccount, useBalance } from 'wagmi'
 
 import { TransactionHash } from '../TransactionHash'
@@ -11,6 +10,7 @@ import { ThumbsUp } from '@/common/components/CustomIcon/ThumbsUp'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetGGPStake } from '@/hooks/useStake'
 import { HexString } from '@/types/cryptoGenerics'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface SuccessfulClaimProps {
   transactionHash: HexString
@@ -53,7 +53,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
           textAlign="center"
         >
           <span>GGP Balance</span>
-          <span className="text-black">{Number(formatEther(ggpBalance)).toFixed(2)}</span>
+          <span className="text-black">{displayBN(ggpBalance)}</span>
         </Text>
         {staked ? (
           <Text
@@ -65,7 +65,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Staked Amount</span>
-            <span className="text-black">{Number(formatEther(staked)).toFixed(2)}</span>
+            <span className="text-black">{displayBN(staked)}</span>
           </Text>
         ) : (
           <Text
@@ -77,7 +77,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Stake Amount</span>
-            <span className="text-black">{Number(formatEther(ggpStake)).toFixed(2)}</span>
+            <span className="text-black">{displayBN(ggpStake)}</span>
           </Text>
         )}
         {collateralization && (
@@ -90,9 +90,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
             textAlign="center"
           >
             <span>Collateralization Ratio</span>
-            <span className="text-black">
-              {Number(formatEther(collateralization)).toFixed(2) + '%'}
-            </span>
+            <span className="text-black">{displayBN(collateralization) + '%'}</span>
           </Text>
         )}
       </div>

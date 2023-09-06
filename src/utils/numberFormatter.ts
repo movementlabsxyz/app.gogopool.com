@@ -1,4 +1,6 @@
-import { BigNumberish, utils } from 'ethers'
+import { BigNumber, BigNumberish, utils } from 'ethers'
+
+import { formatEther } from 'ethers/lib/utils.js'
 
 // formats a BigNumber to a number with a given number of decimals
 export const roundedBigNumber = (num: BigNumberish | undefined, decimals = 4): number => {
@@ -7,4 +9,8 @@ export const roundedBigNumber = (num: BigNumberish | undefined, decimals = 4): n
   }
   const value = utils.formatEther(num) as never
   return Math.round(value * 10 ** decimals) / 10 ** decimals
+}
+
+export const displayBN = (num: BigNumber): string => {
+  return Number(formatEther(num)).toFixed(2)
 }

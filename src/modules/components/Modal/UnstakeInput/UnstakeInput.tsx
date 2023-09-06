@@ -3,7 +3,6 @@ import { FunctionComponent } from 'react'
 
 import { Divider, Flex, FormLabel, Spacer, Text } from '@chakra-ui/react'
 import { useChainModal } from '@rainbow-me/rainbowkit'
-import { formatEther } from 'ethers/lib/utils.js'
 import { useNetwork } from 'wagmi'
 
 import { GGPPillUnit } from '../../Dashboard/Cards/GGPPillUnit'
@@ -14,6 +13,7 @@ import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
+import { displayBN } from '@/utils/numberFormatter'
 
 interface UnstakeInputProps {
   withdraw: () => void
@@ -62,14 +62,11 @@ export const UnstakeInput: FunctionComponent<UnstakeInputProps> = ({
         <Text color="grey.600">Amount to unstake</Text>
       </FormLabel>
 
-      <span className="text-right text-xs hover:underline">
-        Balance: {Number(formatEther(ggpStake)).toFixed(2)} GGP
-      </span>
+      <span className="text-right text-xs hover:underline">Balance: {displayBN(ggpStake)} GGP</span>
       <div
         className={`text-right text-xs ${ratio.lt(MAX_RATIO) ? 'text-red-500' : 'text-green-700'}`}
       >
-        Collateralization ratio:{' '}
-        {ratio.eq(constants.MaxUint256) ? '∞' : Number(formatEther(ratio)).toFixed(2)}%
+        Collateralization ratio: {ratio.eq(constants.MaxUint256) ? '∞' : displayBN(ratio)}%
       </div>
       <Spacer />
       <div className="flex items-center justify-end space-x-6">

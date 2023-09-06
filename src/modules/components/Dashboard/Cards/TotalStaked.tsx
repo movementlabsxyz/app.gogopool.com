@@ -1,7 +1,6 @@
 import { constants } from 'ethers'
 
 import { Button, useDisclosure } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount } from 'wagmi'
 
 import { StakeModal } from '../../Modal/StakeModal'
@@ -20,6 +19,7 @@ import {
   useGetGGPStake,
 } from '@/hooks/useStake'
 import { colors } from '@/theme/colors'
+import { displayBN } from '@/utils/numberFormatter'
 
 const TotalStaked = () => {
   const { address } = useAccount()
@@ -35,27 +35,23 @@ const TotalStaked = () => {
   const stats = [
     {
       name: 'GGP COLLATERAL RATIO',
-      stat: `${
-        straightRatio.eq(constants.MaxUint256)
-          ? '∞'
-          : Number(formatEther(straightRatio.mul(100))).toFixed(2)
-      } %`,
+      stat: `${straightRatio.eq(constants.MaxUint256) ? '∞' : displayBN(straightRatio.mul(100))} %`,
       tooltip: 'Ratio of your GGP staked to your AVAX matched.',
     },
     {
       name: 'GGP STAKED',
-      stat: `${Number(formatEther(ggpStake)).toFixed(2)} GGP`,
+      stat: `${displayBN(ggpStake)} GGP`,
       tooltip: 'The total amount of GGP you have staked.',
     },
     {
       name: 'AVAX STAKED',
-      stat: `${Number(formatEther(avaxStaked)).toFixed(2)} AVAX`,
+      stat: `${displayBN(avaxStaked)} AVAX`,
       tooltip:
         'The total amount of AVAX you have deposited in the protocol. While your minipool is running you will be unable to withdraw this.',
     },
     {
       name: 'MATCHED AMOUNT',
-      stat: `${Number(formatEther(avaxMatched)).toFixed(2)} AVAX`,
+      stat: `${displayBN(avaxMatched)} AVAX`,
       tooltip: 'The matched amount of AVAX received from the liquid staker pool.',
     },
   ]

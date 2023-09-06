@@ -15,6 +15,7 @@ import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
 import { useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface WizardStakeGGPProps {
   currentStep: number
@@ -109,15 +110,12 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
         <Flex gap="2">
           <Text color="grey.600">Current ratio: </Text>
           <Text fontWeight="bold">
-            {currentRatio.eq(constants.MaxUint256)
-              ? '∞'
-              : Number(formatEther(currentRatio)).toFixed(2)}
-            %
+            {currentRatio.eq(constants.MaxUint256) ? '∞' : displayBN(currentRatio)}%
           </Text>
         </Flex>
         <Flex gap="2">
           <Text color="grey.600">Currently staked: </Text>
-          <Text fontWeight="bold">{Number(formatEther(ggpStake)).toFixed(2)} GGP</Text>
+          <Text fontWeight="bold">{displayBN(ggpStake)} GGP</Text>
         </Flex>
       </div>
 
@@ -130,7 +128,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
           note={`Currently we only support matching ${Number(
             formatEther(defaultAVAXAmount),
           ).toFixed(2)} AVAX.`}
-          placeholder={Number(formatEther(defaultAVAXAmount)).toFixed(2)}
+          placeholder={displayBN(defaultAVAXAmount)}
           title="Amount to Match"
           token="AVAX"
           tooltip="Matched AVAX is AVAX from Liquid Stakers that the protocol will allocate to your validator node."

@@ -3,7 +3,6 @@ import { Dispatch, FunctionComponent, SetStateAction } from 'react'
 
 import { Flex, Text, useToast } from '@chakra-ui/react'
 import { useChainModal } from '@rainbow-me/rainbowkit'
-import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount, useBalance, useNetwork, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
@@ -12,6 +11,7 @@ import { AvalancheIcon } from '@/common/components/CustomIcon/AvalancheIcon'
 import { useCreateMinipool } from '@/hooks/minipool'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 import { HexString } from '@/types/cryptoGenerics'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface WizardCreateMinipoolProps {
   avaxAmount: BigNumber
@@ -103,7 +103,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardCreateMinipoolProps> 
           isLoading={isCreateMinipoolLoading || isLoadingDepositTransaction}
           onClick={createMinipool}
         >
-          Deposit {Number(formatEther(avaxAmount)).toFixed(2)} AVAX
+          Deposit {displayBN(avaxAmount)} AVAX
         </Button>
       )}
       {/* Wallet is connected but the createMinipool callStatic failed */}
@@ -122,8 +122,7 @@ export const WizardCreateMinipool: FunctionComponent<WizardCreateMinipoolProps> 
       {/* Wallet is not connected */}
       {!isConnected && <ConnectButton />}
       <Text className="mt-6 text-right text-gray-400" size="sm">
-        Currently we only support minipools of{' '}
-        <b>{Number(formatEther(avaxAmount)).toFixed(2)} AVAX</b>
+        Currently we only support minipools of <b>{displayBN(avaxAmount)} AVAX</b>
       </Text>
     </Flex>
   )

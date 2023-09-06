@@ -5,6 +5,7 @@ import { formatEther } from 'ethers/lib/utils.js'
 
 import { Title } from '@/common/components/Card'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
+import { displayBN } from '@/utils/numberFormatter'
 
 type Props = {
   handleClose: () => void
@@ -44,9 +45,7 @@ export default function ClaimRestakeStepOne({
         </Flex>
         <Flex fontSize="14px" gap="10px">
           <div className="font-semibold text-grey-500">Current Collateralization:</div>
-          <div className="font-bold text-grey-1000">
-            {Number(formatEther(currentRatio)).toFixed(2)}%
-          </div>
+          <div className="font-bold text-grey-1000">{displayBN(currentRatio)}%</div>
         </Flex>
       </Flex>
 

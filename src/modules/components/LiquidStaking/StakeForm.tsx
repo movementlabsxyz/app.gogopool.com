@@ -2,12 +2,13 @@ import { BigNumber } from 'ethers'
 import { Dispatch, SetStateAction } from 'react'
 
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
-import { formatEther, parseEther } from 'ethers/lib/utils.js'
+import { parseEther } from 'ethers/lib/utils.js'
 
 import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
 
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface StakeFormProps {
   amount: BigNumber
@@ -60,7 +61,7 @@ export const StakeForm = ({
       {balance ? (
         <div className="flex justify-end">
           <Text color="grey.600" size="xs">
-            {`Balance ${Number(formatEther(balance)).toFixed(2)} ${token}`}
+            {`Balance ${displayBN(balance)} ${token}`}
           </Text>
         </div>
       ) : null}
