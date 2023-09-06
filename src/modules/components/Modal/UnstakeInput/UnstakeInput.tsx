@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { FunctionComponent } from 'react'
 
 import { Divider, Flex, FormLabel, Spacer, Text } from '@chakra-ui/react'
@@ -68,7 +68,8 @@ export const UnstakeInput: FunctionComponent<UnstakeInputProps> = ({
       <div
         className={`text-right text-xs ${ratio.lt(MAX_RATIO) ? 'text-red-500' : 'text-green-700'}`}
       >
-        Collateralization ratio: {Number(formatEther(ratio)).toFixed(2)}%
+        Collateralization ratio:{' '}
+        {ratio.eq(constants.MaxUint256) ? '∞' : Number(formatEther(ratio)).toFixed(2)}%
       </div>
       <Spacer />
       <div className="flex items-center justify-end space-x-6">

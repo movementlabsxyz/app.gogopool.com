@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { FunctionComponent, useState } from 'react'
 
 import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
@@ -87,7 +87,8 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
             ratio.lt(MIN_RATIO) ? 'text-red-500' : 'text-green-700'
           }`}
         >
-          Collateralization ratio: {Number(formatEther(ratio)).toFixed(2)}%
+          Collateralization ratio:{' '}
+          {ratio.eq(constants.MaxUint256) ? '∞' : Number(formatEther(ratio)).toFixed(2)}%
         </div>
       </div>
 
