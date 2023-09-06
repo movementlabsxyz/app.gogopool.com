@@ -20,8 +20,8 @@ export default function QueueCard({ minipoolIndex, nextCycleDate }: Props) {
         {' '}
         <div className="flex w-[400px] flex-col justify-center pl-6">
           <Text fontSize={18} fontWeight={700}>
-            Your validator is <span className="text-blue-400">{ordinal_suffix(minipoolIndex)}</span>{' '}
-            in the queue!
+            Your validator is{' '}
+            <span className="text-blue-400">{ordinal_suffix(minipoolIndex + 1)}</span> in the queue!
           </Text>
           <Text className="pt-2" fontSize={14}>
             We are currently looking for 1000 AVAX to match in order to launch your node. In order
