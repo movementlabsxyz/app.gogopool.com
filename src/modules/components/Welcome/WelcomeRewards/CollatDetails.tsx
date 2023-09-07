@@ -16,7 +16,7 @@ export default function CollatDetails({
   roi,
 }: Props) {
   return (
-    <div className="flex basis-96 flex-col items-center justify-center rounded-xl border bg-blue-900 py-8">
+    <div className="flex basis-[440px] flex-col justify-center rounded-xl border bg-blue-900 p-8 xs:pl-16">
       <div>
         <div className="text-white">GGP Collatoralization: {collatPercent}%</div>
         <div className="flex flex-col text-caution-500">

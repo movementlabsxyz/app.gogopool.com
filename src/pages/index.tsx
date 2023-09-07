@@ -13,6 +13,7 @@ import { PageHead } from '@/common/components/PageHead'
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 import InfoCard from '@/modules/components/Welcome/InfoCard'
 import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
+import DapplingCard from '@/modules/components/Welcome/WelcomeRewards/DapplingCard'
 import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
 
 const Welcome = () => {
@@ -140,6 +141,7 @@ const Welcome = () => {
             guarantee.
           </Text>
           <WelcomeRewards />
+          <DapplingCard />
         </div>
 
         <Divider />
