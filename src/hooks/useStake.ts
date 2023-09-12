@@ -159,6 +159,26 @@ export const useGetAVAXAssigned = (stakerAddr: HexString, watch = true) => {
   }
 }
 
+// getAVAXValidatingHighWater
+export const useGetAVAXValidatingHighWater = (stakerAddr: HexString, watch = true) => {
+  const { abi, address } = useStakingContract()
+
+  const { data, error, isError, isLoading } = useContractRead({
+    address,
+    abi,
+    functionName: 'getAVAXValidatingHighWater',
+    args: [stakerAddr],
+    watch,
+  })
+
+  return {
+    data: data ? data : BigNumber.from(0),
+    isLoading,
+    isError,
+    error,
+  }
+}
+
 // getGGPPrice
 export const useGetGGPPrice = (watch = true) => {
   const { abi, address } = useOracleContract()

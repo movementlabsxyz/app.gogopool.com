@@ -16,7 +16,7 @@ import { TrophyIcon } from './TrophyIcon'
 
 import { Tooltip } from '@/common/components/Tooltip'
 import postEstimator from '@/hooks/useEstimator'
-import { useGetAVAXStake, useGetGGPStake, useRewardStartTime } from '@/hooks/useStake'
+import { useGetAVAXValidatingHighWater, useGetGGPStake, useRewardStartTime } from '@/hooks/useStake'
 import CountdownTimerNextCycle from '@/modules/components/Countdown/CountdownTimerNextCycle'
 import { colors } from '@/theme/colors'
 import { Ceres } from '@/types/ceres'
@@ -98,22 +98,23 @@ export default function UpcomingRewardsCard({
   const [ggpReward, setGgpReward] = useState(BigNumber.from(0))
 
   const { data: ggpStaked, isLoading: ggpLoading } = useGetGGPStake(address)
-  const { data: avaxStaked, isLoading: avaxLoading } = useGetAVAXStake(address)
   const { data: startTime, isLoading: startTimeLoading } = useRewardStartTime(address)
+  const { data: avaxValidatingHighWater, isLoading: avaxLoading } =
+    useGetAVAXValidatingHighWater(address)
 
   useAsyncEffect(async () => {
-    if (ggpStaked && avaxStaked) {
-      if (ggpStaked.gt(0) && avaxStaked.gt(0)) {
+    if (ggpStaked && avaxValidatingHighWater) {
+      if (ggpStaked.gt(0) && avaxValidatingHighWater.gt(0)) {
         const { apy, ggpReward } = await postEstimator({
           ggpStaked,
-          avaxStaked,
+          avaxStaked: avaxValidatingHighWater,
           walletAddress: address,
         })
         setApy(BigNumber.from(apy))
         setGgpReward(BigNumber.from(ggpReward))
       }
     }
-  }, [ggpStaked, avaxStaked])
+  }, [ggpStaked, avaxValidatingHighWater])
 
   if (ggpLoading || avaxLoading || startTimeLoading) {
     return (
