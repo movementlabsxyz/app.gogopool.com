@@ -7,9 +7,10 @@ import CollatoralizationRadio from './CollatoralizationRadio'
 
 export default function WelcomeRewards() {
   const [collat, setCollat] = useState('10')
+
   return (
-    <div className="flex w-full flex-wrap justify-around gap-3 pt-11">
-      <div className="flex basis-96">
+    <div className="flex w-full flex-wrap justify-around gap-y-3 pt-11">
+      <div className="flex grow basis-[380px]">
         <RadioGroup
           className="flex flex-col justify-between gap-3"
           onChange={setCollat}

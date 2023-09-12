@@ -1,7 +1,5 @@
 import { BigNumber } from 'ethers'
 
-import { formatEther } from 'ethers/lib/utils'
-
 import { EmptyState } from '../../MinipoolTable/EmptyState'
 
 import { Button } from '@/common/components/Button'
@@ -9,6 +7,7 @@ import { Tooltip } from '@/common/components/Tooltip'
 import { useRewardCycleStartTime } from '@/hooks/useRewards'
 import { useGetGGPStake } from '@/hooks/useStake'
 import { HexString } from '@/types/cryptoGenerics'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface RewardsProps {
   address: HexString
@@ -36,11 +35,11 @@ const Rewards = ({ address, openClaimModal, rewardsToClaim }: RewardsProps) => {
   const stats = [
     {
       name: 'Claimable Rewards',
-      stat: `${Number(formatEther(rewardsToClaim)).toFixed(2)} GGP`,
+      stat: `${displayBN(rewardsToClaim)} GGP`,
     },
     {
       name: 'GGP Staked',
-      stat: `${Number(formatEther(ggpStake)).toFixed(2)} GGP`,
+      stat: `${displayBN(ggpStake)} GGP`,
     },
     {
       name: 'Next Reward Cycle',

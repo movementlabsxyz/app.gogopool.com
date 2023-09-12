@@ -12,9 +12,9 @@ export default function CollatoralizationRadio({ checked, details, radio }: Prop
         checked ? 'bg-white' : 'bg-[#F7F9FF]'
       } p-7`}
     >
-      <div className="flex flex-col">
+      <div className="flex basis-[400px] flex-col">
         <div>{radio}</div>
-        <span className="text-default">{details}</span>
+        <span className="flex text-default">{details}</span>
       </div>
     </div>
   )

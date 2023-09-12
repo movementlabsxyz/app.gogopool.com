@@ -35,6 +35,7 @@ import useLiquidStakingData from '@/hooks/liquidStakingData'
 import useRedeem from '@/hooks/redeem'
 import useCeres from '@/hooks/useCeres'
 import addToken from '@/utils/addToken'
+import { WEI_VALUE } from '@/utils/consts'
 import { formatEtherFixed } from '@/utils/formatEtherFixed'
 
 const generateStatistics = (
@@ -256,14 +257,14 @@ export const LiquidStaking: FunctionComponent = () => {
       if (!ggAvaxExchangeRate) {
         setReward(parseEther('0'))
       } else {
-        const rewardAmount = amount.mul(BigNumber.from(10).pow(18)).div(ggAvaxExchangeRate)
+        const rewardAmount = amount.mul(WEI_VALUE).div(ggAvaxExchangeRate)
         setReward(rewardAmount)
       }
     } else {
       if (!ggAvaxExchangeRate) {
         setReward(parseEther('0'))
       } else {
-        const rewardAmount = amount.mul(ggAvaxExchangeRate).div(BigNumber.from(10).pow(18))
+        const rewardAmount = amount.mul(ggAvaxExchangeRate).div(WEI_VALUE)
         setReward(rewardAmount)
       }
     }

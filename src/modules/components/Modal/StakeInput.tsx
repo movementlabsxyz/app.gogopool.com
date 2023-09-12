@@ -1,8 +1,7 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { FunctionComponent, useState } from 'react'
 
 import { Divider, Flex, Spacer, Text } from '@chakra-ui/react'
-import { formatEther } from 'ethers/lib/utils.js'
 import { useAccount, useBalance } from 'wagmi'
 
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
@@ -15,6 +14,7 @@ import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import useGGPAllowance from '@/hooks/allowance'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
+import { displayBN } from '@/utils/numberFormatter'
 
 export interface StakeInputModalProps {
   stake: () => void
@@ -80,14 +80,14 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
           }}
           variant="link"
         >
-          Balance: {Number(formatEther(ggpBalance)).toFixed(2)} GGP
+          Balance: {displayBN(ggpBalance)} GGP
         </Button>
         <div
           className={`text-right text-xs font-bold ${
             ratio.lt(MIN_RATIO) ? 'text-red-500' : 'text-green-700'
           }`}
         >
-          Collateralization ratio: {Number(formatEther(ratio)).toFixed(2)}%
+          Collateralization ratio: {ratio.eq(constants.MaxUint256) ? '∞' : displayBN(ratio)}%
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
             </svg>
           </div>
 
-          <p className="text-[22px]">{Number(formatEther(ggpStake.add(stakeAmount))).toFixed(2)}</p>
+          <p className="text-[22px]">{displayBN(ggpStake.add(stakeAmount))}</p>
         </div>
         <div>
           <Text color="#B7AFF8">Resulting amount in the protocol</Text>
@@ -138,7 +138,7 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
         </a>
 
         <>
-          {allowance.gte(ggpBalance) || approveStatus === 'success' ? (
+          {allowance.gte(stakeAmount) || approveStatus === 'success' ? (
             <Button
               disabled={stakeAmount.lte(0) || !stake || isLoading}
               isLoading={isLoading}

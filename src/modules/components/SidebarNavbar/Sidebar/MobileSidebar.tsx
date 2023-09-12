@@ -100,7 +100,7 @@ export default function MobileSidebar({
                           window.location.pathname === item.href
                             ? 'bg-indigo-800 text-white'
                             : 'text-indigo-100 hover:bg-indigo-600',
-                          'group flex w-full items-center py-4 px-3 text-base font-medium transition-all',
+                          'group flex w-full items-center py-6 px-3 text-base font-medium transition-all',
                         )}
                       >
                         <div className="flex gap-2">
@@ -125,7 +125,7 @@ export default function MobileSidebar({
                           window.location.pathname === item.href
                             ? 'bg-indigo-800 text-white'
                             : 'text-indigo-100 hover:bg-indigo-600',
-                          'group flex w-full items-center py-4 px-3 text-base font-medium transition-all',
+                          'group flex w-full items-center py-6 px-3 text-base font-medium transition-all',
                         )}
                       >
                         <div className="flex gap-2">

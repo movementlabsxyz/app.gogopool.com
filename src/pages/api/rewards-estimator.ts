@@ -11,18 +11,8 @@ import {
   getRewardAmount,
 } from './_utils'
 
-import { HexString } from '@/types/cryptoGenerics'
-import { WEI_VALUE } from '@/utils/consts'
-
-export type BigNumberJSON = {
-  type: string
-  hex: HexString
-}
-
-export type CalculatorReq = {
-  ggpStaked: BigNumberJSON
-  avaxStaked: BigNumberJSON
-}
+import { CalculatorReq } from '@/types/api/rewards-estimator'
+import { INVESTOR_LIST, WEI_VALUE } from '@/utils/consts'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -31,17 +21,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ggpPriceInAvaxData = await fetchGGPPriceInAvax()
 
     // viem's readContract returns everything as bigint, must convert to BigNumber
-    const { avaxStaked, ggpStaked } = convertPost(postData)
+    const { avaxStaked, ggpStaked, walletAddress } = convertPost(postData)
     const stakers = convertStakers(stakersData)
     const [price] = ggpPriceInAvaxData
     const ggpPriceInAvax = BigNumber.from(price)
 
     // calculate rewards and apy
-    const { retailTegs } = calculateTEGS(stakers, ggpPriceInAvax, ggpStaked)
-    const ggpReward = getRewardAmount(ggpStaked, retailTegs)
+    let ggpReward: BigNumber
+    const { investorTegs, retailTegs } = calculateTEGS(stakers, ggpPriceInAvax)
+    if (INVESTOR_LIST.includes(walletAddress)) {
+      ggpReward = getRewardAmount(ggpStaked, investorTegs, true)
+    }
+    ggpReward = getRewardAmount(ggpStaked, retailTegs)
     const avaxStakedInGGP = avaxStaked.mul(WEI_VALUE).div(ggpPriceInAvax)
     const ggpSpent = avaxStakedInGGP.add(ggpStaked)
-    const apy = ggpReward.mul(WEI_VALUE).div(ggpSpent).mul(12)
+    const apy = ggpReward.mul(WEI_VALUE).div(ggpSpent).mul(12).mul(100)
 
     res.send({
       ggpReward: ggpReward,

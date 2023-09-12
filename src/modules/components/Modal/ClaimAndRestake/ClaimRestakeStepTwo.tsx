@@ -2,9 +2,9 @@ import { BigNumber } from 'ethers'
 
 import { Button, Divider, Flex } from '@chakra-ui/react'
 import { SendTransactionResult } from '@wagmi/core'
-import { formatEther } from 'ethers/lib/utils.js'
 
 import { Title } from '@/common/components/Card'
+import { displayBN } from '@/utils/numberFormatter'
 
 type Props = {
   claimData: SendTransactionResult
@@ -36,25 +36,19 @@ export default function ClaimRestakeStepTwo({
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Claiming:</div>
-        <div className="font-bold text-black">
-          {Number(formatEther(claimAmount)).toFixed(2)} GGP
-        </div>
+        <div className="font-bold text-black">{displayBN(claimAmount)} GGP</div>
       </Flex>
       <Divider borderColor="grey.300" my="4" variant="dashed" />
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Restaking:</div>
-        <div className="font-bold text-black">
-          {Number(formatEther(restakeAmount)).toFixed(2)} GGP
-        </div>
+        <div className="font-bold text-black">{displayBN(restakeAmount)} GGP</div>
       </Flex>
       <Divider borderColor="grey.300" my="4" variant="dashed" />
 
       <Flex justify="space-between">
         <div className="font-semibold text-grey-600">Future Collateralization:</div>
-        <div className="font-bold text-black">
-          {Number(formatEther(futureRatio)).toFixed(2) + '%'}
-        </div>
+        <div className="font-bold text-black">{displayBN(futureRatio) + '%'}</div>
       </Flex>
 
       <Divider borderColor="grey.300" mb="4" mt="10" />

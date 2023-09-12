@@ -13,27 +13,23 @@ import { PageHead } from '@/common/components/PageHead'
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 import InfoCard from '@/modules/components/Welcome/InfoCard'
 import WelcomeCard from '@/modules/components/Welcome/WelcomeCard/WelcomeCard'
+import DapplingCard from '@/modules/components/Welcome/WelcomeRewards/DapplingCard'
 import WelcomeRewards from '@/modules/components/Welcome/WelcomeRewards/WelcomeRewards'
 
 const Welcome = () => {
   return (
-    <Box className="bg-[#F7F9FF] py-8" minH="full">
+    <Box className="bg-[#F7F9FF] py-20" minH="full">
       <PageHead append={false} description="Welcome to GoGoPool!" name="Welcome to GoGoPool!" />
       <Container>
         <div
           className="relative flex justify-between pt-12 text-center sm:text-left"
           style={{
-            background: 'linear-gradient(99.86deg, #473CC7 31.28%, #9969FF 110.36%)',
+            background: '#6255F1',
             borderRadius: '24px',
             overflow: 'hidden',
           }}
         >
-          <div
-            className="px-8 text-white"
-            style={{
-              width: 630,
-            }}
-          >
+          <div className="basis-[630px] px-8 text-white">
             <Text className="pb-4 font-domaine text-4xl sm:text-[40px]" fontWeight="bold">
               Become a Validator with Minipools
             </Text>
@@ -42,7 +38,7 @@ const Welcome = () => {
               structure. Whether you are new to Web3 or are a seasoned pioneer, GoGoPool has you
               covered!
             </Text>
-            <Divider />
+            <Divider opacity={'20%'} />
             <div className="flex flex-wrap justify-center gap-5 pt-7 pb-8 sm:justify-start">
               <NextLink href="/create-minipool">
                 <Button variant="tertiary">Create a Minipool</Button>
@@ -85,7 +81,8 @@ const Welcome = () => {
                   <a
                     className="text-blue-500 underline"
                     href="https://docs.gogopool.com/readme-1/as-a-node-operator"
-                    target={'blank'}
+                    rel="noreferrer"
+                    target={'_blank'}
                   >
                     Minipool creation process here.
                   </a>
@@ -120,7 +117,8 @@ const Welcome = () => {
                   <a
                     className="text-blue-500 underline"
                     href="https://docs.gogopool.com/design/how-minipools-work/ggp-rewards"
-                    target={'blank'}
+                    rel="noreferrer"
+                    target={'_blank'}
                   >
                     triple incentive rewards structure.
                   </a>
@@ -143,6 +141,7 @@ const Welcome = () => {
             guarantee.
           </Text>
           <WelcomeRewards />
+          <DapplingCard />
         </div>
 
         <Divider />
@@ -156,7 +155,11 @@ const Welcome = () => {
           </Text>
           <div className="flex flex-wrap justify-around gap-10 py-12">
             <InfoCard
-              button=<a href="https://docs.gogopool.com/gogopool-primer" target={'blank'}>
+              button=<a
+                href="https://docs.gogopool.com/gogopool-primer"
+                rel="noreferrer"
+                target={'_blank'}
+              >
                 <Button size="xs" variant="secondary-outline">
                   Read our Primer
                 </Button>
@@ -166,7 +169,7 @@ const Welcome = () => {
               title="Our Token Mission"
             />
             <InfoCard
-              button=<a href="https://docs.gogopool.com" target={'blank'}>
+              button=<a href="https://docs.gogopool.com" rel="noreferrer" target={'_blank'}>
                 <Button size="xs" variant="secondary-outline">
                   View Documentation
                 </Button>

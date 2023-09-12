@@ -6,7 +6,7 @@ import { TbVectorBezierCircle } from 'react-icons/tb'
 import { NavbarItemTitle } from '../SidebarNavbar'
 import NavItem from './NavItem'
 
-import gogoPoolTitle from '/public/assets/img/nav/logo.svg'
+import gogoPoolTitle from '/public/assets/img/nav/logo-dark-purple.svg'
 
 import ConnectButton from '@/common/components/ConnectButton'
 import GGAvaxTokenIcon from '@/common/components/CustomIcon/GGAvaxTokenIcon'
@@ -34,7 +34,7 @@ export const NavBar = ({ navbarTitle, setNavbarTitle, setSidebarOpen }: Props) =
         <div className="flex">
           <div className="hidden w-64 shrink-0 items-center px-4 sm:flex">
             <NextLink href="/" onClick={() => setNavbarTitle('VALIDATE')}>
-              <Image alt="white logo" height={32} src={gogoPoolTitle} width={118} />
+              <Image alt="white logo" src={gogoPoolTitle} width={152} />
             </NextLink>
           </div>
           <div className="hidden items-center gap-10 px-4 font-bold text-blue-900 sm:flex">
