@@ -138,7 +138,7 @@ export const StakeInput: FunctionComponent<StakeInputModalProps> = ({
         </a>
 
         <>
-          {allowance.gte(ggpBalance) || approveStatus === 'success' ? (
+          {allowance.gte(stakeAmount) || approveStatus === 'success' ? (
             <Button
               disabled={stakeAmount.lte(0) || !stake || isLoading}
               isLoading={isLoading}

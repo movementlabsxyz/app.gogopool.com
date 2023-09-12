@@ -45,9 +45,10 @@ const ApproveButton = ({ amount, setApproveStatus }: ApproveProps) => {
   return isConnected ? (
     <Button
       disabled={!amount || amount.lt(0) || isApproveLoading || !approve || isLoading}
-      full
       isLoading={isApproveLoading || isLoading}
       onClick={approve}
+      size="sm"
+      variant="primary"
     >
       Approve...
     </Button>
