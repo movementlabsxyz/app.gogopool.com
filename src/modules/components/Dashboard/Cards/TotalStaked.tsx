@@ -85,19 +85,20 @@ const TotalStaked = () => {
           <Button
             border={'1px'}
             borderColor={colors.blue[100]}
+            disabled={!address}
             onClick={onOpen}
             paddingX={'16px'}
             size="sm"
             variant="tertiary"
           >
-            Stake {ggpStake ? 'More' : ''}
+            Stake {ggpStake.gt(0) ? 'More' : ''}
           </Button>
         }
         button2={
           <Button
             border={'1px'}
             borderColor={colors.blue[100]}
-            disabled={!ggpStake}
+            disabled={ggpStake.eq(0) || !address}
             onClick={onOpenUnstake}
             paddingX={'16px'}
             size="sm"
