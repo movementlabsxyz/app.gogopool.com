@@ -7,7 +7,6 @@ import { StakeModal } from '../../Modal/StakeModal'
 import { UnstakeModal } from '../../Modal/UnstakeModal'
 import CardTitle from './CardTitle'
 import DashboardButtonCard from './DashboardButtonCard'
-import DashboardCard from './DashboardCard'
 import StakeStat from './StakeStat'
 import { VaultIcon } from './VaultIcon'
 
@@ -56,15 +55,26 @@ const TotalStaked = () => {
     },
   ]
 
-  if (ggpStake.eq(0) || avaxMatched.eq(0)) {
-    return (
-      <DashboardCard cardTitle={<CardTitle icon={VaultIcon} title="My Stake" />}>
+  let cardInternals = (
+    <dl className="py-6">
+      {stats.map((item, index) => (
+        <span key={item.name}>
+          <StakeStat item={item} />
+          {index <= stats.length - 2 && <hr className="border-blue-100" />}
+        </span>
+      ))}
+    </dl>
+  )
+
+  if (ggpStake.eq(0)) {
+    cardInternals = (
+      <div className="flex h-full flex-col items-center justify-center">
         <EmptyStakeIcon />
         <span className="w-80 pt-4 text-center">
           Here you will see <span className="font-bold">your staking</span> information once your{' '}
           <span className="font-bold">Minipool</span> has been created.
         </span>
-      </DashboardCard>
+      </div>
     )
   }
 
@@ -75,19 +85,20 @@ const TotalStaked = () => {
           <Button
             border={'1px'}
             borderColor={colors.blue[100]}
+            disabled={!address}
             onClick={onOpen}
             paddingX={'16px'}
             size="sm"
             variant="tertiary"
           >
-            Stake {ggpStake ? 'More' : ''}
+            Stake {ggpStake.gt(0) ? 'More' : ''}
           </Button>
         }
         button2={
           <Button
             border={'1px'}
             borderColor={colors.blue[100]}
-            disabled={!ggpStake}
+            disabled={ggpStake.eq(0) || !address}
             onClick={onOpenUnstake}
             paddingX={'16px'}
             size="sm"
@@ -98,14 +109,7 @@ const TotalStaked = () => {
         }
         cardTitle={<CardTitle icon={VaultIcon} title="My Stake" />}
       >
-        <dl className="py-6">
-          {stats.map((item, index) => (
-            <span key={item.name}>
-              <StakeStat item={item} />
-              {index <= stats.length - 2 && <hr className="border-blue-100" />}
-            </span>
-          ))}
-        </dl>
+        {cardInternals}
       </DashboardButtonCard>
 
       <UnstakeModal isOpen={isOpenUnstake} onClose={onCloseUnstake} />
