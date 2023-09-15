@@ -116,7 +116,7 @@ export default function UpcomingRewardsCard({
     }
   }, [ggpStaked, avaxValidatingHighWater])
 
-  if (ggpLoading || avaxLoading || startTimeLoading) {
+  if (ggpLoading || avaxLoading || startTimeLoading || !eligibilityCutoff) {
     return (
       <DashboardCard cardTitle={<CardTitle icon={<FiLoader size={40} />} title="Loading" />}>
         Loading...

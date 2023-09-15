@@ -8,9 +8,12 @@ export const WEI_VALUE = BigNumber.from(10).pow(18)
 export const AVAX_VALIDATOR_BASE_APY = parseEther('0.0798')
 export const MINIPOOL_BASE_APY = parseEther('0.075')
 
-export const INVESTOR_LIST = ['0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127']
-export const RETAIL_REWARD_POOL = BigNumber.from('45749504487698707175523')
-export const INVESTOR_REWARD_POOL = BigNumber.from('5083278276410967463947')
+export const INVESTOR_LIST = [
+  '0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127',
+  '0x624c4F9E55d2D1158fD5dee555C3bc8110b1E936',
+]
+export const RETAIL_REWARD_POOL = BigNumber.from('46303215699436471366605')
+export const INVESTOR_REWARD_POOL = BigNumber.from('5144801744381830151845')
 
 export const DECODED_ERRORS = {
   '0x402192dc': 'CancellationTooEarly()',
