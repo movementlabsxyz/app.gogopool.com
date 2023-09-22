@@ -38,7 +38,7 @@ export const SuccessfulClaim: FunctionComponent<SuccessfulClaimProps> = ({
   const { data: ggpStake } = useGetGGPStake(address)
 
   return (
-    <Flex align="center" direction="column" gap={2}>
+    <Flex align="center" direction="column" gap={2} id="survey">
       <ThumbsUp />
       <Text className="mb-4 font-domaine" fontSize={32} fontWeight="bold">
         Success!

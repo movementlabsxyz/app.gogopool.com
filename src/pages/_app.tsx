@@ -8,12 +8,14 @@ import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/nextjs'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
+import { PostHogProvider } from 'posthog-js/react'
 import NoSSR from 'react-no-ssr'
 import { WagmiConfig } from 'wagmi'
 
 import { ChakraFonts } from '@/common/components/CustomFont'
 import { PageHead } from '@/common/components/PageHead'
 import configWagmiClient from '@/config/wagmi'
+import { POSTHOG_API_HOST, POSTHOG_PUBLIC_KEY } from '@/constants/posthog'
 import theme from '@/theme'
 
 const { chains, wagmiClient } = configWagmiClient()
@@ -21,6 +23,11 @@ const { chains, wagmiClient } = configWagmiClient()
 const CrispWithNoSSR = dynamic(() => import('@/common/components/crisp/crisp.js'), {
   ssr: false,
 })
+
+const ph_options = {
+  api_host: POSTHOG_API_HOST,
+  opt_in_site_apps: true,
+}
 
 export const App = ({ Component, pageProps }) => {
   // Use the layout defined at the page level, if available
@@ -31,7 +38,7 @@ export const App = ({ Component, pageProps }) => {
     integrations: [
       new BrowserTracing({
         // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: ['localhost', /^https:\/\/yourserver\.io\/api/],
+        tracePropagationTargets: ['localhost', /^https:\/\/app.gogopool\.com\//],
       }),
     ],
     // Performance Monitoring
@@ -45,18 +52,20 @@ export const App = ({ Component, pageProps }) => {
     <NoSSR>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains} showRecentTransactions>
-          <ChakraProvider theme={theme}>
-            <ChakraFonts />
-            <CrispWithNoSSR />
-            <Head>
-              <meta
-                content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
-                name="viewport"
-              />
-              <PageHead />
-            </Head>
-            {getLayout(<Component {...pageProps} />)}
-          </ChakraProvider>
+          <PostHogProvider apiKey={POSTHOG_PUBLIC_KEY} options={ph_options}>
+            <ChakraProvider theme={theme}>
+              <ChakraFonts />
+              <CrispWithNoSSR />
+              <Head>
+                <meta
+                  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+                  name="viewport"
+                />
+                <PageHead />
+              </Head>
+              {getLayout(<Component {...pageProps} />)}
+            </ChakraProvider>
+          </PostHogProvider>
         </RainbowKitProvider>
       </WagmiConfig>
     </NoSSR>

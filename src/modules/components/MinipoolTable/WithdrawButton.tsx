@@ -24,6 +24,7 @@ const WithdrawButton = ({ children, isFinished, minipool }) => {
             'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
           !enabled && 'cursor-default hover:bg-white',
         )}
+        id="survey"
         onClick={enabled ? withdrawFunds : undefined}
       >
         {children}

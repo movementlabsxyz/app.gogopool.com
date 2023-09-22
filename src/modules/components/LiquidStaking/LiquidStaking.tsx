@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import { BigNumber, BigNumberish } from 'ethers'
 import { FunctionComponent, useEffect, useState } from 'react'
 
