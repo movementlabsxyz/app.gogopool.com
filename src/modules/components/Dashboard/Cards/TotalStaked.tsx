@@ -4,7 +4,7 @@ import { Button, useDisclosure } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 
 import { StakeModal } from '../../Modal/StakeModal/StakeModal'
-import { UnstakeModal } from '../../Modal/UnstakeModal'
+import { UnstakeModal } from '../../Modal/UnstakeModal/UnstakeModal'
 import CardTitle from './CardTitle'
 import DashboardButtonCard from './DashboardButtonCard'
 import StakeStat from './StakeStat'
@@ -28,7 +28,7 @@ const TotalStaked = () => {
   const { data: avaxMatched } = useGetAVAXAssigned(address)
   const { data: avaxStaked } = useGetAVAXStake(address)
 
-  const { isOpen, onClose, onOpen } = useDisclosure()
+  const { isOpen: isOpenStake, onClose: onCloseStake, onOpen: onOpenStake } = useDisclosure()
   const { isOpen: isOpenUnstake, onClose: onCloseUnstake, onOpen: onOpenUnstake } = useDisclosure()
 
   const stats = [
@@ -86,7 +86,7 @@ const TotalStaked = () => {
             border={'1px'}
             borderColor={colors.blue[100]}
             disabled={!address}
-            onClick={onOpen}
+            onClick={onOpenStake}
             paddingX={'16px'}
             size="sm"
             variant="tertiary"
@@ -111,8 +111,8 @@ const TotalStaked = () => {
       >
         {cardInternals}
       </DashboardButtonCard>
-      <UnstakeModal isOpen={isOpenUnstake} onClose={onCloseUnstake} />
-      {isOpen && <StakeModal onClose={onClose} />}
+      {isOpenStake && <StakeModal onClose={onCloseStake} />}
+      {isOpenUnstake && <UnstakeModal onClose={onCloseUnstake} />}
     </>
   )
 }

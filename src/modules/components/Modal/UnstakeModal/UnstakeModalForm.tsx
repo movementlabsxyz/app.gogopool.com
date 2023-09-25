@@ -1,35 +1,39 @@
 import { BigNumber, constants } from 'ethers'
+import { FunctionComponent } from 'react'
 
-import { Box, Divider, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react'
 import { FiInfo } from 'react-icons/fi'
 import { useAccount, useBalance } from 'wagmi'
 
 import { GGPPillUnit } from '../../Dashboard/Cards/GGPPillUnit'
 
-import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { Tooltip } from '@/common/components/Tooltip'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import useCeres from '@/hooks/useCeres'
 import { useGetFutureRatio } from '@/hooks/useGetFutureRatio'
+import { useMaxWithdrawAmount } from '@/hooks/useMaxWithdrawAmount'
 import { useGetContractCollateralizationRatio, useGetGGPStake } from '@/hooks/useStake'
 import { displayBN } from '@/utils/numberFormatter'
 
 const daysInMillis = 1000 * 60 * 60 * 24
 
-interface StakeModalFormProps {
-  stakeAmount: BigNumber
+interface UnstakeModalFormProps {
+  withdrawAmount: BigNumber
   onChange: (value: BigNumber) => void
 }
 
-export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) => {
+export const UnstakeModalForm: FunctionComponent<UnstakeModalFormProps> = ({
+  onChange,
+  withdrawAmount,
+}) => {
   const { address: account } = useAccount()
   const { data: ceresData } = useCeres()
   const { address: ggpAddress } = useTokenGGPContract()
   const { data: ggpBalanceMaybe } = useBalance({
     address: account,
-    token: ggpAddress as `0x${string}`,
+    token: ggpAddress,
   })
   const { data: ggpStake } = useGetGGPStake(account)
 
@@ -37,8 +41,10 @@ export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) =
 
   const { data: straightRatio } = useGetContractCollateralizationRatio(account)
   const futureRatio = useGetFutureRatio({
-    additionalGgp: stakeAmount,
+    additionalGgp: BigNumber.from(0).sub(withdrawAmount),
   })
+
+  const maxWithdraw = useMaxWithdrawAmount()
 
   const rewardsStartDateMillis = ceresData.rewardsCycleStartTime.value * 1000
   const nextCycleStartMillis = rewardsStartDateMillis + daysInMillis * 30
@@ -101,10 +107,10 @@ export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) =
             </Tooltip>
           </Box>
         </Flex>
-        <Title fontWeight="500" lineHeight="40px" width="300px">
-          How much more do you want to{' '}
+        <Title fontWeight="500" lineHeight="40px" width="350px">
+          How much do you want to{' '}
           <Box as="span" color="blue.400">
-            stake?
+            send to your wallet?
           </Box>
         </Title>
         <Box pt="5">
@@ -120,18 +126,18 @@ export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) =
           >
             <Box as="span" fontSize={22} fontWeight="500" width={'100%'}>
               <BigNumberInput
-                bnValue={stakeAmount}
+                bnValue={withdrawAmount}
                 className="w-full border-none focus:border-none focus:outline-none"
-                max={ggpBalance}
+                max={ggpStake}
                 min={BigNumber.from(0)}
                 onChange={(value) => onChange(value)}
-                placeholder="Enter staking amount..."
+                placeholder="Enter removal amount..."
               />
             </Box>
             <Button
               className="underline"
               color="blue.400"
-              onClick={() => onChange(ggpBalance)}
+              onClick={() => onChange(maxWithdraw)}
               size="sm"
               variant="link"
             >
@@ -140,14 +146,25 @@ export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) =
             <GGPPillUnit />
           </HStack>
         </Box>
-        <Box pt="5">
-          <Text as="strong" color="gray.500" fontSize={14}>
-            Future Collateralization:{' '}
-          </Text>
-          <Text as="strong" color="green.700" fontSize={14}>
-            {futureRatio.eq(constants.MaxUint256) ? '∞' : displayBN(futureRatio)}%
-          </Text>
-        </Box>
+        <Flex pt="5">
+          <Box>
+            <Text as="strong" color="gray.500" fontSize={14}>
+              Future Collateralization:{' '}
+            </Text>
+            <Text as="strong" color="green.700" fontSize={14}>
+              {futureRatio.eq(constants.MaxUint256) ? '∞' : displayBN(futureRatio)}%
+            </Text>
+          </Box>
+          <Spacer />
+          <Box>
+            <Text as="strong" color="gray.500" fontSize={14}>
+              Withdraw Amount:{' '}
+            </Text>
+            <Text as="strong" color="green.700" fontSize={14}>
+              {parseFloat(displayBN(withdrawAmount, 18))} GGP
+            </Text>
+          </Box>
+        </Flex>
       </Box>
     </>
   )

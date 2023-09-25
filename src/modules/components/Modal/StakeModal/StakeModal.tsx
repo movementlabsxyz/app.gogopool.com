@@ -2,7 +2,6 @@ import { BigNumber } from 'ethers'
 import { FunctionComponent, useCallback, useState } from 'react'
 
 import {
-  Box,
   Modal as ChakraModal,
   Divider,
   Flex,
@@ -26,11 +25,11 @@ import { Title } from '@/common/components/Card'
 import useGGPAllowance from '@/hooks/allowance'
 import { useStakeGGP } from '@/hooks/useStake'
 
-interface NewStakeModalProps {
+interface StakeModalProps {
   onClose(): void
 }
 
-export const StakeModal: FunctionComponent<NewStakeModalProps> = ({ onClose }) => {
+export const StakeModal: FunctionComponent<StakeModalProps> = ({ onClose }) => {
   const [stakeAmount, setStakeAmount] = useState(BigNumber.from(0))
   const { address: account } = useAccount()
   const { data: ggpAllowance } = useGGPAllowance(account)
@@ -80,41 +79,49 @@ export const StakeModal: FunctionComponent<NewStakeModalProps> = ({ onClose }) =
         <Divider borderColor="blue.100" />
         <ModalFooter>
           <Flex alignItems="center" width="100%">
-            <Box>
+            <Button
+              className="underline"
+              color="blue.400"
+              onClick={handleClose}
+              size="sm"
+              variant="link"
+            >
+              {isSuccess || isError ? 'Close' : 'Cancel'}
+            </Button>
+            <Spacer />
+            {!isSuccess &&
+              !isError &&
+              (allowance.gte(stakeAmount) ? (
+                <Button
+                  color="white"
+                  disabled={hasStake || stakeAmount.lte(0) || !stake || isLoading}
+                  isLoading={isStakeLoading}
+                  onClick={stake}
+                  size="sm"
+                  variant="primary"
+                  width="120px"
+                >
+                  Stake
+                </Button>
+              ) : (
+                <ApproveButton
+                  amount={stakeAmount}
+                  setApproveStatus={() => {
+                    refetch()
+                  }}
+                />
+              ))}
+            {(isSuccess || isError) && (
               <Button
-                className="underline"
-                color="blue.400"
+                _hover={{ backgroundColor: 'blue.600' }}
+                backgroundColor="blue.500"
+                color="white"
                 onClick={handleClose}
                 size="sm"
-                variant="link"
+                variant="primary"
               >
-                {isSuccess || isError ? 'Close' : 'Cancel'}
+                View Dashboard
               </Button>
-            </Box>
-            <Spacer />
-            {!isSuccess && !isError && (
-              <Box>
-                {allowance.gte(stakeAmount) ? (
-                  <Button
-                    color="white"
-                    disabled={hasStake || stakeAmount.lte(0) || !stake}
-                    isLoading={isStakeLoading}
-                    onClick={stake}
-                    size="sm"
-                    variant="primary"
-                    width="120px"
-                  >
-                    Stake
-                  </Button>
-                ) : (
-                  <ApproveButton
-                    amount={stakeAmount}
-                    setApproveStatus={() => {
-                      refetch()
-                    }}
-                  />
-                )}
-              </Box>
             )}
           </Flex>
         </ModalFooter>
