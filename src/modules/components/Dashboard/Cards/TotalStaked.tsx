@@ -111,7 +111,6 @@ const TotalStaked = () => {
       >
         {cardInternals}
       </DashboardButtonCard>
-
       <UnstakeModal isOpen={isOpenUnstake} onClose={onCloseUnstake} />
       <StakeModal isOpen={isOpen} onClose={onClose} />
     </>
