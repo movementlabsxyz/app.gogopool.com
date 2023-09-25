@@ -36,18 +36,6 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
     )
   }
 
-  if (!minipoolsByOwner?.length) {
-    return (
-      <DashboardCard cardTitle={<CardTitle icon={TrophyIcon} title="My Rewards" />}>
-        <EmptyRewardsIcon />
-        <span className="w-80 pt-4 text-center">
-          In order to gain <span className="font-bold">rewards</span> you must have created a{' '}
-          <span className="font-bold">Minipool</span>.
-        </span>
-      </DashboardCard>
-    )
-  }
-
   const prelaunchAtAddr = minipoolsByOwner.filter((minipool) => minipool.status.eq(0))
   // filter to Prelaunch, Launched, Staking and Widthdrawable (PLSW) nodes. These are the valid node types that
   // affect the rewards card logic. Finished, Cancelled, and Error states are ignored.
@@ -66,15 +54,6 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
   const nextCycleStart = cycleStart + 24 * 60 * 60 * 30
   const nextCycleDate = new Date(nextCycleStart * 1000)
 
-  // If they made minipool(s) but all are in Prelaunch status.
-  if (prelaunchAtAddr.length > 0 && prelaunchAtAddr.length === onlyPLSW.length) {
-    // Find the index of the minipool that is closest to being launched
-    const minipoolIndex = minipoolsPrelaunch.findIndex(
-      (minipool) => minipool.nodeID === prelaunchAtAddr[0].nodeID,
-    )
-    return <QueueCard minipoolIndex={minipoolIndex} nextCycleDate={nextCycleDate} />
-  }
-
   // If there are rewards, display rewards screen
   if (rewardsToClaim.gt(0)) {
     return (
@@ -87,7 +66,29 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
     )
   }
 
-  // If there are no rewards to claim,
+  // If there are no rewards, or minipools, display empty state
+  if (!minipoolsByOwner?.length) {
+    return (
+      <DashboardCard cardTitle={<CardTitle icon={TrophyIcon} title="My Rewards" />}>
+        <EmptyRewardsIcon />
+        <span className="w-80 pt-4 text-center">
+          In order to gain <span className="font-bold">rewards</span> you must have created a{' '}
+          <span className="font-bold">Minipool</span>.
+        </span>
+      </DashboardCard>
+    )
+  }
+
+  // If they made minipool(s) but all are in Prelaunch status display queue.
+  if (prelaunchAtAddr.length > 0 && prelaunchAtAddr.length === onlyPLSW.length) {
+    // Find the index of the minipool that is closest to being launched
+    const minipoolIndex = minipoolsPrelaunch.findIndex(
+      (minipool) => minipool.nodeID === prelaunchAtAddr[0].nodeID,
+    )
+    return <QueueCard minipoolIndex={minipoolIndex} nextCycleDate={nextCycleDate} />
+  }
+
+  // If there are no rewards to claim, but they have a running minipool.
   return (
     <UpcomingRewardsCard
       address={address}
