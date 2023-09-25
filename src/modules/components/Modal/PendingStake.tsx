@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
 
-import { TransactionHash } from '../TransactionHash'
+import { TransactionHash } from './TransactionHash'
 
 import DepositAvaxIcon from '@/common/components/CustomIcon/DepositAvaxIcon'
 import { HexString } from '@/types/cryptoGenerics'

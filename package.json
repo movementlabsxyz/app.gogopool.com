@@ -99,7 +99,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run lint:eslint"
+      "eslint --fix"
     ],
     "*.{js,jsx,ts,tsx,scss}": [
       "prettier --write"

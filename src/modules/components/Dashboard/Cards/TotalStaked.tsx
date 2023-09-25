@@ -3,7 +3,7 @@ import { constants } from 'ethers'
 import { Button, useDisclosure } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 
-import { StakeModal } from '../../Modal/StakeModal'
+import { StakeModal } from '../../Modal/StakeModal/StakeModal'
 import { UnstakeModal } from '../../Modal/UnstakeModal'
 import CardTitle from './CardTitle'
 import DashboardButtonCard from './DashboardButtonCard'
@@ -112,7 +112,7 @@ const TotalStaked = () => {
         {cardInternals}
       </DashboardButtonCard>
       <UnstakeModal isOpen={isOpenUnstake} onClose={onCloseUnstake} />
-      <StakeModal isOpen={isOpen} onClose={onClose} />
+      {isOpen && <StakeModal onClose={onClose} />}
     </>
   )
 }

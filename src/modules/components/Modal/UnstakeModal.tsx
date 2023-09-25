@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { FailedClaim } from './ClaimAndRestake/FailedClaim'
-import { PendingStake } from './ClaimAndRestake/PendingStake'
 import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
+import { PendingStake } from './PendingStake'
 import { UnstakeInput } from './UnstakeInput/UnstakeInput'
 
 import { Modal } from '@/common/components/Modal'

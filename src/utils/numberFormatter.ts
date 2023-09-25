@@ -11,6 +11,6 @@ export const roundedBigNumber = (num: BigNumberish | undefined, decimals = 4): n
   return Math.round(value * 10 ** decimals) / 10 ** decimals
 }
 
-export const displayBN = (num: BigNumber): string => {
-  return Number(formatEther(num)).toFixed(2)
+export const displayBN = (num: BigNumber, fractionDigits = 2): string => {
+  return Number(formatEther(num)).toFixed(fractionDigits)
 }
