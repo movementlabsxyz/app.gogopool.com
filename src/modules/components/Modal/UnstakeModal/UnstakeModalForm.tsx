@@ -128,7 +128,7 @@ export const UnstakeModalForm: FunctionComponent<UnstakeModalFormProps> = ({
               <BigNumberInput
                 bnValue={withdrawAmount}
                 className="w-full border-none focus:border-none focus:outline-none"
-                max={ggpStake}
+                max={maxWithdraw}
                 min={BigNumber.from(0)}
                 onChange={(value) => onChange(value)}
                 placeholder="Enter removal amount..."

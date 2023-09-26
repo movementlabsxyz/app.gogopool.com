@@ -3,9 +3,10 @@ import { BigNumber, constants } from 'ethers'
 import { CopyIcon } from '@chakra-ui/icons'
 import { Box, Divider, Flex, Spacer, Stack, Text, useToast } from '@chakra-ui/react'
 import { shortenTransactionHash } from '@usedapp/core'
+import Image from 'next/image'
+import stakeSuccess from 'public/assets/img/large_assets/stake-success.svg'
 import { useAccount, useBalance } from 'wagmi'
 
-import { Title } from '@/common/components/Card'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
 import useCeres from '@/hooks/useCeres'
 import { useGetContractCollateralizationRatio, useGetGGPStake } from '@/hooks/useStake'
@@ -49,12 +50,10 @@ export const StakeModalSuccess = ({ stakeAmount, transactionHash }: StakeModalSu
   return (
     <Stack align="center" gap={2} p="6">
       {/* TODO: Insert success graphic and banner */}
-      <Title>Success!</Title>
-      <Text align="center" width="80%">
+      <Image alt="Success!" height={251} src={stakeSuccess} width={353} />
+      <Text align="center" width="480px">
         You&apos;ve successfully staked{' '}
-        <strong>{parseFloat(displayBN(stakeAmount, 18))} GGP</strong> Tokens. Reward cycles occur
-        every 15 days. You will be eligible for rewards on:{' '}
-        <strong>{nextCycleDate.toLocaleDateString()}</strong>
+        <strong>{parseFloat(displayBN(stakeAmount, 18))} GGP</strong> Tokens.
       </Text>
       <Box
         backgroundColor="caution.400"
