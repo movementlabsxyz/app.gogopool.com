@@ -11,12 +11,14 @@ export type CalculatorReq = {
   ggpStaked: BigNumberJSON
   avaxStaked: BigNumberJSON
   walletAddress: HexString
+  chainId: number
 }
 
 export type CalculatorData = {
   ggpStaked: BigNumber
   avaxStaked: BigNumber
   walletAddress: HexString
+  chainId: number
 }
 
 export type Staker = {

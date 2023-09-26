@@ -6,6 +6,7 @@ import { formatEther } from 'ethers/lib/utils.js'
 import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
 import { FiLoader } from 'react-icons/fi'
 import useAsyncEffect from 'use-async-effect'
+import { useNetwork } from 'wagmi'
 
 import CardTitle from '../CardTitle'
 import DashboardButtonCard from '../DashboardButtonCard'
@@ -94,6 +95,7 @@ export default function UpcomingRewardsCard({
   nextCycleDate,
   openClaimModal,
 }: Props) {
+  const { chain } = useNetwork()
   const [apy, setApy] = useState(BigNumber.from(0))
   const [ggpReward, setGgpReward] = useState(BigNumber.from(0))
 
@@ -109,6 +111,7 @@ export default function UpcomingRewardsCard({
           ggpStaked,
           avaxStaked: avaxValidatingHighWater,
           walletAddress: address,
+          chainId: chain?.id,
         })
         setApy(BigNumber.from(apy))
         setGgpReward(BigNumber.from(ggpReward))
