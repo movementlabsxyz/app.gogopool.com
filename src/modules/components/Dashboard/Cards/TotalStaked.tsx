@@ -1,16 +1,18 @@
 import { constants } from 'ethers'
 
 import { Button, useDisclosure } from '@chakra-ui/react'
+import { parseEther } from 'ethers/lib/utils.js'
 import { useAccount } from 'wagmi'
 
-import { StakeModal } from '../../Modal/StakeModal'
-import { UnstakeModal } from '../../Modal/UnstakeModal'
+import { StakeModal } from '../../Modal/StakeModal/StakeModal'
+import { UnstakeModal } from '../../Modal/UnstakeModal/UnstakeModal'
 import CardTitle from './CardTitle'
 import DashboardButtonCard from './DashboardButtonCard'
 import StakeStat from './StakeStat'
 import { VaultIcon } from './VaultIcon'
 
 import EmptyStakeIcon from '@/common/components/CustomIcon/EmptyStakeIcon'
+import { Tooltip } from '@/common/components/Tooltip'
 import {
   useGetAVAXAssigned,
   useGetAVAXStake,
@@ -28,7 +30,7 @@ const TotalStaked = () => {
   const { data: avaxMatched } = useGetAVAXAssigned(address)
   const { data: avaxStaked } = useGetAVAXStake(address)
 
-  const { isOpen, onClose, onOpen } = useDisclosure()
+  const { isOpen: isOpenStake, onClose: onCloseStake, onOpen: onOpenStake } = useDisclosure()
   const { isOpen: isOpenUnstake, onClose: onCloseUnstake, onOpen: onOpenUnstake } = useDisclosure()
 
   const stats = [
@@ -86,7 +88,7 @@ const TotalStaked = () => {
             border={'1px'}
             borderColor={colors.blue[100]}
             disabled={!address}
-            onClick={onOpen}
+            onClick={onOpenStake}
             paddingX={'16px'}
             size="sm"
             variant="tertiary"
@@ -95,25 +97,34 @@ const TotalStaked = () => {
           </Button>
         }
         button2={
-          <Button
-            border={'1px'}
-            borderColor={colors.blue[100]}
-            disabled={ggpStake.eq(0) || !address}
-            onClick={onOpenUnstake}
-            paddingX={'16px'}
-            size="sm"
-            variant="tertiary"
+          <Tooltip
+            content={
+              straightRatio.lte(parseEther('1.5'))
+                ? 'Collateral ratio at or below 150%'
+                : ggpStake.eq(0)
+                ? 'No GGP Staked'
+                : ''
+            }
           >
-            Unstake GGP
-          </Button>
+            <Button
+              border={'1px'}
+              borderColor={colors.blue[100]}
+              disabled={ggpStake.eq(0) || !address || straightRatio.eq(parseEther('1.5'))}
+              onClick={onOpenUnstake}
+              paddingX={'16px'}
+              size="sm"
+              variant="tertiary"
+            >
+              Unstake GGP
+            </Button>
+          </Tooltip>
         }
         cardTitle={<CardTitle icon={VaultIcon} title="My Stake" />}
       >
         {cardInternals}
       </DashboardButtonCard>
-
-      <UnstakeModal isOpen={isOpenUnstake} onClose={onCloseUnstake} />
-      <StakeModal isOpen={isOpen} onClose={onClose} />
+      {isOpenStake && <StakeModal onClose={onCloseStake} />}
+      {isOpenUnstake && <UnstakeModal onClose={onCloseUnstake} />}
     </>
   )
 }

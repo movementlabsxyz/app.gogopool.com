@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 
-import { useWaitForTransaction } from 'wagmi'
+import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import ClaimRestakeStepOne from './ClaimAndRestake/ClaimRestakeStepOne'
 import ClaimRestakeStepTwo from './ClaimAndRestake/ClaimRestakeStepTwo'
@@ -10,7 +10,8 @@ import { SuccessfulClaim } from './ClaimAndRestake/SuccessfulClaim'
 
 import { Modal } from '@/common/components/Modal'
 import { useClaimAndRestake } from '@/hooks/useClaimNodeOp'
-import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
+import { useGetFutureRatio } from '@/hooks/useGetFutureRatio'
+import { useGetContractCollateralizationRatio } from '@/hooks/useStake'
 
 export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modalProps }) => {
   const [currentStep, setCurrentStep] = useState(1)
@@ -27,11 +28,10 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modal
     setClaimAmount(rewardsToClaim.sub(val))
   }
 
-  const currentRatio = useGetCollateralRatio({})
-
-  const futureRatio = useGetCollateralRatio({
-    ggpAmount: restakeAmount,
-    avaxAmount: BigNumber.from(0),
+  const { address: account } = useAccount()
+  const { data: straightRatio } = useGetContractCollateralizationRatio(account)
+  const futureRatio = useGetFutureRatio({
+    additionalGgp: restakeAmount,
   })
 
   const { data: claimData, reset, write: claim } = useClaimAndRestake(claimAmount, restakeAmount)
@@ -53,7 +53,7 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modal
       {currentStep === 1 && (
         <ClaimRestakeStepOne
           claimAmount={claimAmount}
-          currentRatio={currentRatio}
+          currentRatio={straightRatio.mul(100)}
           futureRatio={futureRatio}
           handleClose={handleClose}
           restakeAmount={restakeAmount}
@@ -75,7 +75,7 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modal
       )}
       {transactionSuccess && !transactionLoading && claimData?.hash && (
         <SuccessfulClaim
-          collateralization={currentRatio}
+          collateralization={straightRatio.mul(100)}
           onClose={handleClose}
           staked={restakeAmount}
           transactionHash={claimData?.hash}

@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import { FunctionComponent } from 'react'
 
 import { Box, Button as ChakraButton, Stack, Text, useToast } from '@chakra-ui/react'

@@ -12,7 +12,7 @@ import { MAX_RATIO } from '../../Wizard/components/StakeButton'
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
-import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
+import { useGetFutureRatio } from '@/hooks/useGetFutureRatio'
 import { displayBN } from '@/utils/numberFormatter'
 
 interface UnstakeInputProps {
@@ -35,7 +35,7 @@ export const UnstakeInput: FunctionComponent<UnstakeInputProps> = ({
   const { chain } = useNetwork()
   const { openChainModal } = useChainModal()
 
-  const ratio = useGetCollateralRatio({ ggpAmount: BigNumber.from(0).sub(withdrawAmount) })
+  const ratio = useGetFutureRatio({ additionalGgp: BigNumber.from(0).sub(withdrawAmount) })
 
   const min = BigNumber.from(0)
   const max = rewardsToClaim.add(ggpStake)
@@ -80,7 +80,7 @@ export const UnstakeInput: FunctionComponent<UnstakeInputProps> = ({
         )}
         {!chain?.unsupported && (
           <Button
-            disabled={!withdraw || ratio.lt(MAX_RATIO)}
+            disabled={!withdraw || ratio.lt(MAX_RATIO.mul(100))}
             onClick={withdraw}
             size="sm"
             variant="primary"

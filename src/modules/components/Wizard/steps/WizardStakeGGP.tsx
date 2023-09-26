@@ -12,8 +12,12 @@ import StakeButton, { MAX_RATIO, MIN_RATIO } from '../components/StakeButton'
 import { DEFAULT_AVAX } from '@/constants/chainDefaults'
 import useGGPAllowance from '@/hooks/allowance'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
-import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
-import { useGetGGPPrice, useGetGGPStake } from '@/hooks/useStake'
+import { useGetFutureRatio } from '@/hooks/useGetFutureRatio'
+import {
+  useGetContractCollateralizationRatio,
+  useGetGGPPrice,
+  useGetGGPStake,
+} from '@/hooks/useStake'
 import { StakeInput } from '@/modules/components/Wizard/StakeInput'
 import { displayBN } from '@/utils/numberFormatter'
 
@@ -60,12 +64,12 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
   const { data: ggpAllowance } = useGGPAllowance(account)
 
   // For calculating ratio
-  const futureRatio = useGetCollateralRatio({
-    ggpAmount,
-    avaxAmount: defaultAVAXAmount,
+  const futureRatio = useGetFutureRatio({
+    additionalGgp: ggpAmount,
+    additionalAvax: defaultAVAXAmount,
   })
-  const currentRatio = useGetCollateralRatio({})
-  const currentRatioWithIncomingAVAX = useGetCollateralRatio({ avaxAmount: defaultAVAXAmount })
+  const { data: straightRatio } = useGetContractCollateralizationRatio(account)
+  const currentRatioWithIncomingAVAX = useGetFutureRatio({ additionalAvax: defaultAVAXAmount })
 
   const { data: ggpStake } = useGetGGPStake(account)
 
@@ -110,7 +114,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
         <Flex gap="2">
           <Text color="grey.600">Current ratio: </Text>
           <Text fontWeight="bold">
-            {currentRatio.eq(constants.MaxUint256) ? '∞' : displayBN(currentRatio)}%
+            {straightRatio.eq(constants.MaxUint256) ? '∞' : displayBN(straightRatio.mul(100))}%
           </Text>
         </Flex>
         <Flex gap="2">
@@ -179,7 +183,7 @@ export const WizardStakeGGP: FunctionComponent<WizardStakeGGPProps> = ({
           <button className="font-medium text-grey-600 underline" onClick={prevStep}>
             Back
           </button>
-          {!ggpBalance?.value.isZero() || currentRatio >= MIN_RATIO ? (
+          {!ggpBalance?.value.isZero() || straightRatio.mul(100) >= MIN_RATIO ? (
             <div>
               {ggpAmount.gt(0) && (ggpAllowance?.gte(ggpAmount) || approved) ? (
                 <StakeButton
