@@ -6,6 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/nextjs'
+import { Analytics } from 'dappling-analytics/react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { PostHogProvider } from 'posthog-js/react'
@@ -56,6 +57,7 @@ export const App = ({ Component, pageProps }) => {
             <ChakraProvider theme={theme}>
               <ChakraFonts />
               <CrispWithNoSSR />
+              <Analytics />
               <Head>
                 <meta
                   content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
