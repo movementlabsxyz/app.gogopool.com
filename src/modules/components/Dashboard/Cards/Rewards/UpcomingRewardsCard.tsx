@@ -67,7 +67,7 @@ function noRewards(
     },
   ]
 
-  if (eligibilityCutoff.lt(userStartTime)) {
+  if (eligibilityCutoff?.lt(userStartTime)) {
     noRewardsStats[0] = {
       name: 'GGP REWARD ELIGIBILITY',
       stat: <span className="text-error-700">Not Eligibile</span>,

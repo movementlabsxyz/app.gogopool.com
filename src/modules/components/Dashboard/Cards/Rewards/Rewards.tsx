@@ -25,6 +25,7 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
   const { data: minipoolsPrelaunch, isLoading: minipoolsPreLoading } = useMinipoolsByStatus({
     status: 0,
   })
+
   const { isLoading: minipoolsOwnLoading, minipools: minipoolsByOwner } =
     useMinipoolsByOwner(address)
 
@@ -35,18 +36,6 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
       </DashboardCard>
     )
   }
-
-  const prelaunchAtAddr = minipoolsByOwner.filter((minipool) => minipool.status.eq(0))
-  // filter to Prelaunch, Launched, Staking and Widthdrawable (PLSW) nodes. These are the valid node types that
-  // affect the rewards card logic. Finished, Cancelled, and Error states are ignored.
-  const onlyPLSW = minipoolsByOwner.filter((minipool) => {
-    return (
-      minipool.status.eq(0) ||
-      minipool.status.eq(1) ||
-      minipool.status.eq(2) ||
-      minipool.status.eq(3)
-    )
-  })
 
   const cycleStart = ceresData.rewardsCycleStartTime.value
   const eligibilityLen = ceresData.rewardsEligibilityMinSeconds.value
@@ -78,6 +67,18 @@ const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: Rewards
       </DashboardCard>
     )
   }
+
+  const prelaunchAtAddr = minipoolsByOwner.filter((minipool) => minipool.status.eq(0))
+  // filter to Prelaunch, Launched, Staking and Widthdrawable (PLSW) nodes. These are the valid node types that
+  // affect the rewards card logic. Finished, Cancelled, and Error states are ignored.
+  const onlyPLSW = minipoolsByOwner.filter((minipool) => {
+    return (
+      minipool.status.eq(0) ||
+      minipool.status.eq(1) ||
+      minipool.status.eq(2) ||
+      minipool.status.eq(3)
+    )
+  })
 
   // If they made minipool(s) but all are in Prelaunch status display queue.
   if (prelaunchAtAddr.length > 0 && prelaunchAtAddr.length === onlyPLSW.length) {
