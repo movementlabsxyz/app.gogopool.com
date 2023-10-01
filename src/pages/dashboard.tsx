@@ -1,12 +1,16 @@
 import { BigNumber } from 'ethers'
 
 import { Box, useDisclosure } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 
+import { Button } from '@/common/components/Button'
 import { DashboardContainer } from '@/common/components/Container'
 import { PageHead } from '@/common/components/PageHead'
 import useCeres from '@/hooks/useCeres'
 import { useGetGGPRewards } from '@/hooks/useStake'
+import CardTitle from '@/modules/components/Dashboard/Cards/CardTitle'
+import DashboardButtonCard from '@/modules/components/Dashboard/Cards/DashboardButtonCard'
 import Rewards from '@/modules/components/Dashboard/Cards/Rewards/Rewards'
 import TotalStaked from '@/modules/components/Dashboard/Cards/TotalStaked'
 import DashboardHeader from '@/modules/components/Dashboard/DashboardHeader'
@@ -15,6 +19,7 @@ import { ClaimAndRestakeModal } from '@/modules/components/Modal/ClaimAndRestake
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 
 const Dashboard = () => {
+  const router = useRouter()
   const { address } = useAccount()
   const { data: ceresData, isLoading: ceresLoading } = useCeres()
   const { data: rewardsToClaimMaybe } = useGetGGPRewards(address)
@@ -48,7 +53,22 @@ const Dashboard = () => {
               rewardsToClaim={rewardsToClaim}
             />
           </div>
-          <MinipoolTable ownerAddress={address} />
+          <DashboardButtonCard
+            button1={
+              <Button
+                onClick={() => router.push('/create-minipool')}
+                size="xs"
+                variant="secondary-filled"
+              >
+                + New Minipool
+              </Button>
+            }
+            cardTitle={<CardTitle icon={null} title="My Minipools" />}
+          >
+            <Box pt="4">
+              <MinipoolTable ownerAddress={address} />
+            </Box>
+          </DashboardButtonCard>
         </Box>
       </DashboardContainer>
     </Box>
