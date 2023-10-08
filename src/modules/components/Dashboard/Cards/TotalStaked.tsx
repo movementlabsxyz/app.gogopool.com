@@ -109,7 +109,7 @@ const TotalStaked = () => {
             <Button
               border={'1px'}
               borderColor={colors.blue[100]}
-              disabled={ggpStake.eq(0) || !address || straightRatio.eq(parseEther('1.5'))}
+              disabled={ggpStake.eq(0) || !address || straightRatio.lte(parseEther('1.5'))}
               onClick={onOpenUnstake}
               paddingX={'16px'}
               size="sm"
