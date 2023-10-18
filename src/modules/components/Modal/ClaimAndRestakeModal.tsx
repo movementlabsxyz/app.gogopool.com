@@ -13,7 +13,13 @@ import { useClaimAndRestake } from '@/hooks/useClaimNodeOp'
 import { useGetFutureRatio } from '@/hooks/useGetFutureRatio'
 import { useGetContractCollateralizationRatio } from '@/hooks/useStake'
 
-export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modalProps }) => {
+export const ClaimAndRestakeModal = ({
+  isOpen,
+  onClose,
+  openSurvey,
+  rewardsToClaim,
+  ...modalProps
+}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const [claimAmount, setClaimAmount] = useState<BigNumber>(rewardsToClaim)
@@ -46,6 +52,12 @@ export const ClaimAndRestakeModal = ({ isOpen, onClose, rewardsToClaim, ...modal
     setClaimAmount(rewardsToClaim)
     setRestakeAmount(BigNumber.from(0))
     setCurrentStep(1)
+    // check local storage for survey
+    const hasShownSurvey = localStorage.getItem('hasShownSurvey')
+    if (!hasShownSurvey || hasShownSurvey === 'false') {
+      openSurvey()
+      localStorage.setItem('hasShownSurvey', 'true')
+    }
   }
 
   return (

@@ -65,7 +65,7 @@ const copyTransaction = (nodeId: string) => {
   })
 }
 
-const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
+const MinipoolCard = ({ minipool, openSurvey }: { minipool: Minipool; openSurvey: () => void }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
   const isWithdrawable = minipool.status.toNumber() === MinipoolStatus.Withdrawable
   const isPrelaunch = minipool.status.toNumber() === MinipoolStatus.Prelaunch
@@ -134,7 +134,7 @@ const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
     )
   } else if (isWithdrawable) {
     return (
-      <WithdrawButton isFinished={isFinished} minipool={minipool}>
+      <WithdrawButton isFinished={isFinished} minipool={minipool} openSurvey={openSurvey}>
         {cardInternals}
       </WithdrawButton>
     )
@@ -149,17 +149,23 @@ const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
   }
 }
 
-const MinipoolList = ({ minipools }: { minipools: Minipool[] }) => {
+const MinipoolList = ({
+  minipools,
+  openSurvey,
+}: {
+  minipools: Minipool[]
+  openSurvey: () => void
+}) => {
   return (
     <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2" role="list">
       {minipools.map((minipool) => (
-        <MinipoolCard key={minipool.nodeID} minipool={minipool} />
+        <MinipoolCard key={minipool.nodeID} minipool={minipool} openSurvey={openSurvey} />
       ))}
     </ul>
   )
 }
 
-const MinipoolView = ({ ownerAddress }) => {
+const MinipoolView = ({ openSurvey, ownerAddress }) => {
   const { isLoading, minipools } = useMinipoolsByOwner(ownerAddress)
   const router = useRouter()
 
@@ -182,7 +188,7 @@ const MinipoolView = ({ ownerAddress }) => {
           {minipools?.length > 0 ? (
             <div className="flex flex-col">
               <div className="overflow-x-auto">
-                <MinipoolList minipools={minipools} />
+                <MinipoolList minipools={minipools} openSurvey={openSurvey} />
               </div>
             </div>
           ) : (

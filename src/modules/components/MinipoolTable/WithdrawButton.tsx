@@ -1,18 +1,33 @@
+import { useEffect } from 'react'
+
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import clsx from 'clsx'
 
 import { Tooltip } from '@/common/components/Tooltip'
 import { useWithdrawMinipoolFunds } from '@/hooks/minipool'
 
-const WithdrawButton = ({ children, isFinished, minipool }) => {
-  const { prepareError: isPrepareErrorWithdraw, write: withdrawFunds } = useWithdrawMinipoolFunds(
-    minipool.nodeID,
-  )
+const WithdrawButton = ({ children, isFinished, minipool, openSurvey }) => {
+  const {
+    prepareError: isPrepareErrorWithdraw,
+    status,
+    write: withdrawFunds,
+  } = useWithdrawMinipoolFunds(minipool.nodeID)
 
   let tooltipLabel = 'Withdraw funds'
   if (isFinished) tooltipLabel = 'Already withdrawn, no actions can be taken.'
 
   const enabled = !isFinished && !isPrepareErrorWithdraw
+
+  useEffect(() => {
+    const hasShownSurvey = localStorage.getItem('hasShownSurvey')
+    if (!hasShownSurvey || hasShownSurvey === 'false') {
+      if (status === 'success') {
+        openSurvey()
+        localStorage.setItem('hasShownSurvey', 'true')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status])
 
   return (
     <Tooltip content={tooltipLabel} wrapperClassName="w-full">
@@ -24,7 +39,6 @@ const WithdrawButton = ({ children, isFinished, minipool }) => {
             'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
           !enabled && 'cursor-default hover:bg-white',
         )}
-        id="survey"
         onClick={enabled ? withdrawFunds : undefined}
       >
         {children}

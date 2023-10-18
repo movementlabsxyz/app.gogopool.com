@@ -12,6 +12,7 @@ import TotalStaked from '@/modules/components/Dashboard/Cards/TotalStaked'
 import DashboardHeader from '@/modules/components/Dashboard/DashboardHeader'
 import MinipoolTable from '@/modules/components/MinipoolTable'
 import { ClaimAndRestakeModal } from '@/modules/components/Modal/ClaimAndRestakeModal'
+import SurveyV2 from '@/modules/components/Modal/Survey/SurveyV2'
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
 
 const Dashboard = () => {
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const rewardsToClaim = rewardsToClaimMaybe || BigNumber.from(0)
 
   const { isOpen, onClose, onOpen } = useDisclosure()
+  const { isOpen: surveyIsOpen, onClose: surveyClose, onOpen: surveyOpen } = useDisclosure()
 
   if (ceresLoading) {
     return null
@@ -28,11 +30,13 @@ const Dashboard = () => {
 
   return (
     <Box className="bg-[#F7F9FF]" minH="full">
+      <SurveyV2 surveyClose={surveyClose} surveyIsOpen={surveyIsOpen} />
       <PageHead append={false} description="Node Operator Dashboard" name="Dashboard" />
       <DashboardContainer>
         <ClaimAndRestakeModal
           isOpen={isOpen}
           onClose={onClose}
+          openSurvey={surveyOpen}
           ownerAddress={address}
           rewardsToClaim={rewardsToClaim}
           status={'success'}
@@ -48,7 +52,7 @@ const Dashboard = () => {
               rewardsToClaim={rewardsToClaim}
             />
           </div>
-          <MinipoolTable ownerAddress={address} />
+          <MinipoolTable openSurvey={surveyOpen} ownerAddress={address} />
         </Box>
       </DashboardContainer>
     </Box>
