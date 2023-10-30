@@ -42,7 +42,7 @@ const Dashboard = () => {
           status={'success'}
         />
         <DashboardHeader ceresData={ceresData} />
-        <Box className="space-y-6 bg-[#F7F9FF] p-8 px-4" minH="full">
+        <Box className="space-y-6 bg-[#F7F9FF] py-8" minH="full">
           <div className="flex shrink flex-wrap justify-around gap-4">
             <TotalStaked />
             <Rewards

@@ -13,7 +13,13 @@ export default function RewardsStat({ item }) {
           </Tooltip>
         </span>
       </span>
-      <dd className="flex items-center justify-end text-sm font-bold text-blue-900">{item.stat}</dd>
+      {item.stat === '0.00 GGP' || item.stat === '0.00 %' ? (
+        <dd className="lds-dual-ring flex self-center"></dd>
+      ) : (
+        <dd className="flex items-center justify-end text-sm font-bold text-blue-900">
+          {item.stat}
+        </dd>
+      )}
     </div>
   )
 }

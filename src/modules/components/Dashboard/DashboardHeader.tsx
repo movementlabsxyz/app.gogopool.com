@@ -11,7 +11,7 @@ export type Props = {
 
 export default function DashboardHeader({ ceresData }: Props) {
   return (
-    <div className="mx-[-24px] flex items-center justify-between border-b border-b-grey-300 bg-[#F7F9FF] p-8 py-6 align-middle std:hidden">
+    <div className="flex items-center justify-between border-b border-b-grey-300 bg-[#F7F9FF] p-8 py-6 align-middle">
       <CountdownTimerHeader ceresData={ceresData} />
       <a
         className="hidden xs:flex"
