@@ -1,13 +1,14 @@
 import { BigNumber, constants } from 'ethers'
 import { FunctionComponent } from 'react'
 
-import { Box, Button, Divider, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Link, Spacer, Text } from '@chakra-ui/react'
 import { FiInfo } from 'react-icons/fi'
 import { useAccount, useBalance } from 'wagmi'
 
 import { GGPPillUnit } from '../../Dashboard/Cards/GGPPillUnit'
 
 import { Title } from '@/common/components/Card'
+import BNWrapper from '@/common/components/Input/BNWrapper'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { Tooltip } from '@/common/components/Tooltip'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
@@ -113,39 +114,28 @@ export const UnstakeModalForm: FunctionComponent<UnstakeModalFormProps> = ({
             send to your wallet?
           </Box>
         </Title>
-        <Box pt="5">
-          <HStack
-            border="1px"
-            borderColor="blue.200"
-            borderRadius="6px"
-            className="focus-within:border-blue-400 focus-within:outline focus-within:outline-1 focus-within:outline-blue-400"
-            pl="4"
-            pr="2"
-            py="2"
-            spacing="2"
+        <BNWrapper>
+          <Box as="span" fontSize={22} fontWeight="500" width={'100%'}>
+            <BigNumberInput
+              bnValue={withdrawAmount}
+              className="w-full border-none focus:border-none focus:outline-none"
+              max={maxWithdraw}
+              min={BigNumber.from(0)}
+              onChange={(value) => onChange(value)}
+              placeholder="Enter removal amount..."
+            />
+          </Box>
+          <Button
+            className="underline"
+            color="blue.400"
+            onClick={() => onChange(maxWithdraw)}
+            size="sm"
+            variant="link"
           >
-            <Box as="span" fontSize={22} fontWeight="500" width={'100%'}>
-              <BigNumberInput
-                bnValue={withdrawAmount}
-                className="w-full border-none focus:border-none focus:outline-none"
-                max={maxWithdraw}
-                min={BigNumber.from(0)}
-                onChange={(value) => onChange(value)}
-                placeholder="Enter removal amount..."
-              />
-            </Box>
-            <Button
-              className="underline"
-              color="blue.400"
-              onClick={() => onChange(maxWithdraw)}
-              size="sm"
-              variant="link"
-            >
-              MAX
-            </Button>
-            <GGPPillUnit />
-          </HStack>
-        </Box>
+            MAX
+          </Button>
+          <GGPPillUnit />
+        </BNWrapper>
         <Flex pt="5">
           <Box>
             <Text as="strong" color="gray.500" fontSize={14}>

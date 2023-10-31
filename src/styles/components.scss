@@ -28,3 +28,39 @@ $grey-800: #323441;
     border-right: 0;
   }
 }
+
+// SimpleSteps dots and line
+.steps {
+  border-top: 2px solid #3e33bb;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+  margin: 6px 0px;
+}
+.steps > li {
+  position: relative;
+}
+.steps > li:after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: white;
+  position: absolute;
+  border-radius: 12px;
+  left: 50%;
+  top: -7px;
+  transform: translatex(-50%);
+  border: 2px solid #3e33bb;
+}
+.steps > li.active:after {
+  background: #3e33bb;
+}
+.steps > li:first-of-type:after {
+  left: 50%;
+}
+.steps > li:last-of-type:after {
+  left: -50%;
+}

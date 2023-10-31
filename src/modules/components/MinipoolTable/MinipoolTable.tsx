@@ -65,7 +65,7 @@ const copyTransaction = (nodeId: string) => {
   })
 }
 
-const MinipoolCard = ({ minipool, openSurvey }: { minipool: Minipool; openSurvey: () => void }) => {
+const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
   const isFinished = minipool.status.toNumber() === MinipoolStatus.Finished
   const isWithdrawable = minipool.status.toNumber() === MinipoolStatus.Withdrawable
   const isPrelaunch = minipool.status.toNumber() === MinipoolStatus.Prelaunch
@@ -134,7 +134,7 @@ const MinipoolCard = ({ minipool, openSurvey }: { minipool: Minipool; openSurvey
     )
   } else if (isWithdrawable) {
     return (
-      <WithdrawButton isFinished={isFinished} minipool={minipool} openSurvey={openSurvey}>
+      <WithdrawButton isFinished={isFinished} minipool={minipool}>
         {cardInternals}
       </WithdrawButton>
     )
@@ -149,23 +149,17 @@ const MinipoolCard = ({ minipool, openSurvey }: { minipool: Minipool; openSurvey
   }
 }
 
-const MinipoolList = ({
-  minipools,
-  openSurvey,
-}: {
-  minipools: Minipool[]
-  openSurvey: () => void
-}) => {
+const MinipoolList = ({ minipools }: { minipools: Minipool[] }) => {
   return (
     <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2" role="list">
       {minipools.map((minipool) => (
-        <MinipoolCard key={minipool.nodeID} minipool={minipool} openSurvey={openSurvey} />
+        <MinipoolCard key={minipool.nodeID} minipool={minipool} />
       ))}
     </ul>
   )
 }
 
-const MinipoolView = ({ openSurvey, ownerAddress }) => {
+const MinipoolView = ({ ownerAddress }) => {
   const { isLoading, minipools } = useMinipoolsByOwner(ownerAddress)
   const router = useRouter()
 
@@ -188,7 +182,7 @@ const MinipoolView = ({ openSurvey, ownerAddress }) => {
           {minipools?.length > 0 ? (
             <div className="flex flex-col">
               <div className="overflow-x-auto">
-                <MinipoolList minipools={minipools} openSurvey={openSurvey} />
+                <MinipoolList minipools={minipools} />
               </div>
             </div>
           ) : (
