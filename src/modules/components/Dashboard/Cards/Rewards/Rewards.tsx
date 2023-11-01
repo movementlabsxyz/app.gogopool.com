@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers'
 
 import { FiLoader } from 'react-icons/fi'
+import { useAccount } from 'wagmi'
 
 import CardTitle from '../CardTitle'
 import QueueCard from './QueueCard'
@@ -10,6 +11,7 @@ import UpcomingRewardsCard from './UpcomingRewardsCard'
 
 import EmptyRewardsIcon from '@/common/components/CustomIcon/EmptyRewardsIcon'
 import { useMinipoolsByOwner, useMinipoolsByStatus } from '@/hooks/minipool'
+import { useGetGGPRewards } from '@/hooks/useStake'
 import DashboardCard from '@/modules/components/Dashboard/Cards/DashboardCard'
 import { Ceres } from '@/types/ceres'
 import { HexString } from '@/types/cryptoGenerics'
@@ -18,13 +20,15 @@ export interface RewardsProps {
   address: HexString
   ceresData: Ceres
   openClaimModal: () => void
-  rewardsToClaim: BigNumber
 }
 
-const Rewards = ({ address, ceresData, openClaimModal, rewardsToClaim }: RewardsProps) => {
+const Rewards = ({ address, ceresData, openClaimModal }: RewardsProps) => {
   const { data: minipoolsPrelaunch, isLoading: minipoolsPreLoading } = useMinipoolsByStatus({
     status: 0,
   })
+  const { address: account } = useAccount()
+  const { data: rewardsToClaimMaybe } = useGetGGPRewards(account)
+  const rewardsToClaim = rewardsToClaimMaybe || BigNumber.from(0)
 
   const { isLoading: minipoolsOwnLoading, minipools: minipoolsByOwner } =
     useMinipoolsByOwner(address)

@@ -1,6 +1,6 @@
 import { BigNumber, constants } from 'ethers'
 
-import { Box, Divider, Flex, HStack, Link, Spacer, Text } from '@chakra-ui/react'
+import { Box, Divider, Flex, Link, Spacer, Text } from '@chakra-ui/react'
 import { FiInfo } from 'react-icons/fi'
 import { useAccount, useBalance } from 'wagmi'
 
@@ -8,6 +8,7 @@ import { GGPPillUnit } from '../../Dashboard/Cards/GGPPillUnit'
 
 import { Button } from '@/common/components/Button'
 import { Title } from '@/common/components/Card'
+import BNWrapper from '@/common/components/Input/BNWrapper'
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { Tooltip } from '@/common/components/Tooltip'
 import useTokenGGPContract from '@/hooks/contracts/tokenGGP'
@@ -107,39 +108,28 @@ export const StakeModalForm = ({ onChange, stakeAmount }: StakeModalFormProps) =
             stake?
           </Box>
         </Title>
-        <Box pt="5">
-          <HStack
-            border="1px"
-            borderColor="blue.200"
-            borderRadius="6px"
-            className="focus-within:border-blue-400 focus-within:outline focus-within:outline-1 focus-within:outline-blue-400"
-            pl="4"
-            pr="2"
-            py="2"
-            spacing="2"
+        <BNWrapper>
+          <Box as="span" fontSize={22} fontWeight="500" width={'100%'}>
+            <BigNumberInput
+              bnValue={stakeAmount}
+              className="w-full border-none focus:border-none focus:outline-none"
+              max={ggpBalance}
+              min={BigNumber.from(0)}
+              onChange={(value) => onChange(value)}
+              placeholder="Enter staking amount..."
+            />
+          </Box>
+          <Button
+            className="underline"
+            color="blue.400"
+            onClick={() => onChange(ggpBalance)}
+            size="sm"
+            variant="link"
           >
-            <Box as="span" fontSize={22} fontWeight="500" width={'100%'}>
-              <BigNumberInput
-                bnValue={stakeAmount}
-                className="w-full border-none focus:border-none focus:outline-none"
-                max={ggpBalance}
-                min={BigNumber.from(0)}
-                onChange={(value) => onChange(value)}
-                placeholder="Enter staking amount..."
-              />
-            </Box>
-            <Button
-              className="underline"
-              color="blue.400"
-              onClick={() => onChange(ggpBalance)}
-              size="sm"
-              variant="link"
-            >
-              MAX
-            </Button>
-            <GGPPillUnit />
-          </HStack>
-        </Box>
+            MAX
+          </Button>
+          <GGPPillUnit />
+        </BNWrapper>
         <Box pt="5">
           <Text as="strong" color="gray.500" fontSize={14}>
             Future Collateralization:{' '}

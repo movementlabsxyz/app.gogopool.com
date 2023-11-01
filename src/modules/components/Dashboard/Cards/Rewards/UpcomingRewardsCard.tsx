@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
-import { Button, Card } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { formatEther } from 'ethers/lib/utils.js'
 import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
 import { FiLoader } from 'react-icons/fi'
@@ -18,7 +18,6 @@ import { TrophyIcon } from './TrophyIcon'
 import { Tooltip } from '@/common/components/Tooltip'
 import postEstimator from '@/hooks/useEstimator'
 import { useGetAVAXValidatingHighWater, useGetGGPStake, useRewardStartTime } from '@/hooks/useStake'
-import CountdownTimerNextCycle from '@/modules/components/Countdown/CountdownTimerNextCycle'
 import { colors } from '@/theme/colors'
 import { Ceres } from '@/types/ceres'
 import { HexString } from '@/types/cryptoGenerics'
@@ -154,17 +153,6 @@ export default function UpcomingRewardsCard({
       cardTitle={<CardTitle icon={TrophyIcon} title="My Rewards" />}
     >
       <dl className="flex flex-wrap gap-8 py-6">
-        <span className="hidden basis-[260px] items-center std:flex">
-          <Card
-            border={'1px'}
-            borderColor={colors.blue[50]}
-            borderRadius={'16px'}
-            boxShadow={'lg'}
-            className="flex w-full justify-center py-4"
-          >
-            <CountdownTimerNextCycle ceresData={ceresData} />
-          </Card>
-        </span>
         <div className="flex grow basis-[250px] justify-center">
           <dl className="flex w-full flex-col">
             {noRewardsStats.map((item, index) => (

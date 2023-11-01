@@ -109,3 +109,28 @@ body,
 [data-rk]:not([class]) {
   height: 100%;
 }
+
+.lds-dual-ring {
+  display: flex;
+  width: 20px;
+  height: 20px;
+}
+.lds-dual-ring:after {
+  content: ' ';
+  display: flex;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-color: #000 transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

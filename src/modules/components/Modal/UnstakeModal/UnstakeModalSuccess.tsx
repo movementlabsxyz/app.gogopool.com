@@ -32,7 +32,6 @@ export const UnstakeModalSuccess = ({
   })
   const { data: ggpStake } = useGetGGPStake(account)
   const { data: straightRatio } = useGetContractCollateralizationRatio(account)
-
   const ggpBalance = ggpBalanceMaybe?.value || BigNumber.from(0)
 
   const toast = useToast()
