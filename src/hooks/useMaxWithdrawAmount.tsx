@@ -16,7 +16,10 @@ export const useMaxWithdrawAmount = (): BigNumber => {
   const maxGgpAsAvax = maxRatio.mul(avaxAssigned)
   let maxWithdrawAmount = BigNumber.from(0)
   if (ggpPriceInAvax.gt(0)) {
-    maxWithdrawAmount = ggpStake.sub(maxGgpAsAvax.div(ggpPriceInAvax))
+    // Subtract an extra 1gwei in case of rounding error when unstaking
+    maxWithdrawAmount = ggpStake
+      .sub(maxGgpAsAvax.div(ggpPriceInAvax))
+      .sub(parseEther('0.000000001'))
   }
 
   if (maxWithdrawAmount.lt(0)) {
