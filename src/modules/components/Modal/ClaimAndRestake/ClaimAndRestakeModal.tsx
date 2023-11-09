@@ -103,7 +103,9 @@ export const ClaimAndRestakeModal: FunctionComponent<ClaimAndRestakeModalProps> 
               straightRatio={straightRatio}
             />
           )}
-          {currentStep === 3 && isLoading && <ClaimAndRestakeModalPending />}
+          {currentStep === 3 && isLoading && (
+            <ClaimAndRestakeModalPending restakeAmount={restakeAmount} />
+          )}
           {currentStep === 3 && isError && (
             <ClaimAndRestakeModalFailure transactionHash={claimData.hash} />
           )}
