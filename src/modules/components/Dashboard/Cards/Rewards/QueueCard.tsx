@@ -25,7 +25,7 @@ export default function QueueCard({ minipoolIndex, nextCycleDate }: Props) {
           </Text>
           <Text className="pt-2" fontSize={14}>
             We are currently looking for 1000 AVAX to match in order to launch your node. In order
-            to qualify for GGP rewards your Minpool must be <b>launched</b> before&nbsp;
+            to qualify for GGP rewards your Minipool must be <b>launched</b> before&nbsp;
             <b>
               {nextCycleDate.toLocaleDateString()} {nextCycleDate.toLocaleTimeString()}
             </b>{' '}
