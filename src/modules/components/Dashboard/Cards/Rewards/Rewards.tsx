@@ -73,8 +73,7 @@ const Rewards = ({ address, ceresData, openClaimModal }: RewardsProps) => {
   }
 
   const prelaunchAtAddr = minipoolsByOwner.filter((minipool) => minipool.status.eq(0))
-  // filter to Prelaunch, Launched, Staking and Widthdrawable (PLSW) nodes. These are the valid node types that
-  // affect the rewards card logic. Finished, Cancelled, and Error states are ignored.
+  // filter to Prelaunch, Launched, Staking and Widthdrawable (PLSW) nodes. These are the valid node types that affect the rewards card logic.
   const onlyPLSW = minipoolsByOwner.filter((minipool) => {
     return (
       minipool.status.eq(0) ||
@@ -83,6 +82,22 @@ const Rewards = ({ address, ceresData, openClaimModal }: RewardsProps) => {
       minipool.status.eq(3)
     )
   })
+
+  // filter to Finished, Cancelled, Error nodes.
+  const onlyFCE = minipoolsByOwner.filter((minipool) => {
+    return minipool.status.eq(4) || minipool.status.eq(5) || minipool.status.eq(6)
+  })
+
+  if (minipoolsByOwner?.length === onlyFCE.length) {
+    return (
+      <DashboardCard cardTitle={<CardTitle icon={TrophyIcon} title="My Rewards" />}>
+        <EmptyRewardsIcon />
+        <span className="w-80 pt-4 text-center">
+          All of your minipools have <span className="font-bold">Finished</span>.
+        </span>
+      </DashboardCard>
+    )
+  }
 
   // If they made minipool(s) but all are in Prelaunch status display queue.
   if (prelaunchAtAddr.length > 0 && prelaunchAtAddr.length === onlyPLSW.length) {

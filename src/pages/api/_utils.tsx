@@ -71,7 +71,8 @@ export async function fetchGGPPriceInAvax(chainId: number) {
  * Fetch AVAX price in USD
  */
 export async function fetchAvaxPriceUSD() {
-  return axios.get('https://jsonbateman.com/avax_price')
+  const response = await axios.get('https://jsonbateman.com/avax_price')
+  return response.data.price
 }
 
 /**
@@ -96,7 +97,12 @@ export async function getRewardAmount(
   chainId: number,
   investor?: boolean,
 ) {
-  const effectiveGGPStaked = BigNumber.from(await getEffectiveGGPStaked(walletAddress, chainId))
+  // Get the amount of ggpstaked at a wallet address
+  let effectiveGGPStaked = BigNumber.from(await getEffectiveGGPStaked(walletAddress, chainId))
+  // If they have no ggp stake, allow the value passed to the endpoint to be the true value to estimate
+  if (effectiveGGPStaked.eq(0)) {
+    effectiveGGPStaked = ggpStake
+  }
   if (investor) {
     return effectiveGGPStaked
       .mul(WEI_VALUE)

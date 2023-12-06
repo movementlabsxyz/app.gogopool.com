@@ -30,6 +30,7 @@ export type AllContracts =
   | 'RewardsPool'
   | 'ClaimNodeOp'
   | 'ProtocolDAO'
+  | 'MinipoolStreamliner'
 
 export const useGetAddress = (key: AllContracts, storageAddr?: string) => {
   const { chain } = useNetwork()

@@ -52,6 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        { 
          ggpStaked: BigNumber
          avaxStaked: BigNumber
+         walletAddress: HexString
+         chainId: number
        }`)
   } else {
     res.status(405).send('Invalid method, POST and GET are accepted')
