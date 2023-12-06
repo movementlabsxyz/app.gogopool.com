@@ -192,7 +192,7 @@ const MQSuccess = ({ formData, transactionData }) => {
             justifyContent="space-between"
           >
             <img alt="Edge Left" src="/assets/img/gogopass/edges-left.svg" />
-            <img alt="Greetings" src="/assets/img/gogopass/greetings.svg" />
+            <img alt="Greetings" src="/assets/img/gogopass/Greetings.svg" />
             <img alt="Edge Right" src="/assets/img/gogopass/edges-right.svg" />
           </Box>
           <Text className="text-sm font-bold" mb={7}>
