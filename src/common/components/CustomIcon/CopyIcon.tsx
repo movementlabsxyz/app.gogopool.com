@@ -4,7 +4,8 @@ import { CustomIcon } from './CustomIcon'
 import { CustomIconProps } from './types'
 
 export const CopyIcon = ({ height = 12, width = 12, ...props }: CustomIconProps) => {
-  const strokeColor = useColorModeValue('#000000', '#A8A8A8')
+  const defaultStrokeColor = useColorModeValue('#000000', '#A8A8A8')
+  const strokeColor = props.stroke || defaultStrokeColor
 
   return (
     <CustomIcon height={height} width={width} {...props}>

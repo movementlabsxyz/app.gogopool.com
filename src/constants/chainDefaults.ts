@@ -8,7 +8,27 @@ export const DEFAULT_AVAX = {
 export const DEFAULT_GGP = {
   43112: parseEther('100'),
   43113: parseEther('1'),
-  43114: parseEther('100'),
+  43114: parseEther('110'),
+}
+export const DEFAULT_AVAX_NUMBER = {
+  43112: 1000,
+  43113: 1,
+  43114: 1000,
+}
+export const DEFAULT_GGP_NUMBER = {
+  43112: 100,
+  43113: 1,
+  43114: 110,
+}
+export const DEFAULT_TRANSACTION_LINK = {
+  43112: `https://testnet.snowtrace.io/tx/`,
+  43113: `https://testnet.snowtrace.io/tx/`,
+  43114: `https://snowtrace.io/tx/`,
+}
+export const DEFAULT_OONODZ_LINK = {
+  43112: `https://app.testnet.oonodz.network/?redirect=ggp&nid=`,
+  43113: `https://app.testnet.oonodz.network/?redirect=ggp&nid=`,
+  43114: `https://app.oonodz.network/?redirect=ggp&nid=`,
 }
 export const DEFAULT_DURATION = {
   43112: ['15 minutes'],
