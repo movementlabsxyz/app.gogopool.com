@@ -88,7 +88,7 @@ const MQAdvancedDetails = ({
             <Text className="text-sm" color={colors.blue[300]} py={3}>
               Your Node will be hosted by{' '}
             </Text>
-            <img alt="Oonodz Logo" src="/assets/img/gogopass/oonodz-logo.svg" />
+            <img alt="Oonodz Logo" src="/assets/img/gogopass/Oonodz-Logo.svg" />
           </Box>
         </Box>
 
