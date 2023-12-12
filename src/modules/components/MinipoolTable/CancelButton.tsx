@@ -1,10 +1,8 @@
-import { ChevronRightIcon } from '@chakra-ui/icons'
-import clsx from 'clsx'
+import { Button } from '@chakra-ui/react'
 
 import { Tooltip } from '@/common/components/Tooltip'
 import { useCancelMinipool } from '@/hooks/minipool'
-
-const CancelButton = ({ children, isFinished, minipool }) => {
+const CancelButton = ({ isFinished, minipool }) => {
   const { prepareError: isPrepareErrorCancel, write: cancelMinipool } = useCancelMinipool(
     minipool.nodeID,
   )
@@ -19,20 +17,15 @@ const CancelButton = ({ children, isFinished, minipool }) => {
 
   return (
     <Tooltip content={tooltipLabel} wrapperClassName="w-full">
-      <div
-        className={clsx(
-          'flex items-center',
-          'overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6',
-          enabled &&
-            'cursor-pointer border-2 border-transparent p-4 transition-all hover:border-indigo-100 hover:shadow-lg',
-          !enabled && 'cursor-default hover:bg-white',
-        )}
-        onClick={enabled ? cancelMinipool : undefined}
-      >
-        {children}
-        {enabled && (
-          <ChevronRightIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
-        )}
+      <div>
+        <Button
+          onClick={enabled ? cancelMinipool : undefined}
+          size="sm"
+          variant="secondary-outline"
+          w="full"
+        >
+          Cancel
+        </Button>
       </div>
     </Tooltip>
   )
