@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { Text } from '@chakra-ui/react'
 import { BiTimeFive } from 'react-icons/bi'
 
@@ -7,7 +9,14 @@ export default function CountdownTimerHeader({ ceresData }) {
   const nextCycleStartMillis = rewardsStartDateMillis + daysInMillis * 30
   const countdownToStart = nextCycleStartMillis - Date.now()
 
-  const daysUntilCutoff = countdownToStart / daysInMillis
+  const [countdownMs, setCountdownMs] = useState(countdownToStart)
+  useEffect(() => {
+    setTimeout(() => {
+      setCountdownMs((prev) => prev - 1000)
+    }, 1000)
+  }, [countdownMs])
+
+  const daysUntilCutoff = countdownMs / daysInMillis
   const hoursUntilCutoff = (daysUntilCutoff % 1) * 24
   const minutesUntilCutoff = (hoursUntilCutoff % 1) * 60
   const secondsUntilCutoff = (minutesUntilCutoff % 1) * 60

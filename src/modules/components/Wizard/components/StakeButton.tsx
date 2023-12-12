@@ -8,8 +8,7 @@ import { useAccount, useWaitForTransaction } from 'wagmi'
 
 import { Button } from '@/common/components/Button'
 import ConnectButton from '@/common/components/ConnectButton'
-import { useGetCollateralRatio } from '@/hooks/useGetCollateralRatio'
-import { useStakeGGP } from '@/hooks/useStake'
+import { useGetContractCollateralizationRatio, useStakeGGP } from '@/hooks/useStake'
 
 export const MIN_RATIO = parseEther('0.1')
 export const MAX_RATIO = parseEther('1.5')
@@ -23,7 +22,7 @@ export interface StakeButtonProps {
 const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: StakeButtonProps) => {
   const toast = useToast()
 
-  const { isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
   const [loadingStake, setLoadingStake] = useState(false)
 
   const {
@@ -37,7 +36,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
     hash: stakeData?.hash,
   })
 
-  const ratio = useGetCollateralRatio({ ggpAmount, avaxAmount })
+  const { data: straightRatio } = useGetContractCollateralizationRatio(address)
 
   const handleSubmit = async () => {
     try {
@@ -83,7 +82,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
       {isConnected ? (
         <div className="flex w-full flex-col items-center">
           <Button
-            disabled={!stake || ratio.lt(MIN_RATIO) || loading || loadingStake}
+            disabled={!stake || straightRatio.mul(100).lt(MIN_RATIO) || loading || loadingStake}
             full
             isLoading={loading || loadingStake}
             onClick={handleSubmit}

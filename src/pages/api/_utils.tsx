@@ -1,12 +1,17 @@
 import { BigNumber } from 'ethers'
 
 import axios from 'axios'
+import { solidityKeccak256 } from 'ethers/lib/utils.js'
 import { createPublicClient, http, parseEther } from 'viem'
 import { avalanche } from 'viem/chains'
 
+import { fuji } from '@/config/chains'
+import { storageAddresses } from '@/constants/storageAddresses'
 import Oracle from '@/contracts/Oracle'
 import Staking from '@/contracts/Staking'
+import Storage from '@/contracts/Storage'
 import { CalculatorData, Staker } from '@/types/api/rewards-estimator'
+import { HexString } from '@/types/cryptoGenerics'
 import { INVESTOR_LIST, INVESTOR_REWARD_POOL, RETAIL_REWARD_POOL, WEI_VALUE } from '@/utils/consts'
 
 const customTransport = http(process.env.API_RPC_ENDPOINT)
@@ -16,12 +21,35 @@ const client = createPublicClient({
   transport: customTransport,
 })
 
+const fujiClient = createPublicClient({
+  chain: fuji,
+  transport: http(),
+})
+
+function getClient(chainId: number) {
+  return chainId == 43114 ? client : fujiClient
+}
+
+export async function getContractAddress(contractName: string, chainId: number) {
+  const args = solidityKeccak256(
+    ['string', 'string'],
+    ['contract.address', contractName],
+  ) as HexString
+
+  return getClient(chainId).readContract({
+    address: storageAddresses[chainId],
+    abi: Storage,
+    functionName: 'getAddress',
+    args: [args],
+  })
+}
+
 /**
  * Fetch stakers data
  */
-export async function fetchStakersData() {
-  return client.readContract({
-    address: '0x9946e68490D71Fe976951e360f295c4Cf8531D00',
+export async function fetchStakersData(chainId: number) {
+  return getClient(chainId).readContract({
+    address: await getContractAddress('Staking', chainId),
     abi: Staking,
     functionName: 'getStakers',
     args: [BigInt(0), BigInt(1000)],
@@ -31,10 +59,10 @@ export async function fetchStakersData() {
 /**
  * Fetch GGP price in AVAX
  */
-export async function fetchGGPPriceInAvax() {
-  return client.readContract({
+export async function fetchGGPPriceInAvax(chainId: number) {
+  return getClient(chainId).readContract({
     abi: Oracle,
-    address: '0x30fb915258D844E9dC420B2C3AA97420AEA16Db7',
+    address: await getContractAddress('Oracle', chainId),
     functionName: 'getGGPPriceInAVAX',
   })
 }
@@ -43,17 +71,46 @@ export async function fetchGGPPriceInAvax() {
  * Fetch AVAX price in USD
  */
 export async function fetchAvaxPriceUSD() {
-  return axios.get('https://jsonbateman.com/avax_price')
+  const response = await axios.get('https://jsonbateman.com/avax_price')
+  return response.data.price
+}
+
+/**
+ * Fetch AVAX price in USD
+ */
+export async function getEffectiveGGPStaked(walletAddress: HexString, chainId: number) {
+  return getClient(chainId).readContract({
+    abi: Staking,
+    address: await getContractAddress('Staking', chainId),
+    functionName: 'getEffectiveGGPStaked',
+    args: [walletAddress],
+  })
 }
 
 /**
  * Reward amount in GGP
  */
-export function getRewardAmount(ggpStake: BigNumber, totalGGPStake: BigNumber, investor?: boolean) {
-  if (investor) {
-    return ggpStake.mul(WEI_VALUE).div(totalGGPStake).mul(INVESTOR_REWARD_POOL).div(WEI_VALUE)
+export async function getRewardAmount(
+  ggpStake: BigNumber,
+  totalGGPStake: BigNumber,
+  walletAddress: HexString,
+  chainId: number,
+  investor?: boolean,
+) {
+  // Get the amount of ggpstaked at a wallet address
+  let effectiveGGPStaked = BigNumber.from(await getEffectiveGGPStaked(walletAddress, chainId))
+  // If they have no ggp stake, allow the value passed to the endpoint to be the true value to estimate
+  if (effectiveGGPStaked.eq(0)) {
+    effectiveGGPStaked = ggpStake
   }
-  return ggpStake.mul(WEI_VALUE).div(totalGGPStake).mul(RETAIL_REWARD_POOL).div(WEI_VALUE)
+  if (investor) {
+    return effectiveGGPStaked
+      .mul(WEI_VALUE)
+      .div(totalGGPStake)
+      .mul(INVESTOR_REWARD_POOL)
+      .div(WEI_VALUE)
+  }
+  return effectiveGGPStaked.mul(WEI_VALUE).div(totalGGPStake).mul(RETAIL_REWARD_POOL).div(WEI_VALUE)
 }
 
 /**
@@ -85,7 +142,10 @@ export function calculateTEGS(stakers: Staker[], ggpPriceInAvax: BigNumber) {
         investorTegs = investorTegs.add(effectiveGGPStaked)
       }
 
-      const collateralRatio = ggpAsAVAX.mul(WEI_VALUE).div(staker.avaxValidatingHighWater)
+      let collateralRatio = BigNumber.from(0)
+      if (staker.avaxValidatingHighWater.gt(0)) {
+        collateralRatio = ggpAsAVAX.mul(WEI_VALUE).div(staker.avaxValidatingHighWater)
+      }
 
       return { ...staker, effectiveGGPStaked, collateralRatio }
     })
@@ -108,14 +168,15 @@ export function convertStakers(a): Staker[] {
 }
 
 /**
- * converts every value on the object to BigNumbers
+ * converts every object value on the object to BigNumbers
  */
 export function convertPost(o): CalculatorData {
   if (typeof o === 'object') {
     for (const key in o) {
-      o[key] = BigNumber.from(o[key])
+      if (typeof o[key] === 'object') {
+        o[key] = BigNumber.from(o[key])
+      }
     }
     return o
   }
-  return o
 }

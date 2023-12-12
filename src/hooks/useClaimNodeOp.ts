@@ -21,7 +21,11 @@ export const useIsEligible = (owner: HexString) => {
   })
 }
 
-export const useClaimAndRestake = (claimAmount: BigNumber, restakeAmount: BigNumber) => {
+export const useClaimAndRestake = (
+  claimAmount: BigNumber,
+  restakeAmount: BigNumber,
+  onConfirmTransaction: () => void,
+) => {
   const addRecentTransaction = useAddRecentTransaction()
   const { abi, address } = useClaimNodeOpContract()
   const toast = useToast()
@@ -50,7 +54,8 @@ export const useClaimAndRestake = (claimAmount: BigNumber, restakeAmount: BigNum
 
   return useContractWrite({
     ...config,
-    onSuccess(data) {
+    onSuccess: (data) => {
+      onConfirmTransaction()
       addRecentTransaction({
         hash: data.hash,
         description: `Claim and restake ${formatEther(claimAmount)} tokens`,

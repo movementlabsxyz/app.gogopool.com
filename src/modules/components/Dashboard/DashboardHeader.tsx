@@ -1,5 +1,6 @@
-import { Button } from '@chakra-ui/react'
+import { Button, useDisclosure } from '@chakra-ui/react'
 
+import { RewardFaqModal } from '../Modal/RewardFaq/RewardFaqModal'
 import CountdownTimerHeader from './CountdownTimerHeader'
 
 import { colors } from '@/theme/colors'
@@ -10,42 +11,38 @@ export type Props = {
 }
 
 export default function DashboardHeader({ ceresData }: Props) {
+  const { isOpen, onClose, onOpen } = useDisclosure()
   return (
-    <div className="mx-[-24px] flex items-center justify-between border-b border-b-grey-300 bg-[#F7F9FF] p-8 py-6 align-middle std:hidden">
-      <CountdownTimerHeader ceresData={ceresData} />
-      <a
-        className="hidden xs:flex"
-        href="https://docs.gogopool.com/design/how-minipools-work/ggp-rewards"
-        rel="noreferrer"
-        target={'_blank'}
-      >
-        <Button
-          background={'none'}
-          border={'1px'}
-          borderColor={colors.blue[100]}
-          size="sm"
-          variant="tertiary"
-        >
-          How do rewards work?
-        </Button>
-      </a>
-      <a
-        className="flex xs:hidden"
-        href="https://docs.gogopool.com/design/how-minipools-work/ggp-rewards"
-        rel="noreferrer"
-        target={'_blank'}
-      >
-        <Button
-          background={'none'}
-          border={'1px'}
-          borderColor={colors.blue[100]}
-          paddingX={'2px'}
-          size="sm"
-          variant="tertiary"
-        >
-          ?
-        </Button>
-      </a>
-    </div>
+    <>
+      {isOpen && <RewardFaqModal onClose={onClose} />}
+      <div className="flex items-center justify-between border-b border-b-grey-300 bg-[#F7F9FF] py-6 align-middle">
+        <CountdownTimerHeader ceresData={ceresData} />
+        <a className="hidden xs:flex">
+          <Button
+            background={'none'}
+            border={'1px'}
+            borderColor={colors.blue[100]}
+            onClick={onOpen}
+            size="sm"
+            variant="tertiary"
+          >
+            How do rewards work?
+          </Button>
+        </a>
+        <a className="flex xs:hidden">
+          <Button
+            background={'none'}
+            border={'1px'}
+            borderColor={colors.blue[100]}
+            onClick={onOpen}
+            paddingX={'2px'}
+            size="sm"
+            variant="tertiary"
+          >
+            ?
+          </Button>
+        </a>
+      </div>
+    </>
   )
 }

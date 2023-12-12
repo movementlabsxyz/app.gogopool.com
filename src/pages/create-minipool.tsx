@@ -1,43 +1,137 @@
-import { useState } from 'react'
+import { BigNumber } from 'ethers'
+import { useEffect, useState } from 'react'
 
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
+import useAsyncEffect from 'use-async-effect'
+import { useAccount, useNetwork } from 'wagmi'
 
-import { PageHead } from '@/common/components/PageHead'
+import { DEFAULT_AVAX, DEFAULT_GGP } from '@/constants/chainDefaults'
+import postEstimator from '@/hooks/useEstimator'
+import { useGetGGPPrice } from '@/hooks/useStake'
+import CreateMinipoolEntry from '@/modules/components/MinipoolQuickstart/CreateMinipoolEntry'
+import MQAdvancedDetails from '@/modules/components/MinipoolQuickstart/MQAdvancedDetails'
+import MQBackground from '@/modules/components/MinipoolQuickstart/MQBackround'
+import MQBasicDetails from '@/modules/components/MinipoolQuickstart/MQBasicDetails'
+import MQForm from '@/modules/components/MinipoolQuickstart/MQForm'
+import MQLogo from '@/modules/components/MinipoolQuickstart/MQLogo'
+import MQSuccess from '@/modules/components/MinipoolQuickstart/MQSuccess'
 import { SidebarNavbar } from '@/modules/components/SidebarNavbar/SidebarNavbar'
-import { Wizard } from '@/modules/components/Wizard'
+import { colors } from '@/theme/colors'
+import { WEI_VALUE } from '@/utils/consts'
 
-function NodeOperator() {
-  const [currentStep, setCurrentStep] = useState<number>(1)
+const CreateMinipool = () => {
+  const { chain } = useNetwork()
+  const { address } = useAccount()
+  const { data: ggpPriceInAvax } = useGetGGPPrice()
+  const [showDetails, setShowDetails] = useState(false)
+  const [showHardwareCostLoading, setShowHardwareCostLoading] = useState(true)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showPriceDetails, setShowPriceDetails] = useState(false)
+  const [apy, setApy] = useState(BigNumber.from('0'))
+  const [ggpReward, setGgpReward] = useState(BigNumber.from('0'))
+  const [formData, setFormData] = useState({
+    location: '',
+    validationLength: '',
+    nodeRentalFee: '',
+    deposit: '',
+  })
+  const [transactionData, setTransactionData] = useState({
+    nodeID: '',
+    hash: '',
+  })
+
+  const [showMinipoolQuickStart, setShowMinipoolQuickStart] = useState(false)
+  const handleMinipoolQuickStartClick = () => {
+    setShowMinipoolQuickStart(true)
+  }
+
+  useEffect(() => {
+    if (!Object.values(formData).includes('')) {
+      setShowDetails(true)
+      setShowHardwareCostLoading(false)
+    }
+  }, [formData])
+
+  useAsyncEffect(async () => {
+    if (ggpPriceInAvax.gt(0) && address) {
+      const { apy, ggpReward } = await postEstimator({
+        ggpStaked: DEFAULT_GGP[chain?.id].div(ggpPriceInAvax).mul(WEI_VALUE),
+        avaxStaked: DEFAULT_AVAX[chain?.id],
+        walletAddress: address,
+        chainId: chain?.id,
+      })
+      setApy(BigNumber.from(apy))
+      setGgpReward(BigNumber.from(ggpReward))
+    }
+  }, [ggpPriceInAvax])
+
+  if (showSuccess) {
+    return (
+      <MQBackground>
+        <MQSuccess formData={formData} transactionData={transactionData} />
+      </MQBackground>
+    )
+  }
+
+  const detailsCard = () => {
+    if (!showDetails) {
+      return <MQLogo />
+    }
+
+    if (showPriceDetails) {
+      return (
+        <MQAdvancedDetails
+          apy={apy}
+          formData={formData}
+          ggpReward={ggpReward}
+          onBackToDetails={() => setShowPriceDetails(false)}
+          onCreationSuccess={() => setShowSuccess(true)}
+          setTransactionData={setTransactionData}
+        />
+      )
+    }
+    return (
+      <MQBasicDetails
+        apy={apy}
+        formData={formData}
+        onCreationSuccess={() => setShowSuccess(true)}
+        onShowPriceDetails={() => setShowPriceDetails(true)}
+        setTransactionData={setTransactionData}
+      />
+    )
+  }
 
   return (
-    <Box className="bg-[#F7F9FF] py-8" minH="full">
-      <PageHead
-        append={false}
-        description="Stake AVAX on the GoGoPool Protocol."
-        name="Create Minipool"
-      />
-      {/* A tutorial should be made. See issue #79
-      <Flex justifyContent="flex-end">
-        <Button
-          bg="white"
-          leftIcon={<PlayButtonIcon />}
-          size="xs"
-          height={10}
-          outline="2px solid #C6C6C6"
-          margin="16px 0 32px 0"
+    <MQBackground>
+      {showMinipoolQuickStart ? (
+        <Box
+          bg={colors.blue[500]}
+          borderRadius="32px"
+          display="flex"
+          flexBasis={'1280px'}
+          gap={'16px'}
+          p={6}
         >
-          <Text color="#686686" fontWeight={{ base: "normal", md: "bold" }}>
-            Watch a quick tutorial
-          </Text>
-        </Button>
-      </Flex> */}
-      <Wizard currentStep={currentStep} setCurrentStep={setCurrentStep} />
-    </Box>
+          <Flex maxW={'600px'} minW={'400px'} w={'50%'}>
+            <MQForm
+              formData={formData}
+              setFormData={setFormData}
+              showHardwareCostLoading={showHardwareCostLoading}
+            />
+          </Flex>
+          <Flex maxW={'600px'} minW={'400px'} w={'50%'}>
+            {detailsCard()}
+          </Flex>
+        </Box>
+      ) : (
+        <CreateMinipoolEntry onMinipoolQuickStartClick={handleMinipoolQuickStartClick} />
+      )}
+    </MQBackground>
   )
 }
 
-NodeOperator.getLayout = function getLayout(page) {
+CreateMinipool.getLayout = function getLayout(page) {
   return <SidebarNavbar>{page}</SidebarNavbar>
 }
 
-export default NodeOperator
+export default CreateMinipool

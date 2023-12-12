@@ -17,8 +17,8 @@ import { INVESTOR_LIST, WEI_VALUE } from '@/utils/consts'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const postData: CalculatorReq = req.body
-    const stakersData = await fetchStakersData()
-    const ggpPriceInAvaxData = await fetchGGPPriceInAvax()
+    const stakersData = await fetchStakersData(postData.chainId)
+    const ggpPriceInAvaxData = await fetchGGPPriceInAvax(postData.chainId)
 
     // viem's readContract returns everything as bigint, must convert to BigNumber
     const { avaxStaked, ggpStaked, walletAddress } = convertPost(postData)
@@ -30,9 +30,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let ggpReward: BigNumber
     const { investorTegs, retailTegs } = calculateTEGS(stakers, ggpPriceInAvax)
     if (INVESTOR_LIST.includes(walletAddress)) {
-      ggpReward = getRewardAmount(ggpStaked, investorTegs, true)
+      ggpReward = await getRewardAmount(
+        ggpStaked,
+        investorTegs,
+        walletAddress,
+        postData.chainId,
+        true,
+      )
     }
-    ggpReward = getRewardAmount(ggpStaked, retailTegs)
+    ggpReward = await getRewardAmount(ggpStaked, retailTegs, walletAddress, postData.chainId)
     const avaxStakedInGGP = avaxStaked.mul(WEI_VALUE).div(ggpPriceInAvax)
     const ggpSpent = avaxStakedInGGP.add(ggpStaked)
     const apy = ggpReward.mul(WEI_VALUE).div(ggpSpent).mul(12).mul(100)
@@ -46,6 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        { 
          ggpStaked: BigNumber
          avaxStaked: BigNumber
+         walletAddress: HexString
+         chainId: number
        }`)
   } else {
     res.status(405).send('Invalid method, POST and GET are accepted')

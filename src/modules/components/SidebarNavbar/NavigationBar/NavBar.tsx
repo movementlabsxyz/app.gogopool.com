@@ -10,7 +10,6 @@ import gogoPoolTitle from '/public/assets/img/nav/logo-dark-purple.svg'
 
 import ConnectButton from '@/common/components/ConnectButton'
 import GGAvaxTokenIcon from '@/common/components/CustomIcon/GGAvaxTokenIcon'
-import GoGoPassIcon from '@/common/components/CustomIcon/GoGoPassIcon'
 import HelpButton from '@/common/components/HelpButton/HelpButton'
 
 type Props = {
@@ -59,14 +58,6 @@ export const NavBar = ({ navbarTitle, setNavbarTitle, setSidebarOpen }: Props) =
               setNavbarTitle={setNavbarTitle}
               title="LIQUID STAKE"
             />
-            <a className="flex cursor-default select-none space-x-2" href="#">
-              <GoGoPassIcon />
-              <span className="uppercase">GoGoPass</span>
-
-              <span className="flex items-center truncate rounded-full bg-[#B7AFF8] px-2 text-xs text-white">
-                Coming Soon
-              </span>
-            </a>
             {/* <NavItem
               href="/#"
               icon={<GoGoPassIcon fill={navbarTitle === 'GOGO PASS' ? '#6255F1' : '#0D0959'} />}

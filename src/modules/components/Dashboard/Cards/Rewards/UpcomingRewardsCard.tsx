@@ -1,11 +1,12 @@
 import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
-import { Button, Card } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { formatEther } from 'ethers/lib/utils.js'
 import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
 import { FiLoader } from 'react-icons/fi'
 import useAsyncEffect from 'use-async-effect'
+import { useNetwork } from 'wagmi'
 
 import CardTitle from '../CardTitle'
 import DashboardButtonCard from '../DashboardButtonCard'
@@ -17,7 +18,6 @@ import { TrophyIcon } from './TrophyIcon'
 import { Tooltip } from '@/common/components/Tooltip'
 import postEstimator from '@/hooks/useEstimator'
 import { useGetAVAXValidatingHighWater, useGetGGPStake, useRewardStartTime } from '@/hooks/useStake'
-import CountdownTimerNextCycle from '@/modules/components/Countdown/CountdownTimerNextCycle'
 import { colors } from '@/theme/colors'
 import { Ceres } from '@/types/ceres'
 import { HexString } from '@/types/cryptoGenerics'
@@ -66,7 +66,7 @@ function noRewards(
     },
   ]
 
-  if (eligibilityCutoff.lt(userStartTime)) {
+  if (eligibilityCutoff?.lt(userStartTime)) {
     noRewardsStats[0] = {
       name: 'GGP REWARD ELIGIBILITY',
       stat: <span className="text-error-700">Not Eligibile</span>,
@@ -94,6 +94,7 @@ export default function UpcomingRewardsCard({
   nextCycleDate,
   openClaimModal,
 }: Props) {
+  const { chain } = useNetwork()
   const [apy, setApy] = useState(BigNumber.from(0))
   const [ggpReward, setGgpReward] = useState(BigNumber.from(0))
 
@@ -109,6 +110,7 @@ export default function UpcomingRewardsCard({
           ggpStaked,
           avaxStaked: avaxValidatingHighWater,
           walletAddress: address,
+          chainId: chain?.id,
         })
         setApy(BigNumber.from(apy))
         setGgpReward(BigNumber.from(ggpReward))
@@ -151,17 +153,6 @@ export default function UpcomingRewardsCard({
       cardTitle={<CardTitle icon={TrophyIcon} title="My Rewards" />}
     >
       <dl className="flex flex-wrap gap-8 py-6">
-        <span className="hidden basis-[260px] items-center std:flex">
-          <Card
-            border={'1px'}
-            borderColor={colors.blue[50]}
-            borderRadius={'16px'}
-            boxShadow={'lg'}
-            className="flex w-full justify-center py-4"
-          >
-            <CountdownTimerNextCycle ceresData={ceresData} />
-          </Card>
-        </span>
         <div className="flex grow basis-[250px] justify-center">
           <dl className="flex w-full flex-col">
             {noRewardsStats.map((item, index) => (
