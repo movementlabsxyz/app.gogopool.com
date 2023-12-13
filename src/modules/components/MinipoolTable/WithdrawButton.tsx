@@ -34,7 +34,7 @@ const WithdrawButton = ({ isFinished, minipool }) => {
   return (
     <>
       <SurveyV2 surveyClose={onCloseSurvey} surveyIsOpen={surveyIsOpen} />
-      <Tooltip content={tooltipLabel} wrapperClassName="w-full">
+      <Tooltip content={tooltipLabel} placement="top" wrapperClassName="w-full">
         <div>
           <Button
             onClick={enabled ? withdrawFunds : undefined}

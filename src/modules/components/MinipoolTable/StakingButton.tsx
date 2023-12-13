@@ -14,7 +14,7 @@ const StakingButton = ({ status }) => {
   }
 
   return (
-    <Tooltip content={tooltipLabel} wrapperClassName="w-full">
+    <Tooltip content={tooltipLabel} placement="top" wrapperClassName="w-full">
       <div>
         <Button
           disabled
