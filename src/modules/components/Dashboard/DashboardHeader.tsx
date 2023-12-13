@@ -12,6 +12,9 @@ export type Props = {
 
 export default function DashboardHeader({ ceresData }: Props) {
   const { isOpen, onClose, onOpen } = useDisclosure()
+  if (ceresData === undefined) {
+    return null
+  }
   return (
     <>
       {isOpen && <RewardFaqModal onClose={onClose} />}
