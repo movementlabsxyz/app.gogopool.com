@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 import { useInterval, useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import * as Sentry from '@sentry/nextjs'
 import { formatEther } from 'ethers/lib/utils'
 import ms from 'ms'
 import { useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
@@ -148,8 +147,8 @@ export const useMinipoolByID = (ID: string | undefined) => {
   let convertedID: HexString | undefined
   try {
     convertedID = nodeIDToHex(ID)
-  } catch (e) {
-    // Sentry.captureException(e)
+  } catch (err) {
+    console.warn(err)
   }
 
   if (!ID || !convertedID) {
@@ -194,8 +193,7 @@ export const useCancelMinipool = (nodeId: HexString) => {
     functionName: 'cancelMinipool',
     args: [nodeId],
     onError(error) {
-      Sentry.captureException(error)
-
+      console.warn(error)
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({
@@ -237,8 +235,8 @@ export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
     // We dont wanna show the toast during onError because
     // they show on the dashboard, we use the error state
     // to know whether or not to allow the button to be clicked
-    onError(e) {
-      Sentry.captureException(e)
+    onError(err) {
+      console.warn(err)
       // Object.keys(DECODED_ERRORS).forEach((key) => {
       //   if (error?.message.includes(key)) {
       //     toast({
@@ -262,8 +260,8 @@ export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
         description: 'Withdraw minipool funds',
       })
     },
-    onError(e) {
-      Sentry.captureException(e)
+    onError(err) {
+      console.warn(err)
     },
   })
 
