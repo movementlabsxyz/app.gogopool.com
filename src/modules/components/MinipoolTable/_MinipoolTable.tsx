@@ -14,7 +14,7 @@ interface MinipoolTableProps {
 export const MinipoolTable: FunctionComponent<MinipoolTableProps> = ({ ownerAddress }) => {
   const { isLoading, minipools } = useMinipoolsByOwner(ownerAddress)
 
-  if (isLoading) {
+  if (isLoading || !minipools) {
     return null
   }
 
