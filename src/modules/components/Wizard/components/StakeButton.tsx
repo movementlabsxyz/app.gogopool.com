@@ -2,7 +2,6 @@ import { BigNumber } from 'ethers'
 import { useState } from 'react'
 
 import { useToast } from '@chakra-ui/react'
-import * as Sentry from '@sentry/nextjs'
 import { parseEther } from 'ethers/lib/utils.js'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 
@@ -55,7 +54,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
       }
       if (!resp.status) {
         setLoadingStake(false)
-        Sentry.captureException(stakeError)
+        console.warn(stakeError)
         toast({
           position: 'top',
           description: 'Error when making transaction',
@@ -65,7 +64,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
       }
     } catch (error) {
       setLoadingStake(false)
-      Sentry.captureException(stakeError)
+      console.warn(error)
       toast({
         position: 'top',
         description: 'Error when making transaction',
