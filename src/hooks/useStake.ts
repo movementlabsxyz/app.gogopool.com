@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 
 import { useToast } from '@chakra-ui/react'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import * as Sentry from '@sentry/nextjs'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
 
@@ -26,8 +25,7 @@ export const useStakeGGP = (amount: BigNumber) => {
     functionName: 'stakeGGP',
     args: [amount],
     onError(error) {
-      Sentry.captureException(error)
-
+      console.warn(error)
       Object.keys(DECODED_ERRORS).forEach((key) => {
         if (error?.message.includes(key)) {
           toast({
@@ -54,7 +52,7 @@ export const useStakeGGP = (amount: BigNumber) => {
         })
       },
       onError(error) {
-        Sentry.captureException(error)
+        console.warn(error)
       },
     }),
   }

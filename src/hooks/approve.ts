@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import * as Sentry from '@sentry/nextjs'
 import { formatEther } from 'ethers/lib/utils'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
@@ -20,7 +19,7 @@ export const useApproveGGP = (amount: BigNumber) => {
     functionName: 'approve',
     args: [stakingAddr, amount],
     onError(error) {
-      Sentry.captureException(error)
+      console.warn(error)
     },
   })
 
@@ -33,7 +32,7 @@ export const useApproveGGP = (amount: BigNumber) => {
       })
     },
     onError(error) {
-      Sentry.captureException(error)
+      console.warn(error)
     },
   })
 
