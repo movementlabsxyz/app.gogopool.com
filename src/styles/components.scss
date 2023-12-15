@@ -29,6 +29,25 @@ $grey-800: #323441;
   }
 }
 
+.scroll_shadows {
+  // max-width: 200px;
+  // overflow: auto;
+
+  background:
+    /* Shadow Cover LEFT */ linear-gradient(
+      to right,
+      white 30%,
+      rgba(255, 255, 255, 0)
+    ),
+    /* Shadow Cover RIGHT */ linear-gradient(to right, rgba(255, 255, 255, 0), white 70%) right,
+    /* Shadow LEFT */ radial-gradient(farthest-side at 0 50%, #eeeafb, rgba(0, 0, 0, 0)) left center,
+    /* Shadow RIGHT */ radial-gradient(farthest-side at 100% 50%, #eeeafb, rgba(0, 0, 0, 0)) right
+      center;
+
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 18px 100%, 18px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
 // SimpleSteps dots and line
 .steps {
   border-top: 2px solid #3e33bb;

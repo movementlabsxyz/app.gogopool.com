@@ -1,3 +1,3 @@
-import MinipoolTable from './MinipoolTable'
+import { MinipoolTable } from './_MinipoolTable'
 
 export default MinipoolTable

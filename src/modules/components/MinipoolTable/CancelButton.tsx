@@ -16,7 +16,7 @@ const CancelButton = ({ isFinished, minipool }) => {
   const enabled = canCancel || !isFinished
 
   return (
-    <Tooltip content={tooltipLabel} wrapperClassName="w-full">
+    <Tooltip content={tooltipLabel} placement="top" wrapperClassName="w-full">
       <div>
         <Button
           onClick={enabled ? cancelMinipool : undefined}

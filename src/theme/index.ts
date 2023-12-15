@@ -10,6 +10,7 @@ import { Drawer } from './components/drawer'
 import { Heading } from './components/heading'
 import { Link } from './components/link'
 import { Modal } from './components/modal'
+import { Table } from './components/table'
 import { Text } from './components/text'
 import { config } from './config'
 import { fonts } from './fonts'
@@ -25,6 +26,7 @@ const theme = extendTheme(
       Card,
       Modal,
       Drawer,
+      Table,
     },
     fonts,
     colors,

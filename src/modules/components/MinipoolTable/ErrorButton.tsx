@@ -30,7 +30,7 @@ const ErrorButton = ({ isFinished, minipool }) => {
   const enabled = !isFinished && !isPrepareErrorWithdraw
 
   return (
-    <Tooltip content={tooltipLabel} wrapperClassName="w-full">
+    <Tooltip content={tooltipLabel} placement="top" wrapperClassName="w-full">
       <div>
         <Button
           onClick={enabled ? withdrawFunds : undefined}

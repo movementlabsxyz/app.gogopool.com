@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers'
+import { ReactNode } from 'react'
 
 import { CopyIcon } from '@chakra-ui/icons'
 import {
@@ -60,7 +61,7 @@ const formatTime = (t: BigNumber) => {
   )
 }
 
-const CopyNodeId = ({ nodeID }) => {
+const CopyNodeId = ({ nodeID }: { nodeID: string }) => {
   console.log('Attempting to copy:', nodeID) // For debuggin
   const { onCopy } = useClipboard(nodeID)
   const toast = useToast()
@@ -104,7 +105,7 @@ const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
     )
   }
 
-  const CardDetails = ({ button }) => {
+  const CardDetails = ({ button }: { button: ReactNode }) => {
     return (
       <Card
         _hover={{
