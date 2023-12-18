@@ -1,7 +1,8 @@
-import { FunctionComponent } from 'react'
+import { Fragment, FunctionComponent } from 'react'
 
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { Table, TableContainer, Tbody, Thead, Tr } from '@chakra-ui/react'
 
+import MinipoolTableHeader from './MinipoolTableHeader'
 import { MinipoolTableRow } from './MinipoolTableRow'
 
 import { useMinipoolsByOwner } from '@/hooks/minipool'
@@ -10,6 +11,16 @@ import { HexString } from '@/types/cryptoGenerics'
 interface MinipoolTableProps {
   ownerAddress: HexString
 }
+
+const tableHeaders = [
+  'Node ID',
+  'Status',
+  'Total Staked',
+  'Launch Time',
+  'Start Time',
+  'End Time',
+  'Withdraw',
+]
 
 export const MinipoolTable: FunctionComponent<MinipoolTableProps> = ({ ownerAddress }) => {
   const { isLoading, minipools } = useMinipoolsByOwner(ownerAddress)
@@ -23,14 +34,11 @@ export const MinipoolTable: FunctionComponent<MinipoolTableProps> = ({ ownerAddr
       <Table>
         <Thead>
           <Tr>
-            {/* Idk why I can't get the text color applied via the theme, so I inlined it */}
-            <Th color="blue.500">Node ID</Th>
-            <Th color="blue.500">Status</Th>
-            <Th color="blue.500">Total Staked</Th>
-            <Th color="blue.500">Launch Time</Th>
-            <Th color="blue.500">Start Time</Th>
-            <Th color="blue.500">End Time</Th>
-            <Th color="blue.500">Withdraw</Th>
+            {tableHeaders.map((header) => (
+              <Fragment key={header}>
+                <MinipoolTableHeader color="blue.500">{header}</MinipoolTableHeader>
+              </Fragment>
+            ))}
           </Tr>
         </Thead>
         <Tbody>

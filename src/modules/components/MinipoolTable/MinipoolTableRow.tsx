@@ -18,7 +18,7 @@ import { nodeHexToID } from '@/utils'
 import { ordinal_suffix } from '@/utils/misc'
 
 const statusColors = {
-  [MinipoolStatus.Launched]: 'green.400',
+  [MinipoolStatus.Launched]: 'orange.400',
   [MinipoolStatus.Staking]: 'purple.400',
   [MinipoolStatus.Withdrawable]: 'green.400',
   [MinipoolStatus.Finished]: 'success.500',
@@ -59,6 +59,8 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   const isLaunched = minipool.status.toNumber() === MinipoolStatus.Launched
   const isCancelled = minipool.status.toNumber() === MinipoolStatus.Canceled
 
+  const formattedStake = formatUnits(minipool.avaxNodeOpAmt.add(minipool.avaxLiquidStakerAmt))
+
   const { data: prelaunchMinipools } = useMinipoolsByStatus({
     status: MinipoolStatus.Prelaunch,
   })
@@ -66,21 +68,25 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   const toast = useToast()
 
   let prelaunchIndex: number
-  if (prelaunchMinipools && status === MinipoolStatus.Prelaunch) {
+  if (prelaunchMinipools && isPrelaunch) {
     prelaunchIndex = prelaunchMinipools.findIndex(({ nodeID }) => minipool.nodeID === nodeID)
   }
 
   const copyNodeId = () => {
-    navigator.clipboard.writeText(minipool.nodeID).catch((err) => {
-      console.error('Failed to copy node ID: ', err)
-    })
-    toast({
-      position: 'top',
-      description: 'Copied!',
-      status: 'info',
-      duration: 2000,
-      isClosable: true,
-    })
+    navigator.clipboard
+      .writeText(minipool.nodeID)
+      .then(() => {
+        toast({
+          position: 'top',
+          description: 'Copied!',
+          status: 'info',
+          duration: 2000,
+          isClosable: true,
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to copy node ID: ', err)
+      })
   }
 
   const withdrawOrCancel = useMemo((): JSX.Element => {
@@ -98,11 +104,16 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   }, [isPrelaunch, isWithdrawable, isError, isStaking, isLaunched, isFinished, minipool])
 
   const endTimeBadge = useMemo((): JSX.Element => {
+    const contractEndTime = formatTime(minipool.endTime)
+    const calculatedEndTime = formatTime(minipool.startTime.add(minipool.duration))
+
     if (isPrelaunch) {
       return (
         <TableBadge
-          color="yellow.500"
-          tooltipContent={`While your Minipool has been created, it will not begin validating on the AVAX network until we have matched your 1000 AVAX. You are currently ${
+          color={statusColors[MinipoolStatus.Prelaunch]}
+          tooltipContent={`While your Minipool has been created, it will not begin validating on the AVAX network until we have matched your ${Number(
+            1000,
+          ).toLocaleString()} AVAX. You are currently ${
             prelaunchIndex === undefined ? '...' : ordinal_suffix(prelaunchIndex + 1)
           } in line.`}
           use="OUTLINE"
@@ -112,18 +123,14 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
       )
     } else if (isWithdrawable) {
       return (
-        <TableBadge
-          color="yellow.500"
-          tooltipContent={`Withdraw your rewards to complete your minipool's journey.`}
-          use="OUTLINE"
-        >
-          Prelaunch
-        </TableBadge>
+        <Text as="span" color={statusColors[MinipoolStatus.Withdrawable]} fontWeight="semibold">
+          {contractEndTime}
+        </Text>
       )
     } else if (isError) {
       return (
         <TableBadge
-          color="red.500"
+          color={statusColors[MinipoolStatus.Error]}
           tooltipContent={`An error occurred with your minipool.`}
           use="OUTLINE"
         >
@@ -132,22 +139,26 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
       )
     } else if (isStaking || isLaunched) {
       return (
-        <div className="flex flex-col">
-          <span>{formatTime(minipool.startTime.add(minipool.duration))}</span>
-        </div>
+        <Text as="span" color={statusColors[MinipoolStatus.Staking]} fontWeight="semibold">
+          {calculatedEndTime}
+        </Text>
       )
     } else if (isCancelled) {
       return (
         <TableBadge
-          color="gray.500"
-          tooltipContent={`Your minipool was cancelled before taking flight.`}
+          color={statusColors[MinipoolStatus.Canceled]}
+          tooltipContent={`Your minipool was canceled before taking flight.`}
           use="OUTLINE"
         >
-          Cancelled
+          Canceled
         </TableBadge>
       )
     } else {
-      return <span>{formatTime(minipool.endTime)}</span>
+      return (
+        <Text as="span" color={statusColors[MinipoolStatus.Finished]} fontWeight="semibold">
+          {contractEndTime}
+        </Text>
+      )
     }
   }, [
     isPrelaunch,
@@ -171,11 +182,16 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
         </Tooltip>
       </Td>
       <Td>
-        <Box as="span" color={statusColors[minipool.status.toNumber()]} fontWeight={700}>
-          {MinipoolStatus[status]}
+        <Box
+          as="span"
+          color={statusColors[minipool.status.toNumber()]}
+          fontSize={13}
+          fontWeight={700}
+        >
+          {MinipoolStatus[status].toUpperCase()}
         </Box>
       </Td>
-      <Td>{formatUnits(minipool.avaxNodeOpAmt.add(minipool.avaxLiquidStakerAmt))} AVAX</Td>
+      <Td>{formattedStake} AVAX</Td>
       <Td>{formatTime(minipool.creationTime)}</Td>
       <Td>{formatTime(minipool.startTime)}</Td>
       <Td>{endTimeBadge}</Td>

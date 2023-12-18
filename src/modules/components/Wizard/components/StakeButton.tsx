@@ -18,7 +18,7 @@ export interface StakeButtonProps {
   lockCurrentStep: () => void
   nextStep: () => void
 }
-const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: StakeButtonProps) => {
+const StakeButton = ({ ggpAmount, lockCurrentStep, nextStep }: StakeButtonProps) => {
   const toast = useToast()
 
   const { address, isConnected } = useAccount()
@@ -64,7 +64,7 @@ const StakeButton = ({ avaxAmount, ggpAmount, lockCurrentStep, nextStep }: Stake
       }
     } catch (error) {
       setLoadingStake(false)
-      console.warn(error)
+      console.warn(stakeError)
       toast({
         position: 'top',
         description: 'Error when making transaction',
