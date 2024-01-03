@@ -143,8 +143,8 @@ export const LiquidStaking: FunctionComponent = () => {
 
   let apy = 0
   if (ceresData) {
-    const { ggAVAXMonthlyInterestMonth } = ceresData
-    apy = Math.abs((ggAVAXMonthlyInterestMonth.value as number) * 12)
+    const { ggAVAXAPY } = ceresData
+    apy = ggAVAXAPY.value as number
   }
 
   const {
