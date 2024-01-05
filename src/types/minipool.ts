@@ -1,7 +1,9 @@
 import type { BigNumber } from 'ethers'
 
+import { HexString } from './cryptoGenerics'
+
 export default interface Minipool {
-  nodeID: string
+  nodeID: HexString
   status: BigNumber
   duration: number
   creationTime: BigNumber
@@ -11,11 +13,12 @@ export default interface Minipool {
   ggpBondAmt: BigNumber
   ggpSlashAmt: BigNumber
   avaxNodeOpAmt: BigNumber
+  avaxNodeOpInitialAmt: BigNumber
   avaxLiquidStakerAmt: BigNumber
   avaxTotalRewardAmt: BigNumber
   avaxNodeOpRewardAmt: BigNumber
   avaxUserRewardAmt: BigNumber
-  owner: `0x${string}`
+  owner: HexString
   multisigAddr: string
   txID: string
   errorCode: string
@@ -35,6 +38,7 @@ const displayNameTable: Record<MinipoolKeys, string> = {
   ggpSlashAmt: 'GGP Slash Amount',
   avaxLiquidStakerAmt: 'User Deposit Amount',
   avaxNodeOpAmt: 'NodeOp Deposit Amount',
+  avaxNodeOpInitialAmt: 'NodeOp Initial Deposit Amount',
   avaxNodeOpRewardAmt: 'NodeOp Reward Amount',
   avaxTotalRewardAmt: 'Total Reward Amount',
   avaxUserRewardAmt: 'User Reward Amount',

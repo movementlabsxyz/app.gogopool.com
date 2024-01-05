@@ -52,6 +52,13 @@ const CreateMinipool = () => {
     }
   }, [formData])
 
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('one-click-relaunch') === 'true') {
+      setShowMinipoolQuickStart(true)
+    }
+  }, [])
+
   useAsyncEffect(async () => {
     if (ggpPriceInAvax.gt(0) && address) {
       const { apy, ggpReward } = await postEstimator({

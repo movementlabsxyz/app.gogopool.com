@@ -2,9 +2,10 @@ import { BigNumber } from 'ethers'
 import { FunctionComponent, useMemo } from 'react'
 
 import { CopyIcon } from '@chakra-ui/icons'
-import { Box, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react'
+import { Box, Flex, Td, Text, Tr, useDisclosure, useToast } from '@chakra-ui/react'
 import { formatUnits } from 'ethers/lib/utils.js'
 
+import { WithdrawOptionsModal } from '../Modal/WithdrawalOptions/WithdrawOptionsModal'
 import CancelButton from './CancelButton'
 import ErrorButton from './ErrorButton'
 import StakingButton from './StakingButton'
@@ -59,6 +60,12 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   const isLaunched = minipool.status.toNumber() === MinipoolStatus.Launched
   const isCancelled = minipool.status.toNumber() === MinipoolStatus.Canceled
 
+  const {
+    isOpen: isOpenWithdrawOptions,
+    onClose: onCloseWithdrawOptions,
+    onOpen: onOpenWithdrawOptions,
+  } = useDisclosure()
+
   const formattedStake = formatUnits(minipool.avaxNodeOpAmt.add(minipool.avaxLiquidStakerAmt))
 
   const { data: prelaunchMinipools } = useMinipoolsByStatus({
@@ -74,7 +81,7 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
 
   const copyNodeId = () => {
     navigator.clipboard
-      .writeText(minipool.nodeID)
+      .writeText(nodeHexToID(minipool.nodeID))
       .then(() => {
         toast({
           position: 'top',
@@ -93,7 +100,7 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
     if (isPrelaunch) {
       return <CancelButton isFinished={isFinished} minipool={minipool} />
     } else if (isWithdrawable) {
-      return <WithdrawButton isFinished={isFinished} minipool={minipool} />
+      return <WithdrawButton isFinished={isFinished} onOpen={onOpenWithdrawOptions} />
     } else if (isError) {
       return <ErrorButton isFinished={isFinished} minipool={minipool} />
     } else if (isStaking || isLaunched) {
@@ -101,7 +108,16 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
     } else {
       return null
     }
-  }, [isPrelaunch, isWithdrawable, isError, isStaking, isLaunched, isFinished, minipool])
+  }, [
+    isPrelaunch,
+    isWithdrawable,
+    isError,
+    isStaking,
+    isLaunched,
+    isFinished,
+    minipool,
+    onOpenWithdrawOptions,
+  ])
 
   const endTimeBadge = useMemo((): JSX.Element => {
     const contractEndTime = formatTime(minipool.endTime)
@@ -172,33 +188,34 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   ])
 
   return (
-    <Tr key={minipool.nodeID}>
-      <Td>
-        <Tooltip content={nodeHexToID(minipool.nodeID)} placement="top">
-          <Flex align="center" cursor="pointer" gap="1" onClick={copyNodeId} width="135px">
-            <span className="truncate">{nodeHexToID(minipool.nodeID)}</span>
-            <CopyIcon />
-          </Flex>
-        </Tooltip>
-      </Td>
-      <Td>
-        <Box
-          as="span"
-          color={statusColors[minipool.status.toNumber()]}
-          fontSize={13}
-          fontWeight={700}
-        >
-          {MinipoolStatus[status].toUpperCase()}
-        </Box>
-      </Td>
-      <Td>{formattedStake} AVAX</Td>
-      <Td>{formatTime(minipool.creationTime)}</Td>
-      <Td>{formatTime(minipool.startTime)}</Td>
-      <Td>{endTimeBadge}</Td>
-      <Td>
-        <Flex align="center" gap="2" justify="space-between">
-          {withdrawOrCancel}
-          {/* Dropdown menu -- This will bring up the options for restaking
+    <>
+      <Tr key={minipool.nodeID}>
+        <Td>
+          <Tooltip content={nodeHexToID(minipool.nodeID)} placement="top">
+            <Flex align="center" cursor="pointer" gap="1" onClick={copyNodeId} width="135px">
+              <span className="truncate">{nodeHexToID(minipool.nodeID)}</span>
+              <CopyIcon />
+            </Flex>
+          </Tooltip>
+        </Td>
+        <Td>
+          <Box
+            as="span"
+            color={statusColors[minipool.status.toNumber()]}
+            fontSize={13}
+            fontWeight={700}
+          >
+            {MinipoolStatus[status].toUpperCase()}
+          </Box>
+        </Td>
+        <Td>{formattedStake} AVAX</Td>
+        <Td>{formatTime(minipool.creationTime)}</Td>
+        <Td>{formatTime(minipool.startTime)}</Td>
+        <Td>{endTimeBadge}</Td>
+        <Td>
+          <Flex align="center" gap="2" justify="space-between">
+            {withdrawOrCancel}
+            {/* Dropdown menu -- This will bring up the options for restaking
           <Popover>
             <PopoverTrigger>
               <Box cursor="pointer">
@@ -231,8 +248,16 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
             </Portal>
           </Popover>
           */}
-        </Flex>
-      </Td>
-    </Tr>
+          </Flex>
+        </Td>
+      </Tr>
+      {isOpenWithdrawOptions && (
+        <WithdrawOptionsModal
+          minipool={minipool}
+          onClose={onCloseWithdrawOptions}
+          onOpen={onOpenWithdrawOptions}
+        />
+      )}
+    </>
   )
 }

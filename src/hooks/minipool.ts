@@ -222,48 +222,85 @@ export const useCancelMinipool = (nodeId: HexString) => {
   return { prepareError, ...write }
 }
 
+const handleErrors = (error, toast) => {
+  Object.keys(DECODED_ERRORS).forEach((key) => {
+    if (error?.message.includes(key)) {
+      toast({
+        position: 'top',
+        title: 'Error minipool withdraw',
+        description: DECODED_ERRORS[key],
+        status: 'error',
+        duration: 20000,
+        isClosable: true,
+      })
+    }
+  })
+}
+
 export const useWithdrawMinipoolFunds = (nodeId: HexString) => {
   const { abi, address } = useMinipoolManagerContract()
   const addRecentTransaction = useAddRecentTransaction()
-  // const toast = useToast()
+  const toast = useToast()
 
   const { config, isError: prepareError } = usePrepareContractWrite({
     address,
     abi,
     functionName: 'withdrawMinipoolFunds',
     args: [nodeId],
+    overrides: {
+      gasLimit: BigNumber.from('15000000'),
+    },
+    onError: (err) => handleErrors(err, toast),
     // We dont wanna show the toast during onError because
     // they show on the dashboard, we use the error state
     // to know whether or not to allow the button to be clicked
-    onError(err) {
-      console.warn(err)
-      // Object.keys(DECODED_ERRORS).forEach((key) => {
-      //   if (error?.message.includes(key)) {
-      //     toast({
-      //       position: 'top',
-      //       title: 'Error during withdraw minipool funds',
-      //       description: DECODED_ERRORS[key],
-      //       status: 'error',
-      //       duration: 20000,
-      //       isClosable: true,
-      //     })
-      //   }
-      // })
-    },
+    // onError(err) {
+    // console.warn(err)
+    // Object.keys(DECODED_ERRORS).forEach((key) => {
+    //   if (error?.message.includes(key)) {
+    //     toast({
+    //       position: 'top',
+    //       title: 'Error during withdraw minipool funds',
+    //       description: DECODED_ERRORS[key],
+    //       status: 'error',
+    //       duration: 20000,
+    //       isClosable: true,
+    //     })
+    //   }
+    // })
+    // },
   })
 
-  const write = useContractWrite({
-    ...config,
-    onSuccess(data) {
-      addRecentTransaction({
-        hash: data.hash,
-        description: 'Withdraw minipool funds',
-      })
-    },
-    onError(err) {
-      console.warn(err)
-    },
-  })
+  return {
+    ...useContractWrite({
+      ...config,
+      onSuccess(data) {
+        addRecentTransaction({
+          hash: data.hash,
+          description: 'Withdraw minipool funds',
+        })
+      },
+    }),
+    prepareError,
+  }
 
-  return { prepareError, ...write }
+  // const write = useContractWrite({
+  //   ...config,
+  //   async onSuccess(data) {
+  //     addRecentTransaction({
+  //       hash: data.hash,
+  //       description: 'Withdraw minipool funds',
+  //     })
+  //     setTransactionStatus('success') // Update status on success
+  //     onTransactionSuccess({
+  //       hash: data.hash,
+  //     })
+  //   },
+  //   onError(err) {
+  //     console.warn(err)
+  //     setTransactionStatus('error') // Update status on error
+  //   },
+  // })
+
+  // return { prepareError, ...write, transactionStatus, ready: write?.write !== undefined }
 }

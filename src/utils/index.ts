@@ -29,3 +29,13 @@ export const nodeHexToID = (h) => {
 export const shortenNodeId = (nodeId: string) => {
   return nodeId.slice(0, 12).concat('...').concat(nodeId.slice(-6))
 }
+
+export const nodeIDRemovePrefix = (pk: string): string => {
+  const prefix = 'NodeID-'
+  if (!pk.startsWith(prefix)) {
+    throw new Error("Error: nodeID must start with 'NodeID-'")
+  }
+  // Extracting the NodeID
+  const startIndex = pk.indexOf(prefix)
+  return pk.substring(startIndex + prefix.length)
+}

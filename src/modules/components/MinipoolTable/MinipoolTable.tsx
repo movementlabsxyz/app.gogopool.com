@@ -62,7 +62,7 @@ const formatTime = (t: BigNumber) => {
 }
 
 const CopyNodeId = ({ nodeID }: { nodeID: string }) => {
-  console.log('Attempting to copy:', nodeID) // For debuggin
+  // console.log('Attempting to copy:', nodeID) // For debuggin
   const { onCopy } = useClipboard(nodeID)
   const toast = useToast()
   const handleCopy = () => {
@@ -186,7 +186,7 @@ const MinipoolCard = ({ minipool }: { minipool: Minipool }) => {
   if (isPrelaunch) {
     return <CardDetails button={<CancelButton isFinished={isFinished} minipool={minipool} />} />
   } else if (isWithdrawable) {
-    return <CardDetails button={<WithdrawButton isFinished={isFinished} minipool={minipool} />} />
+    return <CardDetails button={<WithdrawButton isFinished={isFinished} onOpen={() => null} />} />
   } else if (isError) {
     return <CardDetails button={<ErrorButton isFinished={isFinished} minipool={minipool} />} />
   } else if (isStaking || isLaunched) {

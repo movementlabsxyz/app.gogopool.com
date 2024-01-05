@@ -3,6 +3,11 @@ export const oonodzWrapper = {
   43114: '0x769Fc9b5038d8843895b50a904e04b58b0d4a9CB',
 }
 
+export const oonodzNodeIdNFT = {
+  43113: '0x85644e02E5eD82AA4ed37f231068Bc30E2C5C7a1',
+  43114: '0x7C98CBd78b2180659484B91b06728BF8ABfde3BB',
+}
+
 export const minipoolStreamliner = {
   43113: '0xEf0ECC0e63b9C262beC45D7EF27e75CF969534F0',
   43114: '0x0A75a480Af4ADC81b20b1664A1Da2bd7caEFA430',
