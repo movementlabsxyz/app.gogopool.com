@@ -47,15 +47,15 @@ const TotalStaked = () => {
       tooltip: 'The total amount of GGP you have staked.',
     },
     {
-      name: 'AVAX STAKED',
+      name: 'AVAX LOCKED',
       stat: `${displayBN(avaxStaked)} AVAX`,
       tooltip:
         'The total amount of AVAX you have deposited in the protocol. While your minipool is running you will be unable to withdraw this.',
     },
     {
-      name: 'AVAX MATCHED',
+      name: 'AVAX VALIDATING',
       stat: `${displayBN(avaxValidating)} AVAX`,
-      tooltip: 'The amount of AVAX received from the liquid staker pool for validation.',
+      tooltip: 'The portion of your locked AVAX that is staking on the P-Chain.',
     },
   ]
 
@@ -95,7 +95,7 @@ const TotalStaked = () => {
             size="sm"
             variant="tertiary"
           >
-            Stake {ggpStake.gt(0) ? 'More' : ''}
+            Stake {ggpStake.gt(0) ? 'More GGP' : 'GGP'}
           </Button>
         }
         button2={

@@ -60,6 +60,7 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
   const isLaunched = minipool.status.toNumber() === MinipoolStatus.Launched
   const isCancelled = minipool.status.toNumber() === MinipoolStatus.Canceled
 
+  console.log({ minipool })
   const {
     isOpen: isOpenWithdrawOptions,
     onClose: onCloseWithdrawOptions,
@@ -210,7 +211,7 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
         </Td>
         <Td>{formattedStake} AVAX</Td>
         <Td>{formatTime(minipool.creationTime)}</Td>
-        <Td>{formatTime(minipool.startTime)}</Td>
+        <Td>{formatTime(minipool.initialStartTime)}</Td>
         <Td>{endTimeBadge}</Td>
         <Td>
           <Flex align="center" gap="2" justify="space-between">

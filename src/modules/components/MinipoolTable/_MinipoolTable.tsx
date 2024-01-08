@@ -16,7 +16,7 @@ const tableHeaders = [
   'Node ID',
   'Status',
   'Total Staked',
-  'Launch Time',
+  'Creation Time',
   'Start Time',
   'End Time',
   'Withdraw',
