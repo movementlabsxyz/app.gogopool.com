@@ -68,11 +68,10 @@ export const RewardFaqModal: FunctionComponent<RewardFaqModalProps> = ({ onClose
                 When will I see my rewards?
               </Text>
               <Text color="grey.800" fontSize={14} lineHeight="22px">
-                Reward cycles occur every 30 days. A Minipool must stake for at least 15 days during
-                that cycle to earn rewards. That means you must launch your Minipool before certain
-                dates to earn rewards for that cycle.{' '}
-                <strong>The rewards eligibility cut off date is the last day</strong> that your
-                Minipool can begin staking on the P-Chain to earn for that 30 day cycle.
+                Reward cycles occur every 30 days. A Minipool must have been created for at least 15
+                days during that cycle, then launched (validating on the P-Chain) before cycle end
+                to earn rewards. <strong>The rewards eligibility cut off date</strong> is the last
+                day that your Minipool can be created to earn for that 30 day cycle.
               </Text>
             </ListItem>
             <ListItem maxW={490}>

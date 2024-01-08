@@ -14,8 +14,8 @@ import { VaultIcon } from './VaultIcon'
 import EmptyStakeIcon from '@/common/components/CustomIcon/EmptyStakeIcon'
 import { Tooltip } from '@/common/components/Tooltip'
 import {
-  useGetAVAXAssigned,
   useGetAVAXStake,
+  useGetAVAXValidating,
   useGetContractCollateralizationRatio,
   useGetGGPStake,
 } from '@/hooks/useStake'
@@ -27,7 +27,7 @@ const TotalStaked = () => {
 
   const { data: ggpStake } = useGetGGPStake(address)
   const { data: straightRatio } = useGetContractCollateralizationRatio(address)
-  const { data: avaxMatched } = useGetAVAXAssigned(address)
+  const { data: avaxValidating } = useGetAVAXValidating(address)
   const { data: avaxStaked } = useGetAVAXStake(address)
 
   const { isOpen: isOpenStake, onClose: onCloseStake, onOpen: onOpenStake } = useDisclosure()
@@ -36,7 +36,9 @@ const TotalStaked = () => {
   const stats = [
     {
       name: 'GGP COLLATERAL RATIO',
-      stat: `${straightRatio.eq(constants.MaxUint256) ? '∞' : displayBN(straightRatio.mul(100))} %`,
+      stat: `${
+        straightRatio.eq(constants.MaxUint256) ? 'N/A' : displayBN(straightRatio.mul(100))
+      } %`,
       tooltip: 'Ratio of your GGP staked to your AVAX matched.',
     },
     {
@@ -51,9 +53,9 @@ const TotalStaked = () => {
         'The total amount of AVAX you have deposited in the protocol. While your minipool is running you will be unable to withdraw this.',
     },
     {
-      name: 'MATCHED AMOUNT',
-      stat: `${displayBN(avaxMatched)} AVAX`,
-      tooltip: 'The matched amount of AVAX received from the liquid staker pool.',
+      name: 'AVAX MATCHED',
+      stat: `${displayBN(avaxValidating)} AVAX`,
+      tooltip: 'The amount of AVAX received from the liquid staker pool for validation.',
     },
   ]
 

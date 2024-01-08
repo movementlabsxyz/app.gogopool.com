@@ -157,6 +157,26 @@ export const useGetAVAXAssigned = (stakerAddr: HexString, watch = true) => {
   }
 }
 
+// getAVAXValidating
+export const useGetAVAXValidating = (stakerAddr: HexString, watch = true) => {
+  const { abi, address } = useStakingContract()
+
+  const { data, error, isError, isLoading } = useContractRead({
+    address,
+    abi,
+    functionName: 'getAVAXValidating',
+    args: [stakerAddr],
+    watch,
+  })
+
+  return {
+    data: data ? data : BigNumber.from(0),
+    isLoading,
+    isError,
+    error,
+  }
+}
+
 // getAVAXValidatingHighWater
 export const useGetAVAXValidatingHighWater = (stakerAddr: HexString, watch = true) => {
   const { abi, address } = useStakingContract()

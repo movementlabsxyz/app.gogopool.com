@@ -121,7 +121,7 @@ export const MinipoolTableRow: FunctionComponent<MinipoolTableRowProps> = ({ min
 
   const endTimeBadge = useMemo((): JSX.Element => {
     const contractEndTime = formatTime(minipool.endTime)
-    const calculatedEndTime = formatTime(minipool.startTime.add(minipool.duration))
+    const calculatedEndTime = formatTime(minipool.initialStartTime.add(minipool.duration))
 
     if (isPrelaunch) {
       return (

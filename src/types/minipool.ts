@@ -7,6 +7,7 @@ export default interface Minipool {
   status: BigNumber
   duration: number
   creationTime: BigNumber
+  initialStartTime: BigNumber
   startTime: BigNumber
   endTime: BigNumber
   delegationFee: BigNumber
@@ -32,6 +33,7 @@ const displayNameTable: Record<MinipoolKeys, string> = {
   duration: 'Duration',
   startTime: 'Start Time',
   creationTime: 'Creation Time',
+  initialStartTime: 'Initial Start Time',
   endTime: 'End Time',
   delegationFee: 'Delegation Fee',
   ggpBondAmt: 'GGP Bond Amount',
