@@ -37,8 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         postData.chainId,
         true,
       )
+    } else {
+      ggpReward = await getRewardAmount(ggpStaked, retailTegs, walletAddress, postData.chainId)
     }
-    ggpReward = await getRewardAmount(ggpStaked, retailTegs, walletAddress, postData.chainId)
     const avaxStakedInGGP = avaxStaked.mul(WEI_VALUE).div(ggpPriceInAvax)
     const ggpSpent = avaxStakedInGGP.add(ggpStaked)
     const apy = ggpReward.mul(WEI_VALUE).div(ggpSpent).mul(12).mul(100)
