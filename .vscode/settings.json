@@ -1,12 +1,9 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    // For ESLint
-    "source.fixAll.eslint": true,
-    // For TSLint
-    "source.fixAll.tslint": true,
-    // For Stylelint
-    "source.fixAll.stylelint": true
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.tslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   "editor.formatOnSave": true,
   "editor.tabSize": 2
