@@ -7,7 +7,10 @@ import { publicProvider } from 'wagmi/providers/public'
 import chain from '@/config/chains'
 
 export const configWagmiClient = () => {
-  const { chains, provider } = configureChains([chain.avalanche, chain.fuji], [publicProvider()])
+  const { chains, provider } = configureChains(
+    [chain.avalanche, chain.fuji, chain.m1],
+    [publicProvider()],
+  )
 
   const { connectors } = getDefaultWallets({
     appName: 'GoGoPool',

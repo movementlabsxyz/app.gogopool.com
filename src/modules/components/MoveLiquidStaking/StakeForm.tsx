@@ -4,8 +4,8 @@ import { Dispatch, SetStateAction } from 'react'
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
 import { parseEther } from 'ethers/lib/utils.js'
 
-import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
+import { MOVEPillUnit } from '../Dashboard/Cards/MOVEPillUnit'
 
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { displayBN } from '@/utils/numberFormatter'
@@ -25,7 +25,7 @@ export const StakeForm = ({
   header,
   setAmount,
   setReward,
-  token = 'AVAX',
+  token = 'MOVE',
 }: StakeFormProps): JSX.Element => {
   const handleMaxClick = () => {
     setAmount(balance)
@@ -48,10 +48,10 @@ export const StakeForm = ({
             Max
           </button>
         </div>
-        {token === 'AVAX' ? (
-          <AVAXPillUnit value={null} />
+        {token === 'MOVE' ? (
+          <MOVEPillUnit value={null} />
         ) : (
-          <GGPPillUnit title="ggAVAX" value={null} />
+          <GGPPillUnit title="ggMOVE" value={null} />
         )}
       </div>
       <Divider borderColor="grey.300" display={{ base: null, sm: 'none' }} mb="2" mt="2" />

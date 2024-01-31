@@ -30,9 +30,9 @@ import ConnectButton from '@/common/components/ConnectButton'
 import { InfoCircleIcon } from '@/common/components/CustomIcon'
 import { SwapIcon } from '@/common/components/CustomIcon/SwapIcon'
 import { Tooltip } from '@/common/components/Tooltip'
-import useTokenggAVAXContract from '@/hooks/contracts/tokenggAVAX'
+import useTokenggMOVEContract from '@/hooks/contracts/tokenggMOVE'
 import useDeposit from '@/hooks/deposit'
-import useLiquidStakingData from '@/hooks/liquidStakingData'
+import useMoveLiquidStakingData from '@/hooks/moveLiquidStakingData'
 import useRedeem from '@/hooks/redeem'
 import useCeres from '@/hooks/useCeres'
 import addToken from '@/utils/addToken'
@@ -56,7 +56,7 @@ const generateStatistics = (
       label: (
         <>
           Token Address
-          <Tooltip content="The address of the ggAVAX token" placement="right">
+          <Tooltip content="The address of the ggMOVE token" placement="right">
             <Box as="span">
               <InfoCircleIcon className="ml-1" fill="grey.600" />
             </Box>
@@ -76,7 +76,7 @@ const generateStatistics = (
         <>
           Annual Percentage Yield
           <Tooltip
-            content="Estimated Percentage reward you get per year on your staked AVAX."
+            content="Estimated Percentage reward you get per year on your staked MOVE."
             placement="right"
           >
             <Box as="span">
@@ -91,22 +91,22 @@ const generateStatistics = (
       label: (
         <>
           Exchange Rate
-          <Tooltip content="Rate of exchange between AVAX and ggAVAX." placement="right">
+          <Tooltip content="Rate of exchange between MOVE and ggMOVE." placement="right">
             <Box as="span">
               <InfoCircleIcon className="ml-1" fill="grey.600" />
             </Box>
           </Tooltip>
         </>
       ),
-      value: `1 AVAX = ${Number(formatEther(exchangeRate)).toFixed(6)} ggAVAX`,
+      value: `1 MOVE = ${Number(formatEther(exchangeRate)).toFixed(6)} ggMOVE`,
     },
     {
       label: <># of Stakers</>,
       value: typeof stakers === 'string' ? stakers : stakers.toLocaleString(),
     },
     {
-      label: <>Total AVAX Staked</>,
-      value: `${formatEtherFixed(stakedAmount)} AVAX`,
+      label: <>Total MOVE Staked</>,
+      value: `${formatEtherFixed(stakedAmount)} MOVE`,
     },
     {
       label: (
@@ -131,20 +131,20 @@ export const MoveLiquidStaking: FunctionComponent = () => {
 
   const { chain } = useNetwork()
 
-  const [swapDirection, setSwapDirection] = useState(false) // false for AVAX -> ggAVAX, true for ggAVAX -> AVAX
+  const [swapDirection, setSwapDirection] = useState(false) // false for MOVE -> ggMOVE, true for ggMOVE -> MOVE
   const [amount, setAmount] = useState<BigNumber>(parseEther('0')) // stake value
   const [reward, setReward] = useState<BigNumber>(parseEther('0')) // reward value
 
   const { address: account, isConnected } = useAccount()
 
-  const { address: ggAVAXAddress } = useTokenggAVAXContract()
+  const { address: ggMOVEAddress } = useTokenggMOVEContract()
 
   const { data: ceresData } = useCeres()
 
   let apy = 0
   if (ceresData) {
-    const { ggAVAXAPY } = ceresData
-    apy = ggAVAXAPY.value as number
+    const { ggMOVEAPY } = ceresData
+    apy = ggMOVEAPY?.value | (0 as number)
   }
 
   const {
@@ -152,23 +152,23 @@ export const MoveLiquidStaking: FunctionComponent = () => {
     isLoading: isLoadingStats,
     rewardsCycleLength,
     stakerCount,
-    totalStakedAVAX,
-  } = useLiquidStakingData()
+    totalStakedMOVE,
+  } = useMoveLiquidStakingData()
 
-  // AVAX balance
+  // MOVE balance
   const { data: balance, isLoading: isBalanceLoading } = useBalance({
     watch: true,
     address: account,
   })
 
-  // ggAVAX balance
-  const { data: ggAVAXBalance } = useBalance({
+  // ggMOVE balance
+  const { data: ggMOVEBalance } = useBalance({
     watch: true,
     address: account,
-    token: ggAVAXAddress,
+    token: ggMOVEAddress,
   })
 
-  // deposit the AVAX
+  // deposit the MOVE
   const {
     data: depositData,
     isError: isDepositError,
@@ -176,7 +176,7 @@ export const MoveLiquidStaking: FunctionComponent = () => {
     write: deposit,
   } = useDeposit(amount)
 
-  // redeem ggAVAX
+  // redeem ggMOVE
   const {
     data: redeemData,
     isError: isRedeemError,
@@ -196,10 +196,10 @@ export const MoveLiquidStaking: FunctionComponent = () => {
   const statisticData = generateStatistics(
     apy,
     (ggAvaxExchangeRate as BigNumberish) || 0,
-    (totalStakedAVAX as BigNumberish) || 0,
+    (totalStakedMOVE as BigNumberish) || 0,
     (stakerCount as BigNumberish) || 0,
     (rewardsCycleLength as unknown as number) * 1000,
-    ggAVAXAddress,
+    ggMOVEAddress,
   )
 
   const handleSwap = () => {
@@ -272,9 +272,9 @@ export const MoveLiquidStaking: FunctionComponent = () => {
   }, [amount, ggAvaxExchangeRate, swapDirection])
 
   const displayButton = () => {
-    const buttonText = swapDirection ? 'Redeem ggAVAX' : 'Deposit AVAX'
+    const buttonText = swapDirection ? 'Redeem ggMOVE' : 'Deposit MOVE'
     const sufficientBalance = swapDirection
-      ? ggAVAXBalance?.value.lt(amount)
+      ? ggMOVEBalance?.value.lt(amount)
       : balance?.value.lt(amount)
 
     if (!isConnected) {
@@ -333,11 +333,11 @@ export const MoveLiquidStaking: FunctionComponent = () => {
                   {swapDirection ? (
                     <StakeForm
                       amount={amount}
-                      balance={ggAVAXBalance?.value || parseEther('0')}
+                      balance={ggMOVEBalance?.value || parseEther('0')}
                       header="Amount to redeem"
                       setAmount={setAmount}
                       setReward={setReward}
-                      token="ggAVAX"
+                      token="ggMOVE"
                     />
                   ) : (
                     <StakeForm
@@ -370,10 +370,10 @@ export const MoveLiquidStaking: FunctionComponent = () => {
                   <RewardForm
                     balance={balance?.value || parseEther('0')}
                     reward={reward}
-                    token="AVAX"
+                    token="MOVE"
                   />
                 ) : (
-                  <RewardForm balance={ggAVAXBalance?.value || parseEther('0')} reward={reward} />
+                  <RewardForm balance={ggMOVEBalance?.value || parseEther('0')} reward={reward} />
                 )}
               </Content>
             </Card>
@@ -410,10 +410,10 @@ export const MoveLiquidStaking: FunctionComponent = () => {
             <div className="mt-4 text-xs">
               <Link
                 onClick={() => {
-                  addToken(ggAVAXAddress, 'ggAVAX')
+                  addToken(ggMOVEAddress, 'ggMOVE')
                 }}
               >
-                Add ggAVAX token to wallet
+                Add ggMOVE token to wallet
               </Link>
             </div>
           )}

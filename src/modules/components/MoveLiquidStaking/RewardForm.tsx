@@ -3,8 +3,8 @@ import { FunctionComponent } from 'react'
 
 import { Divider, FormLabel, Text } from '@chakra-ui/react'
 
-import { AVAXPillUnit } from '../Dashboard/Cards/AVAXPillUnit'
 import { GGPPillUnit } from '../Dashboard/Cards/GGPPillUnit'
+import { MOVEPillUnit } from '../Dashboard/Cards/MOVEPillUnit'
 
 import { BigNumberInput } from '@/common/components/Input/BigNumberInput'
 import { displayBN } from '@/utils/numberFormatter'
@@ -15,7 +15,7 @@ interface Props {
   token?: string
 }
 
-export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 'ggAVAX' }) => {
+export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 'ggMOVE' }) => {
   return (
     <>
       <div className="flex items-center justify-between">
@@ -29,10 +29,10 @@ export const RewardForm: FunctionComponent<Props> = ({ balance, reward, token = 
           onChange={() => undefined}
           placeholder="0.0"
         />
-        {token === 'AVAX' ? (
-          <AVAXPillUnit value={null} />
+        {token === 'MOVE' ? (
+          <MOVEPillUnit value={null} />
         ) : (
-          <GGPPillUnit title="ggAVAX" value={null} />
+          <GGPPillUnit title="ggMOVE" value={null} />
         )}
       </div>
       <Divider borderColor="grey.300" display={{ base: null, sm: 'none' }} mb="2" mt="2" />

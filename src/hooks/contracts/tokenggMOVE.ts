@@ -5,7 +5,8 @@ import { useGetAddress } from '../useStorage'
 import TokenggMOVE from '@/contracts/TokenggMOVE'
 
 const useTokenggMOVEContract = () => {
-  const { data } = useGetAddress('TokenggMOVE')
+  // TODO: can we add TokenggMOVE to AllContracts?
+  const { data } = useGetAddress('TokenggAVAX')
 
   const contractInterface = new utils.Interface(TokenggMOVE)
 

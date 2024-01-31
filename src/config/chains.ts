@@ -44,6 +44,28 @@ export const fuji: Chain = {
   testnet: true,
 }
 
+export const m1: Chain = {
+  id: 336,
+  name: 'M1',
+  network: 'm1',
+  iconUrl: '/assets/img/movementBlack.svg',
+  iconBackground: '#ffdb34',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Move',
+    symbol: 'MOVE',
+  },
+  rpcUrls: {
+    default: { http: ['https://devnet.m1.movementlabs.xyz'] },
+    public: { http: ['https://devnet.m1.movementlabs.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'M1Explorer', url: 'https://explorer.devnet.m1.movementlabs.xyz' },
+    etherscan: { name: 'M1Explorer', url: 'https://explorer.devnet.m1.movementlabs.xyz' },
+  },
+  testnet: true,
+}
+
 export const local: Chain = {
   id: 31337,
   name: 'Local',
@@ -109,6 +131,6 @@ export const anr: Chain = {
   },
 }
 
-const chain = { avalanche, fuji, local, anr }
+const chain = { avalanche, fuji, m1, local, anr }
 
 export default chain
