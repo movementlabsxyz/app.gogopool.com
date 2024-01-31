@@ -31,6 +31,7 @@ export type AllContracts =
   | 'ClaimNodeOp'
   | 'ProtocolDAO'
   | 'MinipoolStreamliner'
+  | 'TokenggMOVE'
 
 export const useGetAddress = (key: AllContracts, storageAddr?: string) => {
   const { chain } = useNetwork()

@@ -95,4 +95,6 @@ export type Ceres = {
   effectiveGGPStakePercentChangeWeek: CeresObjNum
   ggAVAXMonthlyInterestMonth: CeresObjNum
   ggAVAXAPY: CeresObjNum
+  ggMOVEMonthlyInterestMonth: CeresObjNum
+  ggMOVEAPY: CeresObjNum
 }
