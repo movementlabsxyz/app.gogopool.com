@@ -56,8 +56,8 @@ export const m1: Chain = {
     symbol: 'MOVE',
   },
   rpcUrls: {
-    default: { http: ['https://devnet.m1.movementlabs.xyz'] },
-    public: { http: ['https://devnet.m1.movementlabs.xyz'] },
+    default: { http: ['https://mevm.devnet.m1.movementlabs.xyz'] },
+    public: { http: ['https://mevm.devnet.m1.movementlabs.xyz'] },
   },
   blockExplorers: {
     default: { name: 'M1Explorer', url: 'https://explorer.devnet.m1.movementlabs.xyz' },

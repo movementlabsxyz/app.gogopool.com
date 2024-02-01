@@ -159,6 +159,7 @@ export const MoveLiquidStaking: FunctionComponent = () => {
   const { data: balance, isLoading: isBalanceLoading } = useBalance({
     watch: true,
     address: account,
+    chainId: 336,
   })
 
   // ggMOVE balance
@@ -272,6 +273,7 @@ export const MoveLiquidStaking: FunctionComponent = () => {
   }, [amount, ggAvaxExchangeRate, swapDirection])
 
   const displayButton = () => {
+    console.log('balance', balance)
     const buttonText = swapDirection ? 'Redeem ggMOVE' : 'Deposit MOVE'
     const sufficientBalance = swapDirection
       ? ggMOVEBalance?.value.lt(amount)
