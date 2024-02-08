@@ -16,7 +16,7 @@ export type SideItem = {
   icon: ReactNode
 }
 
-export type NavbarItemTitle = 'VALIDATE' | 'LIQUID STAKE' | 'GOGO PASS' | 'MOVE LS'
+export type NavbarItemTitle = 'VALIDATE' | 'LIQUID STAKE' | 'GOGO PASS'
 
 const validateSidebar = [
   {
@@ -47,6 +47,11 @@ const liquidSidebar = [
     href: '/liquid-staking/',
     icon: <LuArrowDownUp color="#fff" size={24} />,
   },
+  {
+    name: 'Move Liquid Stake',
+    href: '/move-liquid-staking/',
+    icon: <LuArrowDownUp color="#fff" size={24} />,
+  },
 ]
 
 const moveLiquidSidebar = [
@@ -69,7 +74,6 @@ const sidebarMap: { [key in NavbarItemTitle]: SideItem[] } = {
   'VALIDATE': validateSidebar,
   'LIQUID STAKE': liquidSidebar,
   'GOGO PASS': gogoSidebar,
-  'MOVE LS': moveLiquidSidebar,
 }
 
 export function SidebarNavbar({ children }: { children: ReactNode }) {

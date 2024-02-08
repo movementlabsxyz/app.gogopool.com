@@ -5,7 +5,7 @@ import { solidityKeccak256 } from 'ethers/lib/utils.js'
 import { createPublicClient, http, parseEther } from 'viem'
 import { avalanche } from 'viem/chains'
 
-import { fuji } from '@/config/chains'
+import { fuji, m1 } from '@/config/chains'
 import { storageAddresses } from '@/constants/storageAddresses'
 import Oracle from '@/contracts/Oracle'
 import Staking from '@/contracts/Staking'
@@ -26,8 +26,13 @@ const fujiClient = createPublicClient({
   transport: http(),
 })
 
+const m1Client = createPublicClient({
+  chain: m1,
+  transport: http(),
+})
+
 function getClient(chainId: number) {
-  return chainId == 43114 ? client : fujiClient
+  return chainId == 43114 ? client : chainId == 43113 ? fujiClient : m1Client
 }
 
 export async function getContractAddress(contractName: string, chainId: number) {
